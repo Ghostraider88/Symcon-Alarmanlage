@@ -1,0 +1,16 @@
+{
+    "id": "{91723F1C-05F2-4CDD-A2AC-A309AB3E335C}",
+    "name": "SymconAlarmPro",
+    "type": 3,
+    "vendor": "Symcon Alarm Pro",
+    "aliases": [
+        "Alarmanlage",
+        "Alarm Center",
+        "Alarm System"
+    ],
+    "url": "https://github.com/ghostraider88/symcon-alarmanlage",
+    "parentRequirements": [],
+    "childRequirements": [],
+    "implemented": [],
+    "prefix": "ALARM"
+}

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        :root { color-scheme: light dark; }
+        .ac-wrap { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; padding: 12px; }
+        .ac-card { border-radius: 10px; padding: 14px; color: #fff; }
+        .ac-name { font-size: 13px; opacity: 0.85; }
+        .ac-state { font-size: 22px; font-weight: 700; margin-top: 2px; }
+        .ac-mode { font-size: 14px; opacity: 0.9; }
+        .ac-count { font-size: 28px; font-weight: 700; margin-top: 6px; }
+        .ac-meta { margin-top: 10px; font-size: 13px; line-height: 1.5; }
+        .ac-meta .k { opacity: 0.8; margin-right: 6px; }
+        .ac-badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 12px; margin: 2px 4px 2px 0; background: rgba(0,0,0,0.25); }
+        .ac-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+        .ac-buttons button { flex: 1 1 80px; padding: 10px; border: none; border-radius: 8px; font-size: 13px; cursor: pointer; background: #2c3e50; color: #fff; }
+        .ac-buttons button:hover { opacity: 0.9; }
+        .ac-pin { margin-top: 10px; display: none; }
+        .ac-pin input { width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #999; box-sizing: border-box; }
+        .ac-history { margin-top: 14px; max-height: 180px; overflow-y: auto; font-size: 12px; }
+        .ac-history table { width: 100%; border-collapse: collapse; }
+        .ac-history td { padding: 3px 6px; border-bottom: 1px solid rgba(0,0,0,0.08); }
+        .ac-history .t { white-space: nowrap; opacity: 0.7; }
+        .ac-trouble { color: #ffd; background: rgba(150,0,0,0.35); padding: 6px 8px; border-radius: 6px; margin-top: 8px; font-size: 13px; }
+    </style>
+</head>
+<body>
+<div class="ac-wrap">
+    <div class="ac-card" id="ac-card" style="background:#3a3a3a">
+        <div class="ac-name" id="ac-name">Alarm</div>
+        <div class="ac-state" id="ac-state">—</div>
+        <div class="ac-mode" id="ac-mode"></div>
+        <div class="ac-count" id="ac-count"></div>
+        <div class="ac-trouble" id="ac-trouble" style="display:none"></div>
+        <div class="ac-meta" id="ac-meta"></div>
+        <div class="ac-pin" id="ac-pin">
+            <input type="password" id="ac-pin-input" placeholder="PIN">
+        </div>
+        <div class="ac-buttons">
+            <button onclick="acAction('ArmNight')">Night</button>
+            <button onclick="acAction('ArmAway')">Away</button>
+            <button onclick="acAction('Disarm')">Disarm</button>
+            <button onclick="acAction('Acknowledge')">Ack</button>
+            <button onclick="acAction('Reset')">Reset</button>
+            <button onclick="acAction('Test')">Test</button>
+        </div>
+    </div>
+    <div class="ac-history" id="ac-history"></div>
+</div>
+
+<script>
+    var acState = /*INITIAL_STATE*/null;
+
+    function acAction(ident) {
+        var pin = '';
+        var pinEl = document.getElementById('ac-pin-input');
+        if (pinEl) { pin = pinEl.value || ''; }
+        requestAction(ident, pin);
+        if (pinEl) { pinEl.value = ''; }
+    }
+
+    function acEscape(s) {
+        return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+        });
+    }
+
+    function acRender(s) {
+        if (!s) { return; }
+        acState = s;
+        document.getElementById('ac-card').style.background = s.color || '#3a3a3a';
+        document.getElementById('ac-name').textContent = s.name || 'Alarm';
+        document.getElementById('ac-state').textContent = s.stateName || '';
+        document.getElementById('ac-mode').textContent = s.modeName || '';
+
+        var count = '';
+        if (s.exitRemaining > 0) { count = '⏳ ' + s.exitRemaining + ' s'; }
+        else if (s.entryRemaining > 0) { count = '⚠ ' + s.entryRemaining + ' s'; }
+        document.getElementById('ac-count').textContent = count;
+
+        var trouble = document.getElementById('ac-trouble');
+        if (s.trouble) {
+            trouble.style.display = 'block';
+            trouble.textContent = '⚠ ' + (s.troubleText || '');
+        } else {
+            trouble.style.display = 'none';
+        }
+
+        var meta = '';
+        if (s.openSensors) { meta += '<div><span class="k">Open:</span>' + acEscape(s.openSensors) + '</div>'; }
+        if (s.bypass) { meta += '<div><span class="k">Bypass:</span>' + acEscape(s.bypass) + '</div>'; }
+        if (s.lastTrigger) { meta += '<div><span class="k">Last:</span>' + acEscape(s.lastTrigger) + (s.lastZone ? ' (' + acEscape(s.lastZone) + ')' : '') + '</div>'; }
+        document.getElementById('ac-meta').innerHTML = meta;
+
+        document.getElementById('ac-pin').style.display = s.pinRequired ? 'block' : 'none';
+
+        var rows = '';
+        (s.history || []).forEach(function (h) {
+            rows += '<tr><td class="t">' + acEscape(h.time) + '</td><td>' + acEscape(h.text) + '</td></tr>';
+        });
+        document.getElementById('ac-history').innerHTML = rows ? '<table>' + rows + '</table>' : '';
+    }
+
+    // Called by Symcon when the module pushes an update (UpdateVisualizationValue).
+    function handleMessage(data) {
+        try {
+            acRender(typeof data === 'string' ? JSON.parse(data) : data);
+        } catch (e) { /* ignore malformed payloads */ }
+    }
+
+    acRender(acState);
+</script>
+</body>
+</html>

@@ -1,22 +1,24 @@
-# My Symcon Library
+# Symcon Alarm Pro
 
-[![Check Style](https://github.com/DEIN-USER/DEIN-REPO/actions/workflows/style.yml/badge.svg)](https://github.com/DEIN-USER/DEIN-REPO/actions/workflows/style.yml)
-[![Run Tests](https://github.com/DEIN-USER/DEIN-REPO/actions/workflows/tests.yml/badge.svg)](https://github.com/DEIN-USER/DEIN-REPO/actions/workflows/tests.yml)
+[![Check Style](https://github.com/ghostraider88/symcon-alarmanlage/actions/workflows/style.yml/badge.svg)](https://github.com/ghostraider88/symcon-alarmanlage/actions/workflows/style.yml)
+[![Run Tests](https://github.com/ghostraider88/symcon-alarmanlage/actions/workflows/tests.yml/badge.svg)](https://github.com/ghostraider88/symcon-alarmanlage/actions/workflows/tests.yml)
 
-Bibliothek mit Custom-Modulen für IP-Symcon.
+Flexible, zustandsbasierte Alarmzentrale für IP-Symcon – frei konfigurierbare Sensoren,
+Zonen, Modi, Verzögerungen, PIN, Bypass, Aktionen, Sprachansagen, Kamera- und
+Benachrichtigungshooks sowie Kachelvisu-Frontend. Ohne hart codierte Geräteabhängigkeiten.
 
 ## Enthaltene Module
 
 | Modul | Beschreibung | Doku |
 |-------|--------------|------|
-| MyModule | [Kurzbeschreibung] | [README](MyModule/README.md) |
+| SymconAlarmPro | Zentrale Alarmanlage (State Machine) | [README](SymconAlarmPro/README.md) |
 
 ## Installation
 
 Über das Module Control (Kerninstanz) die Repository-URL hinzufügen:
 
 ```
-https://github.com/DEIN-USER/DEIN-REPO
+https://github.com/ghostraider88/symcon-alarmanlage
 ```
 
 ## Voraussetzungen
@@ -25,9 +27,8 @@ https://github.com/DEIN-USER/DEIN-REPO
 
 ## Entwicklung
 
-Alle verbindlichen Struktur- und Codiervorgaben für die Modulentwicklung stehen in
-[`CLAUDE.md`](CLAUDE.md). Diese Datei dient zugleich als Kontext für Claude Code.
+Alle verbindlichen Struktur- und Codiervorgaben stehen in [`CLAUDE.md`](CLAUDE.md).
 
 ## Lizenz
 
-[MIT / nach Wahl eintragen]
+MIT

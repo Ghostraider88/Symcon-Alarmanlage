@@ -1,0 +1,366 @@
+{
+    "elements": [
+        {
+            "type": "ExpansionPanel",
+            "caption": "General",
+            "items": [
+                { "type": "CheckBox", "name": "Active", "caption": "Module active" },
+                { "type": "ValidationTextBox", "name": "AlarmName", "caption": "Alarm system name" },
+                {
+                    "type": "Select",
+                    "name": "RestartBehavior",
+                    "caption": "Behavior after restart",
+                    "options": [
+                        { "caption": "Always disarmed", "value": "disarmed" },
+                        { "caption": "Restore last mode", "value": "restore" },
+                        { "caption": "Restore last mode with pre-arm check", "value": "restore_precheck" }
+                    ]
+                },
+                { "type": "NumberSpinner", "name": "FrontendRefreshInterval", "caption": "Frontend refresh interval (s, 0 = off)", "minimum": 0 },
+                { "type": "CheckBox", "name": "Debug", "caption": "Enable debug output" }
+            ]
+        },
+        {
+            "type": "ExpansionPanel",
+            "caption": "Modes & Delays",
+            "items": [
+                { "type": "NumberSpinner", "name": "ExitDelayNight", "caption": "Exit delay Night (s)", "minimum": 0 },
+                { "type": "NumberSpinner", "name": "ExitDelayAway", "caption": "Exit delay Away (s)", "minimum": 0 },
+                { "type": "NumberSpinner", "name": "ExitDelayTest", "caption": "Exit delay Test (s)", "minimum": 0 },
+                { "type": "CheckBox", "name": "PreAlarmEnabled", "caption": "Enable pre-alarm phase" },
+                { "type": "NumberSpinner", "name": "PreAlarmDuration", "caption": "Pre-alarm duration (s)", "minimum": 0 },
+                { "type": "CheckBox", "name": "EscalationEnabled", "caption": "Enable escalation repeat" },
+                { "type": "NumberSpinner", "name": "EscalationDelay", "caption": "Escalation interval (s)", "minimum": 1 },
+                { "type": "CheckBox", "name": "SirenDurationEnabled", "caption": "Limit siren duration" },
+                { "type": "NumberSpinner", "name": "SirenDuration", "caption": "Siren duration (s)", "minimum": 1 }
+            ]
+        },
+        {
+            "type": "ExpansionPanel",
+            "caption": "PIN & Security",
+            "items": [
+                { "type": "CheckBox", "name": "PinEnabled", "caption": "PIN protection active" },
+                { "type": "NumberSpinner", "name": "MaxFailedAttempts", "caption": "Max failed attempts", "minimum": 1 },
+                { "type": "NumberSpinner", "name": "LockoutSeconds", "caption": "Lockout time (s)", "minimum": 1 },
+                { "type": "CheckBox", "name": "RequirePinForArm", "caption": "Require PIN for arming" },
+                { "type": "CheckBox", "name": "RequirePinForDisarm", "caption": "Require PIN for disarm/acknowledge/reset" },
+                { "type": "CheckBox", "name": "RequirePinForBypass", "caption": "Require PIN for bypass" },
+                { "type": "Label", "caption": "Set or change the PIN in the test area below (it is stored hashed, never in clear text)." }
+            ]
+        },
+        {
+            "type": "ExpansionPanel",
+            "caption": "Zones",
+            "items": [
+                {
+                    "type": "List",
+                    "name": "Zones",
+                    "caption": "Zones",
+                    "rowCount": 6,
+                    "add": true,
+                    "delete": true,
+                    "columns": [
+                        { "caption": "Enabled", "name": "Enabled", "width": "80px", "add": true, "edit": { "type": "CheckBox" } },
+                        { "caption": "Name", "name": "Name", "width": "200px", "add": "", "edit": { "type": "ValidationTextBox" } },
+                        { "caption": "Description", "name": "Description", "width": "auto", "add": "", "edit": { "type": "ValidationTextBox" } }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "ExpansionPanel",
+            "caption": "Sensors",
+            "items": [
+                {
+                    "type": "List",
+                    "name": "Sensors",
+                    "caption": "Sensors",
+                    "rowCount": 10,
+                    "add": true,
+                    "delete": true,
+                    "columns": [
+                        { "caption": "On", "name": "Enabled", "width": "50px", "add": true, "edit": { "type": "CheckBox" } },
+                        { "caption": "Name", "name": "Name", "width": "150px", "add": "", "edit": { "type": "ValidationTextBox" } },
+                        { "caption": "Variable", "name": "VariableID", "width": "200px", "add": 0, "edit": { "type": "SelectVariable" } },
+                        {
+                            "caption": "Type", "name": "Type", "width": "140px", "add": 0,
+                            "edit": { "type": "Select", "options": [
+                                { "caption": "Door contact", "value": 0 },
+                                { "caption": "Window contact", "value": 1 },
+                                { "caption": "Motion detector", "value": 2 },
+                                { "caption": "Camera alarm", "value": 3 },
+                                { "caption": "Tamper", "value": 4 },
+                                { "caption": "System status", "value": 5 },
+                                { "caption": "External source", "value": 6 },
+                                { "caption": "Other", "value": 7 }
+                            ] }
+                        },
+                        { "caption": "Zone", "name": "Zone", "width": "120px", "add": "", "edit": { "type": "ValidationTextBox" } },
+                        {
+                            "caption": "Trigger", "name": "TriggerType", "width": "150px", "add": 0,
+                            "edit": { "type": "Select", "options": [
+                                { "caption": "Bool true = alarm", "value": 0 },
+                                { "caption": "Bool false = alarm", "value": 1 },
+                                { "caption": "Int = value", "value": 2 },
+                                { "caption": "Int != value", "value": 3 },
+                                { "caption": "Int > value", "value": 4 },
+                                { "caption": "Int >= value", "value": 5 },
+                                { "caption": "Int < value", "value": 6 },
+                                { "caption": "Int <= value", "value": 7 }
+                            ] }
+                        },
+                        { "caption": "Value", "name": "TriggerValue", "width": "80px", "add": 0, "edit": { "type": "NumberSpinner" } },
+                        { "caption": "Night", "name": "ActiveInNight", "width": "60px", "add": false, "edit": { "type": "CheckBox" } },
+                        { "caption": "Away", "name": "ActiveInAway", "width": "60px", "add": true, "edit": { "type": "CheckBox" } },
+                        { "caption": "Test", "name": "ActiveInTest", "width": "60px", "add": true, "edit": { "type": "CheckBox" } },
+                        {
+                            "caption": "Reaction", "name": "Reaction", "width": "140px", "add": 0,
+                            "edit": { "type": "Select", "options": [
+                                { "caption": "Instant alarm", "value": 0 },
+                                { "caption": "Pre-alarm", "value": 1 },
+                                { "caption": "Entry delay", "value": 2 }
+                            ] }
+                        },
+                        { "caption": "Entry delay (s)", "name": "EntryDelay", "width": "100px", "add": 30, "edit": { "type": "NumberSpinner", "minimum": 0 } },
+                        { "caption": "Ignore exit delay", "name": "IgnoreExitDelay", "width": "100px", "add": false, "edit": { "type": "CheckBox" } },
+                        { "caption": "Debounce (ms)", "name": "Debounce", "width": "100px", "add": 0, "edit": { "type": "NumberSpinner", "minimum": 0 } },
+                        { "caption": "Bypass allowed", "name": "BypassAllowed", "width": "100px", "add": true, "edit": { "type": "CheckBox" } },
+                        { "caption": "Block arm if active", "name": "BlockArmIfActive", "width": "120px", "add": false, "edit": { "type": "CheckBox" } },
+                        {
+                            "caption": "Criticality", "name": "Criticality", "width": "110px", "add": 1,
+                            "edit": { "type": "Select", "options": [
+                                { "caption": "Low", "value": 0 },
+                                { "caption": "Normal", "value": 1 },
+                                { "caption": "High", "value": 2 }
+                            ] }
+                        },
+                        { "caption": "Description", "name": "Description", "width": "auto", "add": "", "edit": { "type": "ValidationTextBox" } }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "ExpansionPanel",
+            "caption": "Actions (siren / light)",
+            "items": [
+                {
+                    "type": "List",
+                    "name": "Actions",
+                    "caption": "Actions",
+                    "rowCount": 8,
+                    "add": true,
+                    "delete": true,
+                    "columns": [
+                        { "caption": "On", "name": "Enabled", "width": "50px", "add": true, "edit": { "type": "CheckBox" } },
+                        { "caption": "Name", "name": "Name", "width": "140px", "add": "", "edit": { "type": "ValidationTextBox" } },
+                        {
+                            "caption": "Target type", "name": "TargetType", "width": "110px", "add": 0,
+                            "edit": { "type": "Select", "options": [
+                                { "caption": "Variable", "value": 0 },
+                                { "caption": "Script", "value": 1 }
+                            ] }
+                        },
+                        { "caption": "Target", "name": "TargetID", "width": "180px", "add": 0, "edit": { "type": "SelectObject" } },
+                        {
+                            "caption": "Event", "name": "Event", "width": "160px", "add": "alarm",
+                            "edit": { "type": "Select", "options": [
+                                { "caption": "Arming started", "value": "arming_started" },
+                                { "caption": "Armed", "value": "armed" },
+                                { "caption": "Arming failed", "value": "arming_failed" },
+                                { "caption": "Disarmed", "value": "disarmed" },
+                                { "caption": "Entry delay", "value": "entry_delay" },
+                                { "caption": "Countdown warning", "value": "countdown" },
+                                { "caption": "Pre-alarm", "value": "pre_alarm" },
+                                { "caption": "Alarm", "value": "alarm" },
+                                { "caption": "Alarm not acknowledged", "value": "alarm_unacknowledged" },
+                                { "caption": "Acknowledged", "value": "acknowledged" },
+                                { "caption": "Reset", "value": "reset" },
+                                { "caption": "Trouble", "value": "trouble" },
+                                { "caption": "Test", "value": "test" }
+                            ] }
+                        },
+                        { "caption": "Mode filter (csv)", "name": "ModeFilter", "width": "110px", "add": "", "edit": { "type": "ValidationTextBox" } },
+                        { "caption": "Zone filter", "name": "ZoneFilter", "width": "110px", "add": "", "edit": { "type": "ValidationTextBox" } },
+                        { "caption": "Delay (s)", "name": "Delay", "width": "80px", "add": 0, "edit": { "type": "NumberSpinner", "minimum": 0 } },
+                        { "caption": "Duration (s)", "name": "Duration", "width": "90px", "add": 0, "edit": { "type": "NumberSpinner", "minimum": 0 } },
+                        { "caption": "Value on", "name": "ValueOn", "width": "80px", "add": "1", "edit": { "type": "ValidationTextBox" } },
+                        { "caption": "Value off", "name": "ValueOff", "width": "80px", "add": "0", "edit": { "type": "ValidationTextBox" } },
+                        { "caption": "Cancel on disarm", "name": "CancelOnDisarm", "width": "110px", "add": true, "edit": { "type": "CheckBox" } },
+                        { "caption": "Cancel on ack", "name": "CancelOnAck", "width": "100px", "add": false, "edit": { "type": "CheckBox" } }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "ExpansionPanel",
+            "caption": "Notifications",
+            "items": [
+                {
+                    "type": "List",
+                    "name": "Notifications",
+                    "caption": "Notifications",
+                    "rowCount": 8,
+                    "add": true,
+                    "delete": true,
+                    "columns": [
+                        { "caption": "On", "name": "Enabled", "width": "50px", "add": true, "edit": { "type": "CheckBox" } },
+                        { "caption": "Name", "name": "Name", "width": "140px", "add": "", "edit": { "type": "ValidationTextBox" } },
+                        {
+                            "caption": "Target type", "name": "TargetType", "width": "110px", "add": 1,
+                            "edit": { "type": "Select", "options": [
+                                { "caption": "Variable", "value": 0 },
+                                { "caption": "Script", "value": 1 }
+                            ] }
+                        },
+                        { "caption": "Target", "name": "TargetID", "width": "180px", "add": 0, "edit": { "type": "SelectObject" } },
+                        {
+                            "caption": "Event", "name": "Event", "width": "160px", "add": "alarm",
+                            "edit": { "type": "Select", "options": [
+                                { "caption": "Arming started", "value": "arming_started" },
+                                { "caption": "Armed", "value": "armed" },
+                                { "caption": "Arming failed", "value": "arming_failed" },
+                                { "caption": "Disarmed", "value": "disarmed" },
+                                { "caption": "Entry delay", "value": "entry_delay" },
+                                { "caption": "Pre-alarm", "value": "pre_alarm" },
+                                { "caption": "Alarm", "value": "alarm" },
+                                { "caption": "Alarm not acknowledged", "value": "alarm_unacknowledged" },
+                                { "caption": "Acknowledged", "value": "acknowledged" },
+                                { "caption": "Reset", "value": "reset" },
+                                { "caption": "Trouble", "value": "trouble" },
+                                { "caption": "Test", "value": "test" },
+                                { "caption": "Bypass on", "value": "bypass_on" },
+                                { "caption": "Bypass off", "value": "bypass_off" },
+                                { "caption": "PIN wrong", "value": "pin_wrong" },
+                                { "caption": "PIN locked", "value": "pin_locked" }
+                            ] }
+                        },
+                        { "caption": "Mode filter (csv)", "name": "ModeFilter", "width": "110px", "add": "", "edit": { "type": "ValidationTextBox" } },
+                        { "caption": "Zone filter", "name": "ZoneFilter", "width": "110px", "add": "", "edit": { "type": "ValidationTextBox" } },
+                        { "caption": "Template", "name": "Template", "width": "auto", "add": "Alarm: {sensorName} in {zone} at {timestamp}", "edit": { "type": "ValidationTextBox" } }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "ExpansionPanel",
+            "caption": "Voice announcements (Alexa)",
+            "items": [
+                {
+                    "type": "List",
+                    "name": "VoiceAnnouncements",
+                    "caption": "Voice announcements",
+                    "rowCount": 6,
+                    "add": true,
+                    "delete": true,
+                    "columns": [
+                        { "caption": "On", "name": "Enabled", "width": "50px", "add": true, "edit": { "type": "CheckBox" } },
+                        { "caption": "Name", "name": "Name", "width": "140px", "add": "", "edit": { "type": "ValidationTextBox" } },
+                        {
+                            "caption": "Target type", "name": "TargetType", "width": "110px", "add": 1,
+                            "edit": { "type": "Select", "options": [
+                                { "caption": "Variable", "value": 0 },
+                                { "caption": "Script", "value": 1 }
+                            ] }
+                        },
+                        { "caption": "Target", "name": "TargetID", "width": "180px", "add": 0, "edit": { "type": "SelectObject" } },
+                        {
+                            "caption": "Kind", "name": "Kind", "width": "120px", "add": 0,
+                            "edit": { "type": "Select", "options": [
+                                { "caption": "TTS", "value": 0 },
+                                { "caption": "Announcement", "value": 1 },
+                                { "caption": "SSML", "value": 2 }
+                            ] }
+                        },
+                        {
+                            "caption": "Event", "name": "Event", "width": "160px", "add": "alarm",
+                            "edit": { "type": "Select", "options": [
+                                { "caption": "Arming started", "value": "arming_started" },
+                                { "caption": "Armed", "value": "armed" },
+                                { "caption": "Arming failed", "value": "arming_failed" },
+                                { "caption": "Disarmed", "value": "disarmed" },
+                                { "caption": "Entry delay", "value": "entry_delay" },
+                                { "caption": "Countdown warning", "value": "countdown" },
+                                { "caption": "Pre-alarm", "value": "pre_alarm" },
+                                { "caption": "Alarm", "value": "alarm" },
+                                { "caption": "Acknowledged", "value": "acknowledged" },
+                                { "caption": "Trouble", "value": "trouble" },
+                                { "caption": "Test", "value": "test" }
+                            ] }
+                        },
+                        { "caption": "Mode filter (csv)", "name": "ModeFilter", "width": "110px", "add": "", "edit": { "type": "ValidationTextBox" } },
+                        { "caption": "Zone filter", "name": "ZoneFilter", "width": "110px", "add": "", "edit": { "type": "ValidationTextBox" } },
+                        { "caption": "Template", "name": "Template", "width": "auto", "add": "Alarm in zone {zone}. Trigger {sensorName}.", "edit": { "type": "ValidationTextBox" } }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "ExpansionPanel",
+            "caption": "Cameras",
+            "items": [
+                {
+                    "type": "List",
+                    "name": "Cameras",
+                    "caption": "Cameras",
+                    "rowCount": 6,
+                    "add": true,
+                    "delete": true,
+                    "columns": [
+                        { "caption": "On", "name": "Enabled", "width": "50px", "add": true, "edit": { "type": "CheckBox" } },
+                        { "caption": "Name", "name": "Name", "width": "140px", "add": "", "edit": { "type": "ValidationTextBox" } },
+                        { "caption": "Zone", "name": "Zone", "width": "120px", "add": "", "edit": { "type": "ValidationTextBox" } },
+                        { "caption": "Snapshot script", "name": "SnapshotScript", "width": "160px", "add": 0, "edit": { "type": "SelectScript" } },
+                        { "caption": "Alarm script", "name": "AlarmScript", "width": "160px", "add": 0, "edit": { "type": "SelectScript" } },
+                        { "caption": "URL template", "name": "URLTemplate", "width": "auto", "add": "", "edit": { "type": "ValidationTextBox" } },
+                        { "caption": "On pre-alarm", "name": "OnPreAlarm", "width": "100px", "add": false, "edit": { "type": "CheckBox" } },
+                        { "caption": "On alarm", "name": "OnAlarm", "width": "90px", "add": true, "edit": { "type": "CheckBox" } },
+                        { "caption": "On test", "name": "OnTest", "width": "80px", "add": false, "edit": { "type": "CheckBox" } }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "ExpansionPanel",
+            "caption": "Frontend & History",
+            "items": [
+                { "type": "NumberSpinner", "name": "HistoryMaxEntries", "caption": "Maximum history entries", "minimum": 1 }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "type": "RowLayout",
+            "items": [
+                { "type": "Button", "caption": "Arm Night", "onClick": "Alarm_ArmNight($id, '');" },
+                { "type": "Button", "caption": "Arm Away", "onClick": "Alarm_ArmAway($id, '');" },
+                { "type": "Button", "caption": "Disarm", "onClick": "Alarm_Disarm($id, '');" },
+                { "type": "Button", "caption": "Acknowledge", "onClick": "Alarm_Acknowledge($id, '');" },
+                { "type": "Button", "caption": "Reset", "onClick": "Alarm_Reset($id, '');" },
+                { "type": "Button", "caption": "Panic", "onClick": "Alarm_Panic($id);" }
+            ]
+        },
+        {
+            "type": "RowLayout",
+            "items": [
+                { "type": "Button", "caption": "Pre-arm check (Away)", "onClick": "echo Alarm_RunPreArmCheck($id, 2);" },
+                { "type": "Button", "caption": "Test notification", "onClick": "Alarm_TestNotification($id);" },
+                { "type": "Button", "caption": "Rebuild frontend", "onClick": "Alarm_RebuildFrontend($id);" },
+                { "type": "Button", "caption": "Clear history", "onClick": "Alarm_ClearHistory($id);" }
+            ]
+        },
+        {
+            "type": "ExpansionPanel",
+            "caption": "Set PIN",
+            "items": [
+                { "type": "PasswordTextBox", "name": "NewPin", "caption": "New PIN (leave empty to clear)" },
+                { "type": "Button", "caption": "Save PIN", "onClick": "Alarm_SetPin($id, $NewPin);" }
+            ]
+        }
+    ],
+    "status": [
+        { "code": 102, "icon": "active", "caption": "Active" },
+        { "code": 104, "icon": "inactive", "caption": "Inactive / not configured" },
+        { "code": 201, "icon": "error", "caption": "Configuration error (invalid sensor variable)" },
+        { "code": 202, "icon": "error", "caption": "Trouble active" }
+    ]
+}
