@@ -2,332 +2,332 @@
     "elements": [
         {
             "type": "ExpansionPanel",
-            "caption": "General",
+            "caption": "Allgemein",
             "items": [
-                { "type": "CheckBox", "name": "Active", "caption": "Module active" },
-                { "type": "ValidationTextBox", "name": "AlarmName", "caption": "Alarm system name" },
+                { "type": "CheckBox", "name": "Active", "caption": "Modul aktiv" },
+                { "type": "ValidationTextBox", "name": "AlarmName", "caption": "Name der Alarmanlage" },
                 {
                     "type": "Select",
                     "name": "RestartBehavior",
-                    "caption": "Behavior after restart",
+                    "caption": "Verhalten nach Neustart",
                     "options": [
-                        { "caption": "Always disarmed", "value": "disarmed" },
-                        { "caption": "Restore last mode", "value": "restore" },
-                        { "caption": "Restore last mode with pre-arm check", "value": "restore_precheck" }
+                        { "caption": "Immer unscharf", "value": "disarmed" },
+                        { "caption": "Letzten Modus wiederherstellen", "value": "restore" },
+                        { "caption": "Letzten Modus mit Vorab-Scharfschaltprüfung", "value": "restore_precheck" }
                     ]
                 },
-                { "type": "Label", "caption": "Always disarmed: the system starts unarmed after every restart (safest default). Restore last mode: the system re-arms to the mode it was in before the restart. Restore with pre-arm check: same as Restore, but blocks re-arming if sensors are open." },
-                { "type": "NumberSpinner", "name": "FrontendRefreshInterval", "caption": "Frontend refresh interval (s, 0 = off)", "minimum": 0 },
-                { "type": "Label", "caption": "Periodic frontend refresh for the tile visualization. Set to 0 to disable (updates are pushed automatically on every state change anyway)." },
-                { "type": "CheckBox", "name": "Debug", "caption": "Enable debug output" }
+                { "type": "Label", "caption": "Immer unscharf: Das System startet nach jedem Neustart ohne aktive Scharfschaltung (sicherste Einstellung). Letzten Modus wiederherstellen: Das System schaltet sich nach dem Neustart wieder in den Modus, der vor dem Neustart aktiv war. Mit Vorab-Prüfung: wie Wiederherstellen, aber Scharfschalten wird blockiert, wenn Sensoren offen sind." },
+                { "type": "NumberSpinner", "name": "FrontendRefreshInterval", "caption": "Frontend-Aktualisierung (s, 0 = aus)", "minimum": 0 },
+                { "type": "Label", "caption": "Periodische Aktualisierung der Kachel-Visualisierung. 0 = deaktiviert. Bei jedem Zustandswechsel wird die Kachel ohnehin automatisch aktualisiert – dieser Wert ist nur für den Countdown-Timer sinnvoll." },
+                { "type": "CheckBox", "name": "Debug", "caption": "Debug-Ausgabe aktivieren" }
             ]
         },
         {
             "type": "ExpansionPanel",
-            "caption": "Modes & Delays",
+            "caption": "Modi & Verzögerungen",
             "items": [
-                { "type": "Label", "bold": true, "caption": "Exit delay (arming countdown)" },
-                { "type": "Label", "caption": "When you arm the system, the exit delay gives you time to leave the building before the sensors become active. During this countdown the system is not yet armed. Set to 0 for immediate arming." },
-                { "type": "NumberSpinner", "name": "ExitDelayNight", "caption": "Exit delay Night (s)", "minimum": 0 },
-                { "type": "NumberSpinner", "name": "ExitDelayAway", "caption": "Exit delay Away (s)", "minimum": 0 },
-                { "type": "NumberSpinner", "name": "ExitDelayTest", "caption": "Exit delay Test (s)", "minimum": 0 },
-                { "type": "Label", "bold": true, "caption": "Pre-alarm phase" },
-                { "type": "Label", "caption": "When enabled, certain sensors (configured with Reaction = Pre-alarm) do not trigger an immediate alarm but start a silent pre-alarm phase first. If the situation is not resolved within the pre-alarm duration, the full alarm fires. Useful for a final warning before escalation." },
-                { "type": "CheckBox", "name": "PreAlarmEnabled", "caption": "Enable pre-alarm phase" },
-                { "type": "NumberSpinner", "name": "PreAlarmDuration", "caption": "Pre-alarm duration (s)", "minimum": 0 },
-                { "type": "Label", "bold": true, "caption": "Escalation" },
-                { "type": "Label", "caption": "If an alarm is not acknowledged within the escalation interval, the alarm event fires again (e.g. to send another push notification or re-trigger the siren). Repeat fires every interval until acknowledged or the siren duration expires." },
-                { "type": "CheckBox", "name": "EscalationEnabled", "caption": "Enable escalation repeat" },
-                { "type": "NumberSpinner", "name": "EscalationDelay", "caption": "Escalation interval (s)", "minimum": 1 },
-                { "type": "Label", "bold": true, "caption": "Siren duration limit" },
-                { "type": "Label", "caption": "Limits how long actions with 'Cancel on disarm' keep running. After this time the alarm event fires once more (to reset outputs) even if nobody disarmed or acknowledged. Required in many countries by law." },
-                { "type": "CheckBox", "name": "SirenDurationEnabled", "caption": "Limit siren duration" },
-                { "type": "NumberSpinner", "name": "SirenDuration", "caption": "Siren duration (s)", "minimum": 1 }
+                { "type": "Label", "bold": true, "caption": "Ausgangsverzögerung (Scharf-Countdown)" },
+                { "type": "Label", "caption": "Beim Scharfschalten gibt die Ausgangsverzögerung Zeit, das Gebäude zu verlassen, bevor die Sensoren aktiv werden. Während dieses Countdowns ist das System noch nicht scharf. Auf 0 setzen für sofortiges Scharfschalten." },
+                { "type": "NumberSpinner", "name": "ExitDelayNight", "caption": "Ausgangsverzögerung Nacht (s)", "minimum": 0 },
+                { "type": "NumberSpinner", "name": "ExitDelayAway", "caption": "Ausgangsverzögerung Abwesend (s)", "minimum": 0 },
+                { "type": "NumberSpinner", "name": "ExitDelayTest", "caption": "Ausgangsverzögerung Test (s)", "minimum": 0 },
+                { "type": "Label", "bold": true, "caption": "Voralarm-Phase" },
+                { "type": "Label", "caption": "Wenn aktiviert, lösen Sensoren mit der Reaktion 'Voralarm' keinen sofortigen Alarm aus, sondern starten eine stille Voralarm-Phase. Wird die Lage nicht innerhalb der Voralarm-Dauer bereinigt oder das System unscharfgeschaltet, folgt der vollständige Alarm. Nützlich als letzte Warnung vor der Eskalation." },
+                { "type": "CheckBox", "name": "PreAlarmEnabled", "caption": "Voralarm-Phase aktivieren" },
+                { "type": "NumberSpinner", "name": "PreAlarmDuration", "caption": "Voralarm-Dauer (s)", "minimum": 0 },
+                { "type": "Label", "bold": true, "caption": "Eskalation" },
+                { "type": "Label", "caption": "Falls ein Alarm nicht innerhalb des Eskalationsintervalls quittiert wird, wird das Alarm-Ereignis erneut ausgelöst (z. B. eine weitere Push-Benachrichtigung oder die Sirene erneut einschalten). Wiederholung alle x Sekunden bis zur Quittierung oder bis die Sirenendauer abläuft." },
+                { "type": "CheckBox", "name": "EscalationEnabled", "caption": "Eskalation wiederholen" },
+                { "type": "NumberSpinner", "name": "EscalationDelay", "caption": "Eskalationsintervall (s)", "minimum": 1 },
+                { "type": "Label", "bold": true, "caption": "Sirenendauer begrenzen" },
+                { "type": "Label", "caption": "Begrenzt, wie lange Aktionen mit 'Abbruch bei Unscharf' laufen dürfen. Nach dieser Zeit werden die Ausgänge automatisch zurückgesetzt – auch wenn niemand quittiert oder unscharfgeschaltet hat. In vielen Ländern gesetzlich vorgeschrieben." },
+                { "type": "CheckBox", "name": "SirenDurationEnabled", "caption": "Sirenendauer begrenzen" },
+                { "type": "NumberSpinner", "name": "SirenDuration", "caption": "Sirenendauer (s)", "minimum": 1 }
             ]
         },
         {
             "type": "ExpansionPanel",
-            "caption": "PIN & Security",
+            "caption": "PIN & Sicherheit",
             "items": [
-                { "type": "CheckBox", "name": "PinEnabled", "caption": "PIN protection active" },
-                { "type": "Label", "caption": "When active, arming, disarming, acknowledging, and bypassing require a correct PIN. Without a PIN set, the PIN feature is effectively disabled even if checked." },
-                { "type": "NumberSpinner", "name": "MaxFailedAttempts", "caption": "Max failed attempts", "minimum": 1 },
-                { "type": "NumberSpinner", "name": "LockoutSeconds", "caption": "Lockout time (s)", "minimum": 1 },
-                { "type": "Label", "caption": "After this many consecutive wrong PINs the system locks out further PIN attempts for the configured time." },
-                { "type": "CheckBox", "name": "RequirePinForArm", "caption": "Require PIN for arming" },
-                { "type": "CheckBox", "name": "RequirePinForDisarm", "caption": "Require PIN for disarm/acknowledge/reset" },
-                { "type": "CheckBox", "name": "RequirePinForBypass", "caption": "Require PIN for bypass" },
-                { "type": "Label", "bold": true, "caption": "External PIN pad" },
-                { "type": "Label", "caption": "Connect a physical keypad or any external input (e.g. a Symcon script or widget) by letting it write into a String variable. Select that variable below." },
-                { "type": "SelectVariable", "name": "PinInputVariableID", "caption": "External PIN pad input variable (string, optional)" },
-                { "type": "CheckBox", "name": "ClearPinInput", "caption": "Clear PIN input variable after reading" },
-                { "type": "Label", "caption": "Write the entered PIN into the variable above. Supported formats: only the PIN → disarms; or COMMAND:PIN where COMMAND is ARM_AWAY, ARM_NIGHT, DISARM, ACK, or RESET. Example: ARM_AWAY:1234" },
-                { "type": "Label", "caption": "Set or change the PIN in the test area below. The PIN is stored as a bcrypt hash; it is never saved in clear text." }
+                { "type": "CheckBox", "name": "PinEnabled", "caption": "PIN-Schutz aktiv" },
+                { "type": "Label", "caption": "Wenn aktiv, erfordern Scharfschalten, Unscharfschalten, Quittieren und Bypass eine korrekte PIN. Ohne gesetzte PIN ist der PIN-Schutz wirkungslos, auch wenn das Häkchen gesetzt ist." },
+                { "type": "NumberSpinner", "name": "MaxFailedAttempts", "caption": "Maximale Fehlversuche", "minimum": 1 },
+                { "type": "NumberSpinner", "name": "LockoutSeconds", "caption": "Sperrzeit (s)", "minimum": 1 },
+                { "type": "Label", "caption": "Nach so vielen aufeinanderfolgenden Fehleingaben wird die PIN-Eingabe für die konfigurierte Sperrzeit gesperrt." },
+                { "type": "CheckBox", "name": "RequirePinForArm", "caption": "PIN zum Scharfschalten" },
+                { "type": "CheckBox", "name": "RequirePinForDisarm", "caption": "PIN für Unscharf / Quittieren / Reset" },
+                { "type": "CheckBox", "name": "RequirePinForBypass", "caption": "PIN für Bypass" },
+                { "type": "Label", "bold": true, "caption": "Externes PIN-Pad" },
+                { "type": "Label", "caption": "Ein physisches Tastenfeld oder eine externe Eingabe (z. B. ein Symcon-Skript oder Widget) kann die eingegebene PIN in eine String-Variable schreiben. Diese Variable unten auswählen." },
+                { "type": "SelectVariable", "name": "PinInputVariableID", "caption": "Eingabevariable des PIN-Pads (String, optional)" },
+                { "type": "CheckBox", "name": "ClearPinInput", "caption": "PIN-Variable nach dem Lesen leeren" },
+                { "type": "Label", "caption": "Die eingegebene PIN wird in die Variable oben geschrieben. Unterstützte Formate: nur die PIN → Unscharfschalten; oder BEFEHL:PIN, wobei BEFEHL ARM_AWAY, ARM_NIGHT, DISARM, ACK oder RESET ist. Beispiel: ARM_AWAY:1234" },
+                { "type": "Label", "caption": "PIN setzen oder ändern im Testbereich unten. Die PIN wird als bcrypt-Hash gespeichert – niemals im Klartext." }
             ]
         },
         {
             "type": "ExpansionPanel",
-            "caption": "Zones",
+            "caption": "Zonen",
             "items": [
-                { "type": "Label", "caption": "Zones are logical areas of your home (e.g. Ground floor, First floor, Garden). Assign each sensor to a zone so that actions and notifications can be filtered by zone. A zone is only a name — it has no logic of its own." },
+                { "type": "Label", "caption": "Zonen sind logische Bereiche des Gebäudes (z. B. Erdgeschoss, Obergeschoss, Garten). Jedem Sensor wird eine Zone zugeordnet. Aktionen und Benachrichtigungen können nach Zone gefiltert werden, sodass sie nur dann auslösen, wenn ein Sensor aus einer bestimmten Zone den Alarm ausgelöst hat. Eine Zone hat keine eigene Logik – sie ist nur ein Name." },
                 {
                     "type": "List",
                     "name": "Zones",
-                    "caption": "Zones",
+                    "caption": "Zonen",
                     "rowCount": 6,
                     "add": true,
                     "delete": true,
                     "columns": [
-                        { "caption": "Enabled", "name": "Enabled", "width": "80px", "add": true, "edit": { "type": "CheckBox" } },
+                        { "caption": "Aktiv", "name": "Enabled", "width": "70px", "add": true, "edit": { "type": "CheckBox" } },
                         { "caption": "Name", "name": "Name", "width": "200px", "add": "", "edit": { "type": "ValidationTextBox" } },
-                        { "caption": "Description", "name": "Description", "width": "auto", "add": "", "edit": { "type": "ValidationTextBox" } }
+                        { "caption": "Beschreibung", "name": "Description", "width": "auto", "add": "", "edit": { "type": "ValidationTextBox" } }
                     ]
                 }
             ]
         },
         {
             "type": "ExpansionPanel",
-            "caption": "Sensors",
+            "caption": "Sensoren",
             "items": [
-                { "type": "Label", "bold": true, "caption": "Sensor field reference" },
-                { "type": "Label", "caption": "TYPE — Documentary label only. Does not affect alarm logic. Use it to organise and filter your sensor list visually. Options: Door contact, Window contact, Motion detector, Camera alarm (use for camera motion output variables), Tamper, System status, External source, Other." },
-                { "type": "Label", "caption": "ZONE — Assign the sensor to a zone (from the Zones list above). Zone filtering in actions/notifications fires only when a sensor from that zone triggered the alarm." },
-                { "type": "Label", "caption": "TRIGGER — What counts as an alarm signal:\n• Bool true = alarm: the Boolean variable becomes true → alarm\n• Bool false = alarm: the Boolean variable becomes false → alarm (e.g. window contact opens = false)\n• Int = / != / > / >= / < / <=: compare the integer or float value to the threshold set in the VALUE field." },
-                { "type": "Label", "caption": "VALUE — Comparison threshold, only used when an Int trigger type is selected." },
-                { "type": "Label", "caption": "NIGHT / AWAY / TEST — In which armed mode should this sensor be active? Night mode is typically used when you are home and only perimeter sensors (doors/windows) should be armed. Away mode is used when you have left and all sensors including motion detectors are active. Test mode is for commissioning." },
-                { "type": "Label", "caption": "REACTION — What happens when the sensor triggers:\n• Instant alarm: the alarm fires immediately.\n• Pre-alarm: starts a silent pre-alarm phase (see Modes & Delays). You get a warning period before the full alarm.\n• Entry delay: starts a countdown (the Entry delay (s) field). If you do not disarm within that time, the alarm fires. Use for the front door sensor." },
-                { "type": "Label", "caption": "DEBOUNCE — Minimum milliseconds between two trigger events from the same sensor. Prevents chattering/bouncing contacts from generating multiple alarms. 0 = disabled." },
-                { "type": "Label", "caption": "BYPASS ALLOWED — If checked, this sensor can be individually bypassed without disarming the whole system. Useful for a window you want to leave open while the rest of the system is armed." },
-                { "type": "Label", "caption": "BLOCK ARM IF ACTIVE — If the sensor is in alarm state when arming is attempted, arming is blocked outright instead of only generating a warning. Combine with Criticality = High for critical sensors." },
-                { "type": "Label", "caption": "CRITICALITY — How important is an open sensor during the pre-arm check?\n• Low: only a notice, arming proceeds.\n• Normal: a warning is shown, arming still proceeds.\n• High: arming is blocked when this sensor is open (requires Block arm if active to also be checked)." },
-                { "type": "Label", "caption": "IGNORE EXIT DELAY — If checked, this sensor can trigger even during the exit delay (e.g. a tamper contact or panic button that must always be active)." },
+                { "type": "Label", "bold": true, "caption": "Erklärung der Sensor-Felder" },
+                { "type": "Label", "caption": "TYP — Nur zur Dokumentation. Hat keinen Einfluss auf die Alarmlogik. Dient zur Beschriftung und Organisation der Sensorliste. Mögliche Typen: Türkontakt, Fensterkontakt, Bewegungsmelder, Kamera-Alarm (für den Bool-Alarmausgang einer Kamera), Sabotage, Systemstatus, Externe Quelle, Sonstiges." },
+                { "type": "Label", "caption": "ZONE — Ordnet den Sensor einer Zone zu (aus der Zonenliste oben). Der Zonenfilter bei Aktionen und Benachrichtigungen greift nur, wenn ein Sensor aus der jeweiligen Zone ausgelöst hat." },
+                { "type": "Label", "caption": "AUSLÖSER — Welcher Variablenwert gilt als Alarmsignal?\n• Bool wahr = Alarm: Die Boolean-Variable wechselt auf true → Alarm\n• Bool falsch = Alarm: Die Boolean-Variable wechselt auf false (z. B. Fensterkontakt: offen = false)\n• Int = / ≠ / > / ≥ / < / ≤: Der Integer- oder Float-Wert wird mit dem Schwellwert im Feld 'Wert' verglichen." },
+                { "type": "Label", "caption": "WERT — Der Vergleichsschwellwert, nur relevant bei Int-Auslösertypen. Bei Bool-Typen wird dieses Feld ausgeblendet." },
+                { "type": "Label", "caption": "NACHT / ABWESEND / TEST — In welchem Scharf-Modus soll dieser Sensor aktiv sein? Nacht-Modus: Typischerweise nur Perimetersensoren (Türen, Fenster) aktiv – Bewegungsmelder ausgeschaltet, da man sich im Gebäude befindet. Abwesend-Modus: Alle Sensoren aktiv, da das Gebäude verlassen wurde. Test-Modus: Nur für die Inbetriebnahme – es gibt keinen echten Alarm." },
+                { "type": "Label", "caption": "REAKTION — Was passiert, wenn der Sensor auslöst?\n• Sofortalarm: Der Alarm wird sofort ausgelöst. Für Fenster, Sabotage und kritische Sensoren.\n• Voralarm: Das System wechselt zuerst in eine stille Voralarm-Phase (Dauer unter Modi & Verzögerungen). Wer das System nicht innerhalb dieser Zeit unscharfschaltet, löst den vollständigen Alarm aus.\n• Eintrittsverzögerung: Ein sensorindividueller Countdown startet (Feld 'Eintrittsverzögerung (s)'). Wird das System nicht innerhalb dieser Zeit unscharfgeschaltet, folgt der Alarm. Typischerweise für die Haustür." },
+                { "type": "Label", "caption": "ENTPRELLUNG — Mindestabstand in Millisekunden zwischen zwei Alarm-Auslösungen desselben Sensors. Verhindert Mehrfachauslösungen durch prellende Kontakte (z. B. Türkontakt flattert 20–50 ms beim Öffnen). 0 = deaktiviert." },
+                { "type": "Label", "caption": "BYPASS ERLAUBT — Wenn aktiviert, kann dieser einzelne Sensor manuell deaktiviert (gebypastet) werden, ohne die gesamte Anlage unscharfzuschalten. Nützlich für ein offen stehendes Fenster, während der Rest der Anlage scharf ist." },
+                { "type": "Label", "caption": "SCHARF BLOCKIEREN WENN AKTIV — Wenn der Sensor beim Scharfschalten im Alarmzustand ist, wird das Scharfschalten vollständig blockiert statt nur eine Warnung auszugeben. In Kombination mit Kritikalität 'Hoch' für kritische Sensoren sinnvoll." },
+                { "type": "Label", "caption": "KRITIKALITÄT — Gewichtung bei der Vorab-Scharfschaltprüfung:\n• Niedrig: Nur Hinweis, Scharfschalten läuft weiter.\n• Normal: Warnung wird angezeigt, Scharfschalten läuft weiter.\n• Hoch: Scharfschalten wird blockiert, wenn dieser Sensor offen ist (erfordert zusätzlich 'Scharf blockieren wenn aktiv')." },
+                { "type": "Label", "caption": "AUSGANGSVERZÖGERUNG IGNORIEREN — Wenn aktiviert, kann dieser Sensor einen Alarm auch während der Ausgangsverzögerung auslösen. Für Sabotage-Kontakte oder Panik-Taster, die immer aktiv sein müssen." },
                 {
                     "type": "List",
                     "name": "Sensors",
-                    "caption": "Sensors",
+                    "caption": "Sensoren",
                     "rowCount": 10,
                     "add": true,
                     "delete": true,
                     "columns": [
-                        { "caption": "On", "name": "Enabled", "width": "50px", "add": true, "edit": { "type": "CheckBox" } },
+                        { "caption": "An", "name": "Enabled", "width": "50px", "add": true, "edit": { "type": "CheckBox" } },
                         { "caption": "Name", "name": "Name", "width": "150px", "add": "", "edit": { "type": "ValidationTextBox" } },
                         { "caption": "Variable", "name": "VariableID", "width": "200px", "add": 0, "edit": { "type": "SelectVariable" } },
                         {
-                            "caption": "Type", "name": "Type", "width": "140px", "add": 0,
+                            "caption": "Typ", "name": "Type", "width": "140px", "add": 0,
                             "edit": { "type": "Select", "options": [
-                                { "caption": "Door contact", "value": 0 },
-                                { "caption": "Window contact", "value": 1 },
-                                { "caption": "Motion detector", "value": 2 },
-                                { "caption": "Camera alarm", "value": 3 },
-                                { "caption": "Tamper", "value": 4 },
-                                { "caption": "System status", "value": 5 },
-                                { "caption": "External source", "value": 6 },
-                                { "caption": "Other", "value": 7 }
+                                { "caption": "Türkontakt", "value": 0 },
+                                { "caption": "Fensterkontakt", "value": 1 },
+                                { "caption": "Bewegungsmelder", "value": 2 },
+                                { "caption": "Kamera-Alarm", "value": 3 },
+                                { "caption": "Sabotage", "value": 4 },
+                                { "caption": "Systemstatus", "value": 5 },
+                                { "caption": "Externe Quelle", "value": 6 },
+                                { "caption": "Sonstiges", "value": 7 }
                             ] }
                         },
                         { "caption": "Zone", "name": "Zone", "width": "120px", "add": "", "edit": { "type": "ValidationTextBox" } },
                         {
-                            "caption": "Trigger", "name": "TriggerType", "width": "150px", "add": 0,
+                            "caption": "Auslöser", "name": "TriggerType", "width": "155px", "add": 0,
                             "edit": { "type": "Select", "options": [
-                                { "caption": "Bool true = alarm", "value": 0 },
-                                { "caption": "Bool false = alarm", "value": 1 },
-                                { "caption": "Int = value", "value": 2 },
-                                { "caption": "Int != value", "value": 3 },
-                                { "caption": "Int > value", "value": 4 },
-                                { "caption": "Int >= value", "value": 5 },
-                                { "caption": "Int < value", "value": 6 },
-                                { "caption": "Int <= value", "value": 7 }
+                                { "caption": "Bool wahr = Alarm", "value": 0 },
+                                { "caption": "Bool falsch = Alarm", "value": 1 },
+                                { "caption": "Int = Wert", "value": 2 },
+                                { "caption": "Int ≠ Wert", "value": 3 },
+                                { "caption": "Int > Wert", "value": 4 },
+                                { "caption": "Int ≥ Wert", "value": 5 },
+                                { "caption": "Int < Wert", "value": 6 },
+                                { "caption": "Int ≤ Wert", "value": 7 }
                             ] }
                         },
-                        { "caption": "Value (Int only)", "name": "TriggerValue", "width": "100px", "add": 0, "edit": { "type": "NumberSpinner", "minimum": -999999, "visibleIf": "TriggerType >= 2" } },
-                        { "caption": "Night", "name": "ActiveInNight", "width": "60px", "add": false, "edit": { "type": "CheckBox" } },
-                        { "caption": "Away", "name": "ActiveInAway", "width": "60px", "add": true, "edit": { "type": "CheckBox" } },
-                        { "caption": "Test", "name": "ActiveInTest", "width": "60px", "add": true, "edit": { "type": "CheckBox" } },
+                        { "caption": "Wert (nur Int)", "name": "TriggerValue", "width": "100px", "add": 0, "edit": { "type": "NumberSpinner", "minimum": -999999, "visibleIf": "TriggerType >= 2" } },
+                        { "caption": "Nacht", "name": "ActiveInNight", "width": "65px", "add": false, "edit": { "type": "CheckBox" } },
+                        { "caption": "Abwesend", "name": "ActiveInAway", "width": "80px", "add": true, "edit": { "type": "CheckBox" } },
+                        { "caption": "Test", "name": "ActiveInTest", "width": "55px", "add": true, "edit": { "type": "CheckBox" } },
                         {
-                            "caption": "Reaction", "name": "Reaction", "width": "140px", "add": 0,
+                            "caption": "Reaktion", "name": "Reaction", "width": "160px", "add": 0,
                             "edit": { "type": "Select", "options": [
-                                { "caption": "Instant alarm", "value": 0 },
-                                { "caption": "Pre-alarm", "value": 1 },
-                                { "caption": "Entry delay", "value": 2 }
+                                { "caption": "Sofortalarm", "value": 0 },
+                                { "caption": "Voralarm", "value": 1 },
+                                { "caption": "Eintrittsverzögerung", "value": 2 }
                             ] }
                         },
-                        { "caption": "Entry delay (s)", "name": "EntryDelay", "width": "100px", "add": 30, "edit": { "type": "NumberSpinner", "minimum": 0 } },
-                        { "caption": "Ignore exit delay", "name": "IgnoreExitDelay", "width": "110px", "add": false, "edit": { "type": "CheckBox" } },
-                        { "caption": "Debounce (ms)", "name": "Debounce", "width": "100px", "add": 0, "edit": { "type": "NumberSpinner", "minimum": 0 } },
-                        { "caption": "Bypass allowed", "name": "BypassAllowed", "width": "100px", "add": true, "edit": { "type": "CheckBox" } },
-                        { "caption": "Block arm if active", "name": "BlockArmIfActive", "width": "120px", "add": false, "edit": { "type": "CheckBox" } },
+                        { "caption": "Eintrittsverzögerung (s)", "name": "EntryDelay", "width": "130px", "add": 30, "edit": { "type": "NumberSpinner", "minimum": 0 } },
+                        { "caption": "Ausgangsverzög. ignorieren", "name": "IgnoreExitDelay", "width": "140px", "add": false, "edit": { "type": "CheckBox" } },
+                        { "caption": "Entprellung (ms)", "name": "Debounce", "width": "110px", "add": 0, "edit": { "type": "NumberSpinner", "minimum": 0 } },
+                        { "caption": "Bypass erlaubt", "name": "BypassAllowed", "width": "100px", "add": true, "edit": { "type": "CheckBox" } },
+                        { "caption": "Scharf blockieren wenn aktiv", "name": "BlockArmIfActive", "width": "145px", "add": false, "edit": { "type": "CheckBox" } },
                         {
-                            "caption": "Criticality", "name": "Criticality", "width": "110px", "add": 1,
+                            "caption": "Kritikalität", "name": "Criticality", "width": "110px", "add": 1,
                             "edit": { "type": "Select", "options": [
-                                { "caption": "Low", "value": 0 },
+                                { "caption": "Niedrig", "value": 0 },
                                 { "caption": "Normal", "value": 1 },
-                                { "caption": "High", "value": 2 }
+                                { "caption": "Hoch", "value": 2 }
                             ] }
                         },
-                        { "caption": "Description", "name": "Description", "width": "auto", "add": "", "edit": { "type": "ValidationTextBox" } }
+                        { "caption": "Beschreibung", "name": "Description", "width": "auto", "add": "", "edit": { "type": "ValidationTextBox" } }
                     ]
                 }
             ]
         },
         {
             "type": "ExpansionPanel",
-            "caption": "Actions (siren / light)",
+            "caption": "Aktionen (Sirene / Licht)",
             "items": [
-                { "type": "Label", "bold": true, "caption": "Actions — physical outputs when an alarm event occurs" },
-                { "type": "Label", "caption": "Actions control devices: a siren relay, a warning light, a Shelly switch, or any other variable or script. They fire when a specific alarm event occurs and can be limited by mode and zone." },
-                { "type": "Label", "caption": "TARGET TYPE — Variable: directly set an IP-Symcon variable (device output). The module uses RequestAction when the variable has an action handler, otherwise sets the value directly. Script: call an IPS script with VALUE and SENDER parameters." },
-                { "type": "Label", "caption": "VALUE ON / VALUE OFF — The value written when the action turns on and off. For Boolean variables: 1/0 or true/false. For dimmers (0–100) or colour variables: the appropriate numeric value. For scripts, VALUE is passed as a parameter." },
-                { "type": "Label", "caption": "DELAY — Wait this many seconds after the event before switching the output on. Useful for a staged response (e.g. pre-warning light 5 s before the siren)." },
-                { "type": "Label", "caption": "DURATION — Keep the output on for this many seconds, then switch it off automatically. Set to 0 for indefinite (controlled by Cancel on disarm / Cancel on ack)." },
-                { "type": "Label", "caption": "BLINK — Flash the output N times with the given interval (e.g. Blink=3, Interval=1 s flashes on-off-on-off-on-off). Overrides Duration when enabled. Useful for warning lights." },
-                { "type": "Label", "caption": "MODE FILTER — Comma-separated list of modes this action should fire in. Leave empty to fire in all modes. Values: night, away, test. Example: night,away (fires in Night and Away mode, not in Test)." },
-                { "type": "Label", "caption": "ZONE FILTER — Only fire this action when the triggering sensor belongs to the selected zone. Leave empty to fire for any zone." },
-                { "type": "Label", "caption": "CANCEL ON DISARM / CANCEL ON ACK — The module tracks running actions and turns off their 'Value off' when the condition clears. 'Cancel on disarm' is recommended for siren actions; 'Cancel on ack' for lights that should stop when the alarm is acknowledged." },
+                { "type": "Label", "bold": true, "caption": "Aktionen — physische Ausgänge bei Alarm" },
+                { "type": "Label", "caption": "Aktionen steuern Geräte: eine Sirenen-Relais, ein Warnlicht, einen Shelly-Schalter oder jede andere IP-Symcon-Variable. Sie werden ausgelöst, wenn ein bestimmtes Alarm-Ereignis eintritt, und können nach Modus und Zone gefiltert werden." },
+                { "type": "Label", "caption": "ZIELTYP — Variable: Eine IP-Symcon-Variable wird direkt gesetzt. Das Modul verwendet RequestAction, wenn die Variable einen Aktions-Handler hat (z. B. Homematic-Aktor), sonst SetValue. Skript: Ein IPS-Skript wird mit den Parametern VALUE und SENDER='AlarmCenter' aufgerufen." },
+                { "type": "Label", "caption": "WERT EIN / WERT AUS — Der Wert, der beim Einschalten und Ausschalten geschrieben wird. Für Boolean-Variablen: 1/0 oder true/false. Für Dimmer (0–100): den Prozentwert. Für Farbvariablen: den Zahlenwert der Farbe (z. B. 16711680 für Rot). Für Skripte wird der Wert als VALUE-Parameter übergeben." },
+                { "type": "Label", "caption": "VERZÖGERUNG — Wartezeit in Sekunden nach dem Ereignis, bevor der Ausgang eingeschaltet wird. Für gestaffelte Reaktionen, z. B. 5 Sekunden Warnlicht, dann Sirene." },
+                { "type": "Label", "caption": "DAUER — Dauer in Sekunden, nach der der Ausgang automatisch ausgeschaltet wird. 0 = unbegrenzt (wird nur durch 'Abbruch bei Unscharf' oder 'Abbruch bei Quittierung' gestoppt)." },
+                { "type": "Label", "caption": "BLINKEN — Blinkt den Ausgang N mal mit dem konfigurierten Intervall. Beispiel: Anzahl=3, Intervall=1 s → der Ausgang geht ein-aus-ein-aus-ein-aus über 6 Sekunden. Überschreibt 'Dauer' wenn aktiviert. Geeignet für Warnlichter." },
+                { "type": "Label", "caption": "MODUSFILTER — Kommagetrennte Liste von Modi, in denen diese Aktion ausgelöst werden soll. Leer = alle Modi. Gültige Werte: night, away, test. Beispiel: night,away (nicht im Test-Modus)." },
+                { "type": "Label", "caption": "ZONENFILTER — Nur auslösen, wenn der auslösende Sensor zur ausgewählten Zone gehört. Leer = alle Zonen." },
+                { "type": "Label", "caption": "ABBRUCH BEI UNSCHARF / ABBRUCH BEI QUITTIERUNG — Das Modul verfolgt laufende Aktionen und schaltet sie beim Unscharfschalten bzw. Quittieren automatisch aus (schreibt 'Wert aus'). Empfehlung: 'Abbruch bei Unscharf' für Sirenen aktivieren; 'Abbruch bei Quittierung' für Lichter, die nach der Bestätigung stoppen sollen." },
                 {
                     "type": "List",
                     "name": "Actions",
-                    "caption": "Actions",
+                    "caption": "Aktionen",
                     "rowCount": 8,
                     "add": true,
                     "delete": true,
                     "columns": [
-                        { "caption": "On", "name": "Enabled", "width": "50px", "add": true, "edit": { "type": "CheckBox" } },
+                        { "caption": "An", "name": "Enabled", "width": "50px", "add": true, "edit": { "type": "CheckBox" } },
                         { "caption": "Name", "name": "Name", "width": "140px", "add": "", "edit": { "type": "ValidationTextBox" } },
                         {
-                            "caption": "Target type", "name": "TargetType", "width": "110px", "add": 0,
+                            "caption": "Zieltyp", "name": "TargetType", "width": "110px", "add": 0,
                             "edit": { "type": "Select", "options": [
                                 { "caption": "Variable", "value": 0 },
-                                { "caption": "Script", "value": 1 }
+                                { "caption": "Skript", "value": 1 }
                             ] }
                         },
-                        { "caption": "Target", "name": "TargetID", "width": "180px", "add": 0, "edit": { "type": "SelectObject" } },
+                        { "caption": "Ziel", "name": "TargetID", "width": "180px", "add": 0, "edit": { "type": "SelectObject" } },
                         {
-                            "caption": "Event", "name": "Event", "width": "160px", "add": "alarm",
+                            "caption": "Ereignis", "name": "Event", "width": "170px", "add": "alarm",
                             "edit": { "type": "Select", "options": [
-                                { "caption": "Arming started", "value": "arming_started" },
-                                { "caption": "Armed", "value": "armed" },
-                                { "caption": "Arming failed", "value": "arming_failed" },
-                                { "caption": "Disarmed", "value": "disarmed" },
-                                { "caption": "Entry delay", "value": "entry_delay" },
-                                { "caption": "Countdown warning", "value": "countdown" },
-                                { "caption": "Pre-alarm", "value": "pre_alarm" },
+                                { "caption": "Scharfschalten gestartet", "value": "arming_started" },
+                                { "caption": "Scharf", "value": "armed" },
+                                { "caption": "Scharfschalten fehlgeschlagen", "value": "arming_failed" },
+                                { "caption": "Unscharf", "value": "disarmed" },
+                                { "caption": "Eintrittsverzögerung", "value": "entry_delay" },
+                                { "caption": "Countdown-Warnung", "value": "countdown" },
+                                { "caption": "Voralarm", "value": "pre_alarm" },
                                 { "caption": "Alarm", "value": "alarm" },
-                                { "caption": "Alarm not acknowledged", "value": "alarm_unacknowledged" },
-                                { "caption": "Acknowledged", "value": "acknowledged" },
+                                { "caption": "Alarm nicht quittiert", "value": "alarm_unacknowledged" },
+                                { "caption": "Quittiert", "value": "acknowledged" },
                                 { "caption": "Reset", "value": "reset" },
-                                { "caption": "Trouble", "value": "trouble" },
+                                { "caption": "Störung", "value": "trouble" },
                                 { "caption": "Test", "value": "test" }
                             ] }
                         },
-                        { "caption": "Mode filter (csv)", "name": "ModeFilter", "width": "120px", "add": "", "edit": { "type": "ValidationTextBox" } },
-                        { "caption": "Zone filter", "name": "ZoneFilter", "width": "110px", "add": "", "edit": { "type": "ValidationTextBox" } },
-                        { "caption": "Delay (s)", "name": "Delay", "width": "80px", "add": 0, "edit": { "type": "NumberSpinner", "minimum": 0 } },
-                        { "caption": "Duration (s)", "name": "Duration", "width": "90px", "add": 0, "edit": { "type": "NumberSpinner", "minimum": 0 } },
-                        { "caption": "Value on", "name": "ValueOn", "width": "80px", "add": "1", "edit": { "type": "ValidationTextBox" } },
-                        { "caption": "Value off", "name": "ValueOff", "width": "80px", "add": "0", "edit": { "type": "ValidationTextBox" } },
-                        { "caption": "Cancel on disarm", "name": "CancelOnDisarm", "width": "110px", "add": true, "edit": { "type": "CheckBox" } },
-                        { "caption": "Cancel on ack", "name": "CancelOnAck", "width": "100px", "add": false, "edit": { "type": "CheckBox" } },
-                        { "caption": "Blink", "name": "BlinkEnabled", "width": "60px", "add": false, "edit": { "type": "CheckBox" } },
-                        { "caption": "Blink count", "name": "BlinkCount", "width": "90px", "add": 3, "edit": { "type": "NumberSpinner", "minimum": 1, "visibleIf": "BlinkEnabled" } },
-                        { "caption": "Blink interval (s)", "name": "BlinkInterval", "width": "110px", "add": 1, "edit": { "type": "NumberSpinner", "minimum": 1, "visibleIf": "BlinkEnabled" } }
+                        { "caption": "Modusfilter (csv)", "name": "ModeFilter", "width": "120px", "add": "", "edit": { "type": "ValidationTextBox" } },
+                        { "caption": "Zonenfilter", "name": "ZoneFilter", "width": "110px", "add": "", "edit": { "type": "ValidationTextBox" } },
+                        { "caption": "Verzögerung (s)", "name": "Delay", "width": "100px", "add": 0, "edit": { "type": "NumberSpinner", "minimum": 0 } },
+                        { "caption": "Dauer (s)", "name": "Duration", "width": "80px", "add": 0, "edit": { "type": "NumberSpinner", "minimum": 0 } },
+                        { "caption": "Wert ein", "name": "ValueOn", "width": "80px", "add": "1", "edit": { "type": "ValidationTextBox" } },
+                        { "caption": "Wert aus", "name": "ValueOff", "width": "80px", "add": "0", "edit": { "type": "ValidationTextBox" } },
+                        { "caption": "Abbruch bei Unscharf", "name": "CancelOnDisarm", "width": "130px", "add": true, "edit": { "type": "CheckBox" } },
+                        { "caption": "Abbruch bei Quittierung", "name": "CancelOnAck", "width": "130px", "add": false, "edit": { "type": "CheckBox" } },
+                        { "caption": "Blinken", "name": "BlinkEnabled", "width": "70px", "add": false, "edit": { "type": "CheckBox" } },
+                        { "caption": "Anzahl Blinks", "name": "BlinkCount", "width": "100px", "add": 3, "edit": { "type": "NumberSpinner", "minimum": 1, "visibleIf": "BlinkEnabled" } },
+                        { "caption": "Blink-Intervall (s)", "name": "BlinkInterval", "width": "115px", "add": 1, "edit": { "type": "NumberSpinner", "minimum": 1, "visibleIf": "BlinkEnabled" } }
                     ]
                 }
             ]
         },
         {
             "type": "ExpansionPanel",
-            "caption": "Notifications",
+            "caption": "Benachrichtigungen",
             "items": [
-                { "type": "Label", "bold": true, "caption": "Notifications — push, email, Telegram, variable, or script" },
-                { "type": "Label", "caption": "Notifications inform you when an alarm event occurs. Select the type and the corresponding IP-Symcon module instance. The module never hard-codes any service — it calls the function of the installed module." },
-                { "type": "Label", "caption": "PUSHOVER — Select your configured Pushover module instance. Subject becomes the notification title." },
-                { "type": "Label", "caption": "SMTP / Email — Select your configured SMTP/Mailer instance. Subject is the email subject. If the module requires a recipient, enter the email address in the Parameter field." },
-                { "type": "Label", "caption": "TELEGRAM — Select your configured Telegram Bot instance. Enter the Chat ID in the Parameter field (required). The module tries TelegramBot_SendMessage and Telegram_SendMessage — ensure the correct module is installed." },
-                { "type": "Label", "caption": "VARIABLE — Write the rendered message text into a String variable. Useful for display boards, custom scripts watching a variable, or other integrations." },
-                { "type": "Label", "caption": "SCRIPT — Call an IPS script with TEXT, SUBJECT, EVENT, and SENDER='AlarmCenter' as parameters. Maximum flexibility: the script can forward to any service." },
-                { "type": "Label", "caption": "MESSAGE TEMPLATE — The text to send. Placeholders: {sensorName}, {zone}, {mode}, {state}, {timestamp}, {remainingSeconds}." },
-                { "type": "Label", "caption": "MODE FILTER — CSV list of modes (night, away, test). Leave empty for all modes. ZONE FILTER — Only notify when the triggering sensor is in the selected zone." },
+                { "type": "Label", "bold": true, "caption": "Benachrichtigungen — Push, E-Mail, Telegram, Variable oder Skript" },
+                { "type": "Label", "caption": "Benachrichtigungen informieren bei Alarm-Ereignissen. Einfach die gewünschte IP-Symcon-Modulinstanz auswählen – das Modul ruft die passende Funktion des installierten Moduls auf." },
+                { "type": "Label", "caption": "PUSHOVER — Die konfigurierte Pushover-Instanz in IP-Symcon auswählen. 'Betreff/Titel' wird der Titel der Push-Benachrichtigung." },
+                { "type": "Label", "caption": "SMTP / E-MAIL — Die konfigurierte SMTP- oder Mailer-Instanz auswählen. 'Betreff/Titel' wird der E-Mail-Betreff. Wenn das Modul eine Empfängeradresse benötigt, diese im Feld 'Parameter' eintragen." },
+                { "type": "Label", "caption": "TELEGRAM — Die konfigurierte Telegram-Bot-Instanz auswählen. Die Chat-ID im Feld 'Parameter' eintragen (Pflichtfeld). Das Modul versucht der Reihe nach TelegramBot_SendMessage und Telegram_SendMessage – das passende Modul muss installiert sein." },
+                { "type": "Label", "caption": "VARIABLE — Der gerenderte Nachrichtentext wird in eine String-Variable geschrieben. Geeignet für Anzeigetafeln, eigene Skripte, die eine Variable beobachten, oder andere Integrationen." },
+                { "type": "Label", "caption": "SKRIPT — Ein IPS-Skript wird mit den Parametern TEXT, SUBJECT, EVENT und SENDER='AlarmCenter' aufgerufen. Maximale Flexibilität – das Skript kann an beliebige Dienste weiterleiten." },
+                { "type": "Label", "caption": "NACHRICHTENVORLAGE — Der Benachrichtigungstext. Platzhalter: {sensorName}, {zone}, {mode}, {state}, {timestamp}, {remainingSeconds}." },
+                { "type": "Label", "caption": "MODUSFILTER — CSV-Liste von Modi (night, away, test). Leer = alle Modi. ZONENFILTER — Nur benachrichtigen, wenn der auslösende Sensor in der ausgewählten Zone liegt." },
                 {
                     "type": "List",
                     "name": "Notifications",
-                    "caption": "Notifications",
+                    "caption": "Benachrichtigungen",
                     "rowCount": 8,
                     "add": true,
                     "delete": true,
                     "columns": [
-                        { "caption": "On", "name": "Enabled", "width": "50px", "add": true, "edit": { "type": "CheckBox" } },
+                        { "caption": "An", "name": "Enabled", "width": "50px", "add": true, "edit": { "type": "CheckBox" } },
                         { "caption": "Name", "name": "Name", "width": "140px", "add": "", "edit": { "type": "ValidationTextBox" } },
                         {
-                            "caption": "Type", "name": "NotifyType", "width": "130px", "add": 4,
+                            "caption": "Typ", "name": "NotifyType", "width": "130px", "add": 4,
                             "edit": { "type": "Select", "options": [
                                 { "caption": "Pushover", "value": 0 },
-                                { "caption": "SMTP / Email", "value": 1 },
+                                { "caption": "SMTP / E-Mail", "value": 1 },
                                 { "caption": "Telegram", "value": 2 },
                                 { "caption": "Variable", "value": 3 },
-                                { "caption": "Script", "value": 4 }
+                                { "caption": "Skript", "value": 4 }
                             ] }
                         },
-                        { "caption": "Instance / Target", "name": "TargetID", "width": "180px", "add": 0, "edit": { "type": "SelectObject" } },
-                        { "caption": "Parameter (ChatID/Email)", "name": "Parameter", "width": "160px", "add": "", "edit": { "type": "ValidationTextBox" } },
-                        { "caption": "Subject / Title", "name": "Subject", "width": "140px", "add": "Alarm", "edit": { "type": "ValidationTextBox" } },
+                        { "caption": "Instanz / Ziel", "name": "TargetID", "width": "180px", "add": 0, "edit": { "type": "SelectObject" } },
+                        { "caption": "Parameter (ChatID/E-Mail)", "name": "Parameter", "width": "170px", "add": "", "edit": { "type": "ValidationTextBox" } },
+                        { "caption": "Betreff / Titel", "name": "Subject", "width": "140px", "add": "Alarm", "edit": { "type": "ValidationTextBox" } },
                         {
-                            "caption": "Event", "name": "Event", "width": "160px", "add": "alarm",
+                            "caption": "Ereignis", "name": "Event", "width": "170px", "add": "alarm",
                             "edit": { "type": "Select", "options": [
-                                { "caption": "Arming started", "value": "arming_started" },
-                                { "caption": "Armed", "value": "armed" },
-                                { "caption": "Arming failed", "value": "arming_failed" },
-                                { "caption": "Disarmed", "value": "disarmed" },
-                                { "caption": "Entry delay", "value": "entry_delay" },
-                                { "caption": "Pre-alarm", "value": "pre_alarm" },
+                                { "caption": "Scharfschalten gestartet", "value": "arming_started" },
+                                { "caption": "Scharf", "value": "armed" },
+                                { "caption": "Scharfschalten fehlgeschlagen", "value": "arming_failed" },
+                                { "caption": "Unscharf", "value": "disarmed" },
+                                { "caption": "Eintrittsverzögerung", "value": "entry_delay" },
+                                { "caption": "Voralarm", "value": "pre_alarm" },
                                 { "caption": "Alarm", "value": "alarm" },
-                                { "caption": "Alarm not acknowledged", "value": "alarm_unacknowledged" },
-                                { "caption": "Acknowledged", "value": "acknowledged" },
+                                { "caption": "Alarm nicht quittiert", "value": "alarm_unacknowledged" },
+                                { "caption": "Quittiert", "value": "acknowledged" },
                                 { "caption": "Reset", "value": "reset" },
-                                { "caption": "Trouble", "value": "trouble" },
+                                { "caption": "Störung", "value": "trouble" },
                                 { "caption": "Test", "value": "test" },
-                                { "caption": "Bypass on", "value": "bypass_on" },
-                                { "caption": "Bypass off", "value": "bypass_off" },
-                                { "caption": "PIN wrong", "value": "pin_wrong" },
-                                { "caption": "PIN locked", "value": "pin_locked" }
+                                { "caption": "Bypass aktiviert", "value": "bypass_on" },
+                                { "caption": "Bypass deaktiviert", "value": "bypass_off" },
+                                { "caption": "PIN falsch", "value": "pin_wrong" },
+                                { "caption": "PIN gesperrt", "value": "pin_locked" }
                             ] }
                         },
-                        { "caption": "Mode filter (csv)", "name": "ModeFilter", "width": "120px", "add": "", "edit": { "type": "ValidationTextBox" } },
-                        { "caption": "Zone filter", "name": "ZoneFilter", "width": "110px", "add": "", "edit": { "type": "ValidationTextBox" } },
-                        { "caption": "Message template", "name": "Template", "width": "auto", "add": "Alarm: {sensorName} in {zone} at {timestamp}", "edit": { "type": "ValidationTextBox" } }
+                        { "caption": "Modusfilter (csv)", "name": "ModeFilter", "width": "120px", "add": "", "edit": { "type": "ValidationTextBox" } },
+                        { "caption": "Zonenfilter", "name": "ZoneFilter", "width": "110px", "add": "", "edit": { "type": "ValidationTextBox" } },
+                        { "caption": "Nachrichtenvorlage", "name": "Template", "width": "auto", "add": "Alarm: {sensorName} in Zone {zone} um {timestamp}", "edit": { "type": "ValidationTextBox" } }
                     ]
                 }
             ]
         },
         {
             "type": "ExpansionPanel",
-            "caption": "Voice announcements (Alexa / TTS)",
+            "caption": "Sprachansagen (Alexa / TTS)",
             "items": [
-                { "type": "Label", "bold": true, "caption": "Voice announcements via Echo Remote or any TTS module" },
-                { "type": "Label", "caption": "Voice announcements send a spoken text when an alarm event occurs. Two delivery methods:" },
-                { "type": "Label", "caption": "VARIABLE — Enter the ID of the 'Text to speech' String variable of your Echo Remote (or any TTS module) instance. The module calls RequestAction on the variable so the module speaks the text even if the content has not changed since the last announcement." },
-                { "type": "Label", "caption": "SCRIPT — Call an IPS script with TEXT, KIND (TTS/Announcement/SSML), and SENDER='AlarmCenter'. Use this for custom TTS engines or multi-speaker setups." },
-                { "type": "Label", "caption": "KIND — TTS: plain text-to-speech. Announcement: uses the Alexa announcement API (overrides whatever is playing). SSML: Speech Synthesis Markup Language for advanced pronunciation control." },
-                { "type": "Label", "caption": "IMPORTANT: If the Alexa does not speak, verify that the 'Text to speech' variable is a String variable belonging to an active Echo Remote instance. The module uses RequestAction — make sure the variable has an action handler (check with HasAction in a test script)." },
+                { "type": "Label", "bold": true, "caption": "Sprachansagen über Echo Remote oder beliebiges TTS-Modul" },
+                { "type": "Label", "caption": "Sprachansagen lassen einen Text vorlesen, wenn ein Alarm-Ereignis eintritt. Zwei Liefermethoden stehen zur Verfügung:" },
+                { "type": "Label", "caption": "VARIABLE (TTS) — Die ID der String-Variablen 'Text zu Sprache' der Echo-Remote-Instanz (oder eines anderen TTS-Moduls) auswählen. Das Modul ruft RequestAction auf die Variable auf, damit das Echo-Remote-Modul den Text direkt vorspricht – auch wenn derselbe Text zuletzt gesagt wurde." },
+                { "type": "Label", "caption": "SKRIPT — Ein IPS-Skript wird mit den Parametern TEXT, KIND (TTS/Announcement/SSML) und SENDER='AlarmCenter' aufgerufen. Geeignet für eigene TTS-Engines oder Mehrfachlautsprecher-Setups." },
+                { "type": "Label", "caption": "ART — TTS: normales Text-to-Speech. Announcement: nutzt die Alexa-Ankündigungs-API (unterbricht laufende Wiedergabe). SSML: Speech Synthesis Markup Language für Aussprache-Kontrolle." },
+                { "type": "Label", "caption": "WICHTIG: Wenn Alexa nicht spricht, bitte prüfen ob HasAction() für die TTS-Variable true zurückgibt. Test-Skript: echo HasAction(VARIABLENID); Ergibt false, hat die Variable keinen Aktions-Handler und das Modul fällt auf SetValue zurück – der Text muss sich dann ändern, damit ein VM_UPDATE ausgelöst wird." },
                 {
                     "type": "List",
                     "name": "VoiceAnnouncements",
-                    "caption": "Voice announcements",
+                    "caption": "Sprachansagen",
                     "rowCount": 6,
                     "add": true,
                     "delete": true,
                     "columns": [
-                        { "caption": "On", "name": "Enabled", "width": "50px", "add": true, "edit": { "type": "CheckBox" } },
+                        { "caption": "An", "name": "Enabled", "width": "50px", "add": true, "edit": { "type": "CheckBox" } },
                         { "caption": "Name", "name": "Name", "width": "140px", "add": "", "edit": { "type": "ValidationTextBox" } },
                         {
-                            "caption": "Target type", "name": "TargetType", "width": "110px", "add": 0,
+                            "caption": "Zieltyp", "name": "TargetType", "width": "130px", "add": 0,
                             "edit": { "type": "Select", "options": [
                                 { "caption": "Variable (TTS)", "value": 0 },
-                                { "caption": "Script", "value": 1 }
+                                { "caption": "Skript", "value": 1 }
                             ] }
                         },
-                        { "caption": "Target", "name": "TargetID", "width": "180px", "add": 0, "edit": { "type": "SelectObject" } },
+                        { "caption": "Ziel", "name": "TargetID", "width": "180px", "add": 0, "edit": { "type": "SelectObject" } },
                         {
-                            "caption": "Kind", "name": "Kind", "width": "120px", "add": 0,
+                            "caption": "Art", "name": "Kind", "width": "120px", "add": 0,
                             "edit": { "type": "Select", "options": [
                                 { "caption": "TTS", "value": 0 },
                                 { "caption": "Announcement", "value": 1 },
@@ -335,61 +335,61 @@
                             ] }
                         },
                         {
-                            "caption": "Event", "name": "Event", "width": "160px", "add": "alarm",
+                            "caption": "Ereignis", "name": "Event", "width": "170px", "add": "alarm",
                             "edit": { "type": "Select", "options": [
-                                { "caption": "Arming started", "value": "arming_started" },
-                                { "caption": "Armed", "value": "armed" },
-                                { "caption": "Arming failed", "value": "arming_failed" },
-                                { "caption": "Disarmed", "value": "disarmed" },
-                                { "caption": "Entry delay", "value": "entry_delay" },
-                                { "caption": "Countdown warning", "value": "countdown" },
-                                { "caption": "Pre-alarm", "value": "pre_alarm" },
+                                { "caption": "Scharfschalten gestartet", "value": "arming_started" },
+                                { "caption": "Scharf", "value": "armed" },
+                                { "caption": "Scharfschalten fehlgeschlagen", "value": "arming_failed" },
+                                { "caption": "Unscharf", "value": "disarmed" },
+                                { "caption": "Eintrittsverzögerung", "value": "entry_delay" },
+                                { "caption": "Countdown-Warnung", "value": "countdown" },
+                                { "caption": "Voralarm", "value": "pre_alarm" },
                                 { "caption": "Alarm", "value": "alarm" },
-                                { "caption": "Acknowledged", "value": "acknowledged" },
-                                { "caption": "Trouble", "value": "trouble" },
+                                { "caption": "Quittiert", "value": "acknowledged" },
+                                { "caption": "Störung", "value": "trouble" },
                                 { "caption": "Test", "value": "test" }
                             ] }
                         },
-                        { "caption": "Mode filter (csv)", "name": "ModeFilter", "width": "120px", "add": "", "edit": { "type": "ValidationTextBox" } },
-                        { "caption": "Zone filter", "name": "ZoneFilter", "width": "110px", "add": "", "edit": { "type": "ValidationTextBox" } },
-                        { "caption": "Template", "name": "Template", "width": "auto", "add": "Alarm in zone {zone}. Trigger {sensorName}.", "edit": { "type": "ValidationTextBox" } }
+                        { "caption": "Modusfilter (csv)", "name": "ModeFilter", "width": "120px", "add": "", "edit": { "type": "ValidationTextBox" } },
+                        { "caption": "Zonenfilter", "name": "ZoneFilter", "width": "110px", "add": "", "edit": { "type": "ValidationTextBox" } },
+                        { "caption": "Textvorlage", "name": "Template", "width": "auto", "add": "Alarm in Zone {zone}. Auslöser: {sensorName}.", "edit": { "type": "ValidationTextBox" } }
                     ]
                 }
             ]
         },
         {
             "type": "ExpansionPanel",
-            "caption": "Cameras",
+            "caption": "Kameras",
             "items": [
-                { "type": "Label", "bold": true, "caption": "Camera actions on alarm" },
-                { "type": "Label", "caption": "IMPORTANT: To use a camera's motion or alarm output as an alarm trigger, add it as a Sensor (select the camera's Boolean motion/alarm variable). The camera section here serves a different purpose: it runs a script when an alarm or pre-alarm occurs, allowing you to capture a snapshot, send a Telegram message with an image, start a recording, etc." },
-                { "type": "Label", "caption": "SCRIPT — An IPS script called with these parameters:\n• CAMERA_NAME: the name configured here\n• ZONE: the zone this camera is assigned to\n• EVENT: 'pre_alarm', 'alarm', or 'test'\n• SENDER: always 'AlarmCenter'\n\nExample use: the script calls an HTTP endpoint to grab a snapshot, then sends it via Telegram or email." },
-                { "type": "Label", "caption": "ZONE FILTER — Leave empty to fire for any zone. Enter a zone name to only trigger this camera action when the alarm was caused by a sensor from that zone." },
+                { "type": "Label", "bold": true, "caption": "Kamera-Aktionen bei Alarm" },
+                { "type": "Label", "caption": "WICHTIG: Um den Bewegungs- oder Alarmausgang einer Kamera als Auslöser zu nutzen, den Bool-Alarmwert der Kamera als Sensor in der Sensorliste eintragen. Dieser Bereich hier hat eine andere Aufgabe: ein Skript aufrufen, wenn ein Alarm oder Voralarm eintritt – z. B. um ein Snapshot anzufordern, eine Telegram-Nachricht mit Bild zu senden oder eine Aufzeichnung zu starten." },
+                { "type": "Label", "caption": "SKRIPT — Ein IPS-Skript, das mit folgenden Parametern aufgerufen wird:\n• CAMERA_NAME: der hier konfigurierte Name\n• ZONE: die Zone, der diese Kamera zugeordnet ist\n• EVENT: 'pre_alarm', 'alarm' oder 'test'\n• SENDER: immer 'AlarmCenter'\n\nBeispiel: Das Skript ruft per HTTP-GET ein Snapshot-Bild ab und sendet es via Telegram oder E-Mail." },
+                { "type": "Label", "caption": "ZONENFILTER — Leer = Aktion wird bei jeder Zone ausgelöst. Zonennamen eingeben, um die Kamerareaktion auf Sensoren aus einer bestimmten Zone zu beschränken." },
                 {
                     "type": "List",
                     "name": "Cameras",
-                    "caption": "Cameras",
+                    "caption": "Kameras",
                     "rowCount": 6,
                     "add": true,
                     "delete": true,
                     "columns": [
-                        { "caption": "On", "name": "Enabled", "width": "50px", "add": true, "edit": { "type": "CheckBox" } },
+                        { "caption": "An", "name": "Enabled", "width": "50px", "add": true, "edit": { "type": "CheckBox" } },
                         { "caption": "Name", "name": "Name", "width": "150px", "add": "", "edit": { "type": "ValidationTextBox" } },
-                        { "caption": "Zone filter", "name": "Zone", "width": "120px", "add": "", "edit": { "type": "ValidationTextBox" } },
-                        { "caption": "Script", "name": "Script", "width": "200px", "add": 0, "edit": { "type": "SelectScript" } },
-                        { "caption": "On pre-alarm", "name": "OnPreAlarm", "width": "100px", "add": false, "edit": { "type": "CheckBox" } },
-                        { "caption": "On alarm", "name": "OnAlarm", "width": "90px", "add": true, "edit": { "type": "CheckBox" } },
-                        { "caption": "On test", "name": "OnTest", "width": "80px", "add": false, "edit": { "type": "CheckBox" } }
+                        { "caption": "Zonenfilter", "name": "Zone", "width": "120px", "add": "", "edit": { "type": "ValidationTextBox" } },
+                        { "caption": "Skript", "name": "Script", "width": "200px", "add": 0, "edit": { "type": "SelectScript" } },
+                        { "caption": "Bei Voralarm", "name": "OnPreAlarm", "width": "100px", "add": false, "edit": { "type": "CheckBox" } },
+                        { "caption": "Bei Alarm", "name": "OnAlarm", "width": "80px", "add": true, "edit": { "type": "CheckBox" } },
+                        { "caption": "Bei Test", "name": "OnTest", "width": "75px", "add": false, "edit": { "type": "CheckBox" } }
                     ]
                 }
             ]
         },
         {
             "type": "ExpansionPanel",
-            "caption": "Frontend & History",
+            "caption": "Frontend & Verlauf",
             "items": [
-                { "type": "Label", "caption": "The alarm status is shown in an HTML tile visualization in the IP-Symcon web front. The tile updates automatically on every state change. The history keeps a rolling log of the last N events." },
-                { "type": "NumberSpinner", "name": "HistoryMaxEntries", "caption": "Maximum history entries", "minimum": 1 }
+                { "type": "Label", "caption": "Der Alarmstatus wird als HTML-Kachel in der IP-Symcon-Visualisierung angezeigt und bei jedem Zustandswechsel automatisch aktualisiert. Der Verlauf speichert die letzten N Ereignisse." },
+                { "type": "NumberSpinner", "name": "HistoryMaxEntries", "caption": "Maximale Verlaufseinträge", "minimum": 1 }
             ]
         }
     ],
@@ -397,36 +397,36 @@
         {
             "type": "RowLayout",
             "items": [
-                { "type": "Button", "caption": "Arm Night", "onClick": "Alarm_ArmNight($id, '');" },
-                { "type": "Button", "caption": "Arm Away", "onClick": "Alarm_ArmAway($id, '');" },
-                { "type": "Button", "caption": "Disarm", "onClick": "Alarm_Disarm($id, '');" },
-                { "type": "Button", "caption": "Acknowledge", "onClick": "Alarm_Acknowledge($id, '');" },
+                { "type": "Button", "caption": "Nacht scharf", "onClick": "Alarm_ArmNight($id, '');" },
+                { "type": "Button", "caption": "Abwesend scharf", "onClick": "Alarm_ArmAway($id, '');" },
+                { "type": "Button", "caption": "Unscharf", "onClick": "Alarm_Disarm($id, '');" },
+                { "type": "Button", "caption": "Quittieren", "onClick": "Alarm_Acknowledge($id, '');" },
                 { "type": "Button", "caption": "Reset", "onClick": "Alarm_Reset($id, '');" },
-                { "type": "Button", "caption": "Panic", "onClick": "Alarm_Panic($id);" }
+                { "type": "Button", "caption": "Panik", "onClick": "Alarm_Panic($id);" }
             ]
         },
         {
             "type": "RowLayout",
             "items": [
-                { "type": "Button", "caption": "Pre-arm check (Away)", "onClick": "echo Alarm_RunPreArmCheck($id, 2);" },
-                { "type": "Button", "caption": "Test notification", "onClick": "Alarm_TestNotification($id);" },
-                { "type": "Button", "caption": "Rebuild frontend", "onClick": "Alarm_RebuildFrontend($id);" },
-                { "type": "Button", "caption": "Clear history", "onClick": "Alarm_ClearHistory($id);" }
+                { "type": "Button", "caption": "Vorab-Check (Abwesend)", "onClick": "echo Alarm_RunPreArmCheck($id, 2);" },
+                { "type": "Button", "caption": "Testbenachrichtigung", "onClick": "Alarm_TestNotification($id);" },
+                { "type": "Button", "caption": "Frontend neu aufbauen", "onClick": "Alarm_RebuildFrontend($id);" },
+                { "type": "Button", "caption": "Verlauf löschen", "onClick": "Alarm_ClearHistory($id);" }
             ]
         },
         {
             "type": "ExpansionPanel",
-            "caption": "Set PIN",
+            "caption": "PIN setzen",
             "items": [
-                { "type": "PasswordTextBox", "name": "NewPin", "caption": "New PIN (leave empty to clear)" },
-                { "type": "Button", "caption": "Save PIN", "onClick": "Alarm_SetPin($id, $NewPin);" }
+                { "type": "PasswordTextBox", "name": "NewPin", "caption": "Neue PIN (leer lassen zum Löschen)" },
+                { "type": "Button", "caption": "PIN speichern", "onClick": "Alarm_SetPin($id, $NewPin);" }
             ]
         }
     ],
     "status": [
-        { "code": 102, "icon": "active", "caption": "Active" },
-        { "code": 104, "icon": "inactive", "caption": "Inactive / not configured" },
-        { "code": 201, "icon": "error", "caption": "Configuration error (invalid sensor variable)" },
-        { "code": 202, "icon": "error", "caption": "Trouble active" }
+        { "code": 102, "icon": "active", "caption": "Aktiv" },
+        { "code": 104, "icon": "inactive", "caption": "Inaktiv / nicht konfiguriert" },
+        { "code": 201, "icon": "error", "caption": "Konfigurationsfehler (ungültige Sensorvariable)" },
+        { "code": 202, "icon": "error", "caption": "Störung aktiv" }
     ]
 }

@@ -1,373 +1,373 @@
 # SymconAlarmPro
 
-A flexible, state-machine-based alarm center for IP-Symcon 8.1+. No device IDs are hardcoded — every sensor, zone, output, notification, and camera action is configured through the instance form.
+Flexible, state-machine-basierte Alarmzentrale für IP-Symcon 8.1+. Keine Geräte-IDs sind fest einprogrammiert – alle Sensoren, Zonen, Ausgänge, Benachrichtigungen und Kamera-Aktionen werden vollständig über die Instanzkonfiguration eingerichtet.
 
 ---
 
-## Quick-start checklist
+## Schnellstart
 
-1. Add the library via **Module Control** → **Add** → paste the repository URL
-2. Create an instance of **Symcon Alarm Pro** under *Other*
-3. Open the instance configuration, configure **Zones** first, then **Sensors**
-4. Test with the **Test** mode before using Night / Away mode
-5. Set a PIN if required (via the *Set PIN* section at the bottom of the form)
+1. Bibliothek über **Modulverwaltung** → **Hinzufügen** → Repository-URL einfügen
+2. Neue Instanz **Symcon Alarm Pro** unter *Sonstige* anlegen
+3. Konfiguration öffnen, zunächst **Zonen** anlegen, dann **Sensoren** konfigurieren
+4. Erste Tests im **Test**-Modus durchführen, bevor Nacht- oder Abwesend-Modus genutzt wird
+5. Bei Bedarf eine PIN im Abschnitt *PIN setzen* am unteren Ende des Formulars setzen
 
 ---
 
-## Concepts
+## Grundkonzepte
 
-### Modes vs. States
+### Modi vs. Zustände
 
-**Mode** is the user's intent (what you want the system to do):
+**Modus** ist die Absicht des Nutzers – was die Anlage tun soll:
 
-| Mode | Description |
-|------|-------------|
-| Disarmed | System is off, no sensors are active |
-| Night | You are home. Typically only perimeter sensors (doors/windows) are active. Motion detectors are off. |
-| Away | You have left the building. All configured sensors are active. |
-| Test | Commissioning mode. Sensors fire but the system never escalates to a real alarm. Use for first-time setup. |
-
-**State** is what the system is currently doing internally:
-
-| State | Description |
+| Modus | Beschreibung |
 |-------|-------------|
-| Disarmed | Nothing active |
-| Arming (exit delay) | Countdown before arming; leave the building now |
-| Armed Night / Armed Away | System is live |
-| Entry delay | A sensor with reaction "Entry delay" triggered; disarm within the configured seconds or the alarm fires |
-| Pre-alarm | A sensor with reaction "Pre-alarm" triggered; a warning period before full alarm |
-| Alarm | Alarm is active |
-| Alarm acknowledged | Alarm was confirmed but not fully reset |
-| Test | System is armed in test mode |
+| Unscharf | Anlage inaktiv, keine Sensoren überwacht |
+| Nacht | Man ist zuhause. Typischerweise nur Perimetersensoren (Türen, Fenster) aktiv. Bewegungsmelder ausgeschaltet. |
+| Abwesend | Das Gebäude wurde verlassen. Alle konfigurierten Sensoren sind aktiv. |
+| Test | Inbetriebnahme-Modus. Sensoren lösen aus, aber die Anlage eskaliert nie zu einem echten Alarm. |
+
+**Zustand** ist das, was die Anlage intern gerade macht:
+
+| Zustand | Beschreibung |
+|---------|-------------|
+| Unscharf | Nichts aktiv |
+| Scharfschalten (Ausgangsverzögerung) | Countdown vor dem Scharfschalten – jetzt das Gebäude verlassen |
+| Scharf (Nacht / Abwesend) | Anlage ist aktiv |
+| Eintrittsverzögerung | Sensor mit Reaktion „Eintrittsverzögerung" hat ausgelöst; Anlage innerhalb der konfigurierten Sekunden unscharfschalten |
+| Voralarm | Sensor mit Reaktion „Voralarm" hat ausgelöst; stille Warnphase vor dem echten Alarm |
+| Alarm | Alarm ist aktiv |
+| Alarm quittiert | Alarm wurde bestätigt, aber noch nicht vollständig zurückgesetzt |
+| Test | Anlage ist im Test-Modus scharf |
 
 ---
 
-## Zones
+## Zonen
 
-Zones are logical areas (e.g. *Ground floor*, *Garden*, *Garage*). They serve two purposes:
+Zonen sind logische Bereiche (z. B. *Erdgeschoss*, *Garten*, *Garage*). Sie haben zwei Funktionen:
 
-1. **Organisation** – label which area a sensor belongs to
-2. **Filtering** – actions, notifications, and cameras can be limited to fire only when a sensor from a specific zone triggers
+1. **Organisation** – Jeder Sensor wird einer Zone zugeordnet, um die Sensorliste übersichtlich zu halten
+2. **Filterung** – Aktionen, Benachrichtigungen und Kameras können so konfiguriert werden, dass sie nur auslösen, wenn ein Sensor aus einer bestimmten Zone den Alarm ausgelöst hat
 
-A zone has no logic of its own; it is purely a label that you define and then reference in other places.
+Eine Zone hat keine eigene Logik – sie ist nur ein Name, der an anderen Stellen referenziert wird.
 
-**Setup:** Add zones in the **Zones** panel. The name is a free text field. Use exactly the same name when assigning sensors and configuring zone filters.
+**Einrichtung:** Zonen im Bereich **Zonen** anlegen. Der Name ist ein freies Textfeld. Exakt denselben Namen beim Zuordnen von Sensoren und beim Einrichten von Zonenfiltern verwenden.
 
 ---
 
-## Sensors
+## Sensoren
 
-### Sensor type
+### Sensor-Typ
 
-The sensor type (Door contact, Window contact, Motion detector, …) is **documentary only**. It does not affect alarm logic. Use it to label and organise your list. The actual alarm behaviour is entirely determined by the **Trigger** and **Reaction** fields.
+Der Sensor-Typ (Türkontakt, Fensterkontakt, Bewegungsmelder, …) dient **ausschließlich der Dokumentation**. Er hat keinen Einfluss auf die Alarmlogik. Das tatsächliche Verhalten wird allein durch die Felder **Auslöser** und **Reaktion** bestimmt.
 
-| Type | Intended use |
-|------|-------------|
-| Door contact | Reed switch or magnetic contact on a door |
-| Window contact | Reed switch on a window |
-| Motion detector | PIR or radar presence sensor |
-| Camera alarm | Boolean alarm output of an IP camera |
-| Tamper | Anti-tamper switch on a sensor housing |
-| System status | System health or status signal |
-| External source | Any external alarm signal (e.g. flood, smoke) |
-| Other | Anything else |
+| Typ | Vorgesehener Einsatz |
+|-----|---------------------|
+| Türkontakt | Reed-Kontakt oder Magnetkontakt an einer Tür |
+| Fensterkontakt | Reed-Kontakt an einem Fenster |
+| Bewegungsmelder | PIR- oder Radar-Präsenzsensor |
+| Kamera-Alarm | Bool-Alarmausgang einer IP-Kamera |
+| Sabotage | Sabotagekontakt am Sensorgehäuse |
+| Systemstatus | Systemzustand oder Statussignal |
+| Externe Quelle | Beliebiges externes Alarmsignal (z. B. Wasser, Rauch) |
+| Sonstiges | Alles weitere |
 
-### Trigger types
+### Auslöser-Typen
 
-The trigger defines which variable value counts as "alarm". IP-Symcon sends a `VM_UPDATE` event whenever a watched variable changes; the module evaluates the new value against the configured trigger.
+Der Auslöser legt fest, welcher Variablenwert als Alarmsignal gilt. IP-Symcon sendet ein `VM_UPDATE`-Ereignis, sobald eine überwachte Variable ihren Wert ändert; das Modul prüft den neuen Wert gegen den konfigurierten Auslöser.
 
-| Trigger | Meaning |
-|---------|---------|
-| Bool true = alarm | The Boolean variable changes to `true` |
-| Bool false = alarm | The Boolean variable changes to `false` (e.g. a window contact where *open* = `false`) |
-| Int = value | Integer/float value equals the threshold |
-| Int ≠ value | Integer/float value does not equal the threshold |
-| Int > value | Integer/float value is greater than the threshold |
-| Int ≥ value | Integer/float value is greater than or equal to the threshold |
-| Int < value | Integer/float value is less than the threshold |
-| Int ≤ value | Integer/float value is less than or equal to the threshold |
-
-The **Value** field (comparison threshold) is only relevant for Int trigger types.
-
-### Night / Away / Test — active modes
-
-Each sensor has three checkboxes: **Night**, **Away**, **Test**. A sensor is only evaluated when the system is armed in one of the checked modes.
-
-**Typical configuration:**
-- Door contact on front door: ✓ Night, ✓ Away → active in both modes
-- Motion detector: ✗ Night, ✓ Away → active only when you are away (not when sleeping)
-- Test-only sensor: ✗ Night, ✗ Away, ✓ Test → only for commissioning
-
-### Reaction types
-
-| Reaction | Behaviour |
+| Auslöser | Bedeutung |
 |----------|-----------|
-| **Instant alarm** | The alarm fires immediately when the sensor triggers. Use for windows, tamper contacts, and critical sensors. |
-| **Pre-alarm** | The system enters a silent pre-alarm phase first. If the alarm is not cleared or disarmed within the pre-alarm duration (configured in Modes & Delays), the full alarm fires. Useful as a grace period before escalation. |
-| **Entry delay** | A per-sensor countdown starts (the *Entry delay (s)* field). If you do not disarm within that time, the alarm fires. Use for the front door — you need a moment to disarm the system when you come home. |
+| Bool wahr = Alarm | Die Boolean-Variable wechselt auf `true` |
+| Bool falsch = Alarm | Die Boolean-Variable wechselt auf `false` (z. B. Fensterkontakt: offen = false) |
+| Int = Wert | Integer- oder Float-Wert ist gleich dem Schwellwert |
+| Int ≠ Wert | Integer- oder Float-Wert ist ungleich dem Schwellwert |
+| Int > Wert | Integer- oder Float-Wert ist größer als der Schwellwert |
+| Int ≥ Wert | Integer- oder Float-Wert ist größer oder gleich dem Schwellwert |
+| Int < Wert | Integer- oder Float-Wert ist kleiner als der Schwellwert |
+| Int ≤ Wert | Integer- oder Float-Wert ist kleiner oder gleich dem Schwellwert |
 
-### Debounce
+Das Feld **Wert** (Vergleichsschwellwert) wird nur bei Int-Auslösertypen angezeigt.
 
-Minimum milliseconds between two alarm triggers from the same sensor. Prevents bouncing contacts from generating multiple alarms. A door contact may flutter for 20–50 ms when it opens; setting Debounce to 200 ms filters that out. Set to 0 to disable.
+### Nacht / Abwesend / Test – aktive Modi
+
+Jeder Sensor hat drei Kontrollkästchen: **Nacht**, **Abwesend**, **Test**. Ein Sensor wird nur ausgewertet, wenn das System in einem der aktivierten Modi scharf geschaltet ist.
+
+**Typische Konfiguration:**
+- Türkontakt Haustür: ✓ Nacht, ✓ Abwesend → aktiv in beiden Modi
+- Bewegungsmelder: ✗ Nacht, ✓ Abwesend → nur aktiv, wenn man das Haus verlassen hat
+- Testsensor: ✗ Nacht, ✗ Abwesend, ✓ Test → ausschließlich für die Inbetriebnahme
+
+### Reaktions-Typen
+
+| Reaktion | Verhalten |
+|----------|-----------|
+| **Sofortalarm** | Der Alarm wird sofort ausgelöst. Für Fenster, Sabotagekontakte und kritische Sensoren. |
+| **Voralarm** | Das System wechselt zunächst in eine stille Voralarm-Phase (Dauer unter *Modi & Verzögerungen*). Wer das System nicht innerhalb dieser Zeit unscharfschaltet, löst den vollständigen Alarm aus. Sinnvoll als Gnadenfrist vor der Eskalation. |
+| **Eintrittsverzögerung** | Ein sensorindividueller Countdown startet (Feld *Eintrittsverzögerung (s)*). Wird das System nicht in dieser Zeit unscharfgeschaltet, folgt der Alarm. Typisch für die Haustür – man braucht nach Hause kommen einen Moment zum Abschalten. |
+
+### Entprellung
+
+Mindestabstand in Millisekunden zwischen zwei Alarm-Auslösungen desselben Sensors. Verhindert Mehrfachauslösungen durch prellende Kontakte (ein Türkontakt kann beim Öffnen 20–50 ms flattern). Auf 200 ms setzen filtert das zuverlässig heraus. 0 = deaktiviert.
 
 ### Bypass
 
-When **Bypass allowed** is checked, this specific sensor can be temporarily disabled without disarming the whole system. Use case: you want to leave a window open while the rest of the system is armed.
+Wenn **Bypass erlaubt** aktiviert ist, kann dieser einzelne Sensor vorübergehend deaktiviert werden, ohne die gesamte Anlage unscharfzuschalten. Anwendungsfall: ein Fenster bleibt offen, während der Rest der Anlage scharf ist.
 
-Bypass a sensor via the `Alarm_BypassSensor($id, $variableID)` API call or from a script/button. The bypass can be time-limited (duration in minutes).
+Bypass per API: `Alarm_BypassSensor($id, $variablenID, $minuten)` oder über einen Button/ein Skript. Der Bypass kann zeitlich begrenzt werden.
 
-### Block arm if active
+### Scharf blockieren wenn aktiv
 
-If this sensor is in alarm state when you try to arm the system, arming is blocked with an error. Without this flag, open sensors generate only a warning and arming proceeds anyway.
+Ist dieser Sensor im Alarmzustand, wenn ein Scharfschalten versucht wird, wird das Scharfschalten vollständig blockiert statt nur eine Warnung auszugeben. Ohne dieses Flag werden offene Sensoren nur als Warnung angezeigt, das Scharfschalten läuft aber trotzdem durch.
 
-### Criticality
+### Kritikalität
 
-Affects the pre-arm check result:
+Beeinflusst das Ergebnis der Vorab-Scharfschaltprüfung:
 
-| Criticality | Effect when sensor is open during arm attempt |
-|-------------|----------------------------------------------|
-| Low | Notice only, arming proceeds |
-| Normal | Warning shown, arming proceeds |
-| High | Blocks arming (requires *Block arm if active* to also be checked) |
+| Kritikalität | Auswirkung bei offenem Sensor beim Scharfschalten |
+|-------------|--------------------------------------------------|
+| Niedrig | Nur Hinweis, Scharfschalten läuft weiter |
+| Normal | Warnung wird angezeigt, Scharfschalten läuft weiter |
+| Hoch | Scharfschalten wird blockiert (erfordert zusätzlich *Scharf blockieren wenn aktiv*) |
 
-### Exit delay ignore
+### Ausgangsverzögerung ignorieren
 
-If checked, this sensor can fire an alarm even during the exit delay phase. Use for tamper contacts or a panic button that must always be active regardless of the countdown.
+Wenn aktiviert, kann dieser Sensor einen Alarm auch während der Ausgangsverzögerung auslösen. Für Sabotagekontakte oder Panik-Taster, die unabhängig vom Countdown immer aktiv sein müssen.
 
 ---
 
-## Actions (siren / lights)
+## Aktionen (Sirene / Licht)
 
-Actions control physical outputs when an alarm event occurs: siren relays, warning lights, Shelly switches, dimmers, or any other IP-Symcon variable.
+Aktionen steuern physische Ausgänge, wenn ein Alarm-Ereignis eintritt: Sirenen-Relais, Warnlichter, Shelly-Schalter, Dimmer oder jede andere IP-Symcon-Variable.
 
-### Target types
+### Zieltypen
 
-| Type | Description |
-|------|-------------|
-| Variable | The module writes `Value on` / `Value off` to the variable. If the variable has an action handler (e.g. it belongs to a Homematic actor), `RequestAction` is used; otherwise `SetValue`. |
-| Script | An IPS script is called with `VALUE` and `SENDER='AlarmCenter'` parameters. |
+| Typ | Beschreibung |
+|-----|-------------|
+| Variable | Das Modul schreibt *Wert ein* / *Wert aus* in die Variable. Wenn die Variable einen Aktions-Handler hat (z. B. Homematic-Aktor), wird `RequestAction` verwendet, sonst `SetValue`. |
+| Skript | Ein IPS-Skript wird mit den Parametern `VALUE` und `SENDER='AlarmCenter'` aufgerufen. |
 
-### Value on / Value off
+### Wert ein / Wert aus
 
-The values written when the action switches on and off:
-- Boolean variable: `1` / `0` or `true` / `false`
+Die Werte beim Ein- und Ausschalten:
+- Boolean-Variable: `1` / `0` oder `true` / `false`
 - Dimmer (0–100): `100` / `0`
-- Colour variable: integer representation of the colour (e.g. `16711680` for red)
-- For scripts: passed as the `VALUE` parameter
+- Farbvariable: Zahlendarstellung der Farbe (z. B. `16711680` für Rot / #FF0000)
+- Für Skripte: wird als `VALUE`-Parameter übergeben
 
-### Delay and Duration
+### Verzögerung und Dauer
 
-- **Delay**: Wait N seconds after the event before switching on. Useful for staged responses (pre-warning light 5 s before siren).
-- **Duration**: Keep the output on for N seconds, then switch off automatically. Set to 0 for indefinite (until cancelled).
+- **Verzögerung**: Wartezeit in Sekunden nach dem Ereignis vor dem Einschalten. Für gestaffelte Reaktionen (z. B. 5 s Warnlicht, dann Sirene).
+- **Dauer**: Automatisches Ausschalten nach N Sekunden. 0 = unbegrenzt (bis zum Abbruch).
 
-### Blink mode
+### Blink-Modus
 
-Flashes the output N times with a configurable interval. Example: `Blink count = 3`, `Blink interval = 1 s` → the output goes on–off–on–off–on–off over 6 seconds. Overrides **Duration** when enabled. Useful for warning lights.
+Blinkt den Ausgang N mal mit konfigurierbarem Intervall. Beispiel: Anzahl = 3, Intervall = 1 s → der Ausgang geht ein–aus–ein–aus–ein–aus über 6 Sekunden. Überschreibt **Dauer** wenn aktiviert. Geeignet für Warnlichter.
 
-### Mode filter
+### Modusfilter
 
-Comma-separated mode names. Leave empty to fire in all modes. Example: `night,away` fires in Night and Away modes but not in Test mode.
+Kommagetrennte Modusnamen. Leer = alle Modi. Beispiel: `night,away` löst im Nacht- und Abwesend-Modus aus, nicht im Test-Modus.
 
-### Zone filter
+### Zonenfilter
 
-Select a zone from the dropdown. Leave empty to fire regardless of which zone triggered.
+Nur auslösen, wenn der auslösende Sensor zur ausgewählten Zone gehört. Leer = alle Zonen.
 
-### Cancel on disarm / Cancel on ack
+### Abbruch bei Unscharf / Abbruch bei Quittierung
 
-The module tracks running actions and automatically turns them off (writes `Value off`) when:
-- **Cancel on disarm**: the system is disarmed
-- **Cancel on ack**: the alarm is acknowledged
+Das Modul verfolgt laufende Aktionen und schaltet sie automatisch aus (schreibt *Wert aus*), wenn:
+- **Abbruch bei Unscharf**: die Anlage unscharfgeschaltet wird
+- **Abbruch bei Quittierung**: der Alarm quittiert wird
 
-Recommendation: enable *Cancel on disarm* for sirens. Enable *Cancel on ack* for lights that should stop when the alarm is confirmed.
+Empfehlung: *Abbruch bei Unscharf* für Sirenen; *Abbruch bei Quittierung* für Lichter, die nach der Bestätigung stoppen sollen.
 
 ---
 
-## Notifications
+## Benachrichtigungen
 
-Notifications send a message when an alarm event occurs. The module supports five delivery types.
+Benachrichtigungen informieren bei Alarm-Ereignissen. Das Modul unterstützt fünf Liefermethoden.
 
-### Delivery types
+### Liefermethoden
 
 #### Pushover
 
-Select the **Pushover** module instance configured in IP-Symcon. The module calls `PushOver_SendNotification()`. The *Subject / Title* field becomes the notification title.
+Die in IP-Symcon konfigurierte **Pushover**-Instanz auswählen. Das Modul ruft `PushOver_SendNotification()` auf. Das Feld *Betreff/Titel* wird der Titel der Push-Benachrichtigung.
 
-**Setup:** Install the Pushover module from the Symcon module store, enter your API credentials, then select the instance here.
+**Einrichtung:** Pushover-Modul aus dem Symcon-Modulkatalog installieren, API-Zugangsdaten eingeben, dann die Instanz hier auswählen.
 
-#### SMTP / Email
+#### SMTP / E-Mail
 
-Select the **SMTP** (Mailer) module instance. The module calls `SMTP_SendMail()`. Subject becomes the email subject line. If the module requires a recipient address, enter it in the **Parameter** field.
+Die konfigurierte **SMTP**- oder Mailer-Instanz auswählen. Das Modul ruft `SMTP_SendMail()` auf. *Betreff/Titel* wird zum E-Mail-Betreff. Wenn das Modul eine Empfängeradresse benötigt, diese im Feld **Parameter** eintragen.
 
 #### Telegram
 
-Select the **Telegram Bot** module instance. Enter the **Chat ID** in the *Parameter* field. The module tries `TelegramBot_SendMessage()` and `Telegram_SendMessage()` in order.
+Die konfigurierte **Telegram-Bot**-Instanz auswählen. Die **Chat-ID** im Feld *Parameter* eintragen (Pflicht). Das Modul versucht der Reihe nach `TelegramBot_SendMessage()` und `Telegram_SendMessage()`.
 
-**Setup:** Install a Telegram Bot module, configure the bot token, then enter the Chat ID of the target conversation.
+**Einrichtung:** Telegram-Bot-Modul installieren, Bot-Token konfigurieren, Chat-ID des Zielgesprächs ermitteln und hier eintragen.
 
 #### Variable
 
-Writes the rendered message text into a String variable. The module uses `RequestAction` when the variable has an action handler (e.g. Echo Remote TTS), otherwise clears and re-sets the value to ensure the change event fires.
+Der gerenderte Nachrichtentext wird in eine String-Variable geschrieben. Das Modul verwendet `RequestAction`, wenn die Variable einen Aktions-Handler hat (z. B. Echo Remote TTS-Variable), sonst wird der Wert erst geleert und dann neu gesetzt, damit das Änderungs-Ereignis immer ausgelöst wird.
 
-#### Script
+#### Skript
 
-Calls an IPS script with these parameters:
-- `TEXT` — rendered message
-- `SUBJECT` — subject / title
-- `EVENT` — event name (e.g. `alarm`, `disarmed`)
-- `SENDER` — always `AlarmCenter`
+Ein IPS-Skript wird mit folgenden Parametern aufgerufen:
+- `TEXT` — gerenderter Nachrichtentext
+- `SUBJECT` — Betreff / Titel
+- `EVENT` — Ereignisname (z. B. `alarm`, `disarmed`)
+- `SENDER` — immer `AlarmCenter`
 
-### Message template
+### Nachrichtenvorlage
 
-The template supports these placeholders:
+Die Vorlage unterstützt folgende Platzhalter:
 
-| Placeholder | Description |
+| Platzhalter | Beschreibung |
 |-------------|-------------|
-| `{sensorName}` | Name of the triggering sensor |
-| `{zone}` | Zone of the triggering sensor |
-| `{mode}` | Current mode (disarmed/night/away/test) |
-| `{state}` | Current state |
-| `{timestamp}` | Current date/time |
-| `{remainingSeconds}` | Remaining delay seconds (during entry/exit delay) |
+| `{sensorName}` | Name des auslösenden Sensors |
+| `{zone}` | Zone des auslösenden Sensors |
+| `{mode}` | Aktueller Modus (disarmed/night/away/test) |
+| `{state}` | Aktueller Zustand |
+| `{timestamp}` | Aktuelles Datum/Uhrzeit |
+| `{remainingSeconds}` | Verbleibende Sekunden (bei Eintrittsverzögerung/Ausgangsverzögerung) |
 
 ---
 
-## Voice announcements (Alexa / TTS)
+## Sprachansagen (Alexa / TTS)
 
-Voice announcements send spoken text when an alarm event occurs.
+Sprachansagen lassen einen Text vorlesen, wenn ein Alarm-Ereignis eintritt.
 
-### Alexa setup (Echo Remote module)
+### Alexa einrichten (Echo Remote Modul)
 
-1. Open the **Echo Remote** instance in IP-Symcon
-2. Find the **Text to speech** String variable under the instance
-3. Note the variable ID
-4. In the Voice announcements list, set **Target type = Variable (TTS)** and select this variable as target
+1. Die **Echo Remote**-Instanz in IP-Symcon öffnen
+2. Die String-Variable **Text zu Sprache** unter der Instanz suchen
+3. Variablen-ID notieren
+4. In der Sprachansagen-Liste **Zieltyp = Variable (TTS)** auswählen und diese Variable als Ziel eintragen
 
-The module uses `RequestAction` on the TTS variable, which triggers the Echo Remote module's handler directly. This ensures speech fires even if the same text was spoken recently.
+Das Modul ruft `RequestAction` auf die TTS-Variable auf – dadurch wird der Handler des Echo-Remote-Moduls direkt aufgerufen und der Text wird vorgelesen, auch wenn derselbe Text zuletzt gesprochen wurde.
 
-**If Alexa does not speak:** verify that `HasAction()` returns true for the TTS variable. Open a test script and run `echo HasAction(<variableID>);`. If it returns `false`, the variable has no action handler and the module falls back to `SetValue` — which requires the text to change to fire a VM_UPDATE.
+**Alexa spricht nicht:** Prüfen ob `HasAction()` für die TTS-Variable `true` zurückgibt. Test-Skript: `echo HasAction(<VariablenID>);`. Bei `false` hat die Variable keinen Aktions-Handler – das Modul fällt auf SetValue zurück, und der Text muss sich ändern, damit ein VM_UPDATE ausgelöst wird.
 
-### Kind
+### Art
 
-| Kind | Description |
-|------|-------------|
-| TTS | Plain text-to-speech |
-| Announcement | Uses the Alexa announcement API (interrupts whatever is playing) |
-| SSML | Speech Synthesis Markup Language for advanced pronunciation |
+| Art | Beschreibung |
+|-----|-------------|
+| TTS | Normales Text-to-Speech |
+| Announcement | Nutzt die Alexa-Ankündigungs-API (unterbricht laufende Wiedergabe) |
+| SSML | Speech Synthesis Markup Language für individuelle Aussprache-Kontrolle |
 
-The Kind field is passed as `KIND` to scripts. For variable targets it is informational only.
+Das Feld *Art* wird als `KIND`-Parameter an Skripte übergeben. Bei Variable-Zielen hat es keine direkte Funktion.
 
 ---
 
-## Cameras
+## Kameras
 
-The Cameras section handles what happens **after** an alarm: call a script so you can grab a snapshot, send it via Telegram, start a recording, etc.
+Der Bereich Kameras steuert, was **nach** einem Alarm passiert: ein Skript aufrufen, das einen Snapshot abruft, ihn per Telegram sendet, eine Aufzeichnung startet o. Ä.
 
-> **Motion detection → use Sensors.** Add a camera's Boolean motion/alarm output variable as a Sensor. The Camera section is not for detecting motion; it is for reacting to an alarm with camera-related actions.
+> **Bewegungserkennung → Sensoren verwenden.** Den Bool-Bewegungs- oder Alarmausgang einer Kamera als Sensor in die Sensorliste eintragen. Dieser Kamera-Bereich dient nicht der Bewegungserkennung, sondern der Reaktion auf einen Alarm.
 
-### Script parameters
+### Skript-Parameter
 
-When an event fires, the module calls your script with:
+Wenn ein Ereignis auslöst, ruft das Modul das Skript mit folgenden Parametern auf:
 
-| Parameter | Value |
-|-----------|-------|
-| `CAMERA_NAME` | Name configured in the list |
-| `ZONE` | Zone the camera is assigned to |
-| `EVENT` | `pre_alarm`, `alarm`, or `test` |
-| `SENDER` | `AlarmCenter` |
+| Parameter | Wert |
+|-----------|------|
+| `CAMERA_NAME` | Der hier konfigurierte Name |
+| `ZONE` | Die Zone, der diese Kamera zugeordnet ist |
+| `EVENT` | `pre_alarm`, `alarm` oder `test` |
+| `SENDER` | Immer `AlarmCenter` |
 
-### Example script (Telegram snapshot)
+### Beispielskript (Telegram-Snapshot)
 
 ```php
 <?php
 $url = 'http://192.168.1.50/snapshot.jpg';
-$chatID = '<your-chat-id>';
-$telegramID = 12345; // ID of Telegram Bot instance in IP-Symcon
-$caption = 'Alarm: ' . $_IPS['CAMERA_NAME'] . ' – ' . $_IPS['ZONE'];
+$chatID = '<deine-chat-id>';
+$telegramID = 12345; // ID der Telegram-Bot-Instanz in IP-Symcon
+$beschriftung = 'Alarm: ' . $_IPS['CAMERA_NAME'] . ' – Zone ' . $_IPS['ZONE'];
 
-$image = file_get_contents($url);
-if ($image !== false) {
-    TelegramBot_SendPhoto($telegramID, $chatID, $image, $caption);
+$bild = file_get_contents($url);
+if ($bild !== false) {
+    TelegramBot_SendPhoto($telegramID, $chatID, $bild, $beschriftung);
 }
 ```
 
 ---
 
-## PIN security
+## PIN-Sicherheit
 
-The PIN is stored as a bcrypt hash in a module attribute. It is **never** stored in clear text or in a Symcon property (which would appear in settings.json).
+Die PIN wird als bcrypt-Hash in einem Modul-Attribut gespeichert. Sie wird **niemals im Klartext** gespeichert und erscheint nicht in `settings.json`.
 
-### Setting a PIN
+### PIN setzen
 
-Use the **Set PIN** section in the actions area of the configuration form, or call:
+Über den Bereich **PIN setzen** im Aktionsbereich der Konfiguration oder per API:
 ```php
 Alarm_SetPin($id, '1234');
 ```
 
-### External PIN pad
+### Externes PIN-Pad
 
-Connect a physical keypad by selecting a String variable in the *External PIN pad input variable* field. The keypad writes the PIN into this variable. Supported formats:
+Ein physisches Tastenfeld anschließen, indem eine String-Variable im Feld *Eingabevariable des PIN-Pads* ausgewählt wird. Das Tastenfeld schreibt die eingegebene PIN in diese Variable. Unterstützte Formate:
 
-| Input | Action |
-|-------|--------|
-| `1234` | Disarm |
-| `DISARM:1234` | Disarm |
-| `ARM_AWAY:1234` | Arm Away |
-| `ARM_NIGHT:1234` | Arm Night |
-| `ACK:1234` | Acknowledge |
+| Eingabe | Aktion |
+|---------|--------|
+| `1234` | Unscharfschalten |
+| `DISARM:1234` | Unscharfschalten |
+| `ARM_AWAY:1234` | Abwesend scharf |
+| `ARM_NIGHT:1234` | Nacht scharf |
+| `ACK:1234` | Quittieren |
 | `RESET:1234` | Reset |
 
-Enable *Clear PIN input variable after reading* to erase the PIN from the variable immediately after processing.
+*PIN-Variable nach dem Lesen leeren* aktivieren, damit die PIN nach der Verarbeitung sofort aus der Variable gelöscht wird.
 
 ---
 
-## PHP API
+## PHP-API
 
-All exported functions use the `Alarm_` prefix.
+Alle exportierten Funktionen verwenden das Präfix `Alarm_`.
 
-| Function | Description |
+| Funktion | Beschreibung |
 |----------|-------------|
-| `Alarm_ArmNight($id, $pin)` | Arm in Night mode |
-| `Alarm_ArmAway($id, $pin)` | Arm in Away mode |
-| `Alarm_Disarm($id, $pin)` | Disarm |
-| `Alarm_Acknowledge($id, $pin)` | Acknowledge alarm |
-| `Alarm_Reset($id, $pin)` | Reset alarm state |
-| `Alarm_SetMode($id, $mode)` | Set mode by integer (0=Disarmed, 1=Night, 2=Away, 3=Test) |
-| `Alarm_Panic($id)` | Trigger panic alarm immediately |
-| `Alarm_BypassSensor($id, $varID, $minutes, $pin)` | Bypass a sensor temporarily |
-| `Alarm_UnbypassSensor($id, $varID, $pin)` | Remove bypass |
-| `Alarm_SetPin($id, $pin)` | Set or clear the PIN |
-| `Alarm_RunPreArmCheck($id, $mode)` | Run pre-arm check and return result string |
-| `Alarm_HandleSensorEvent($id, $varID, $value)` | Manually trigger a sensor event |
-| `Alarm_TestNotification($id)` | Send a test notification to all configured channels |
-| `Alarm_RebuildFrontend($id)` | Force-refresh the tile visualization |
-| `Alarm_ClearHistory($id)` | Clear the event history |
+| `Alarm_ArmNight($id, $pin)` | Nacht-Modus scharf |
+| `Alarm_ArmAway($id, $pin)` | Abwesend-Modus scharf |
+| `Alarm_Disarm($id, $pin)` | Unscharfschalten |
+| `Alarm_Acknowledge($id, $pin)` | Alarm quittieren |
+| `Alarm_Reset($id, $pin)` | Alarmzustand zurücksetzen |
+| `Alarm_SetMode($id, $modus)` | Modus per Ganzzahl setzen (0=Unscharf, 1=Nacht, 2=Abwesend, 3=Test) |
+| `Alarm_Panic($id)` | Panik-Alarm sofort auslösen |
+| `Alarm_BypassSensor($id, $varID, $minuten, $pin)` | Sensor temporär bypassen |
+| `Alarm_UnbypassSensor($id, $varID, $pin)` | Bypass aufheben |
+| `Alarm_SetPin($id, $pin)` | PIN setzen oder löschen |
+| `Alarm_RunPreArmCheck($id, $modus)` | Vorab-Check durchführen, Ergebnis als Text zurückgeben |
+| `Alarm_HandleSensorEvent($id, $varID, $wert)` | Sensor-Ereignis manuell auslösen |
+| `Alarm_TestNotification($id)` | Testbenachrichtigung an alle konfigurierten Kanäle senden |
+| `Alarm_RebuildFrontend($id)` | Kachel-Visualisierung neu aufbauen |
+| `Alarm_ClearHistory($id)` | Ereignisverlauf löschen |
 
 ---
 
-## Status variables
+## Statusvariablen
 
-The module creates these variables under the instance:
+Das Modul legt folgende Variablen unter der Instanz an:
 
-| Variable | Description |
+| Variable | Beschreibung |
 |----------|-------------|
-| Mode | Current operating mode (switchable) |
-| State | Internal state (read-only) |
-| IsArmed | Boolean: is the system armed? |
-| IsAlarmActive | Boolean: is an alarm currently active? |
-| LastEvent | Text of the last event |
-| LastTriggerSensorName | Name of the last sensor that triggered |
-| LastTriggerZone | Zone of the last triggering sensor |
-| ExitDelayRemaining | Remaining exit delay in seconds |
-| EntryDelayRemaining | Remaining entry delay in seconds |
-| TroubleActive | Boolean: is there an active trouble? |
-| TroubleSummary | Text description of active troubles |
-| BypassActive | Boolean: is any sensor bypassed? |
-| OpenSensorsSummary | Comma-separated list of open sensors |
+| Modus | Aktueller Betriebsmodus (schaltbar) |
+| Zustand | Interner Zustand (nur lesbar) |
+| Ist scharf | Boolean: ist die Anlage scharf? |
+| Alarm aktiv | Boolean: ist gerade ein Alarm aktiv? |
+| Letztes Ereignis | Text des letzten Ereignisses |
+| Letzter Auslöser | Name des zuletzt auslösenden Sensors |
+| Letzte Zone | Zone des zuletzt auslösenden Sensors |
+| Ausgangsverzögerung Rest | Verbleibende Ausgangsverzögerung in Sekunden |
+| Eintrittsverzögerung Rest | Verbleibende Eintrittsverzögerung in Sekunden |
+| Störung aktiv | Boolean: liegt eine aktive Störung vor? |
+| Störungsübersicht | Textbeschreibung aktiver Störungen |
+| Bypass aktiv | Boolean: ist ein Sensor gebypastet? |
+| Offene Sensoren | Kommagetrennte Liste offener Sensoren |
 
 ---
 
-## Compatibility
+## Kompatibilität
 
-- IP-Symcon 8.1 or newer
-- PHP 8.0 or newer
-- Uses `IPSModuleStrict` (mandatory type hints, read-only variables)
+- IP-Symcon 8.1 oder neuer
+- PHP 8.0 oder neuer
+- Verwendet `IPSModuleStrict` (Pflicht-Typangaben, Read-Only-Variablen)
