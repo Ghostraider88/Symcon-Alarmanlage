@@ -76,7 +76,9 @@ trait PinTrait
         if ($attempts >= $max) {
             $lockout = max(1, $this->ReadPropertyInteger('LockoutSeconds'));
             $this->WriteAttributeInteger('LockoutUntil', time() + $lockout);
-            $this->RaiseTrouble(sprintf($this->Translate('PIN locked for %d seconds'), $lockout));
+            // A lockout is transient (it expires on its own), so only log it –
+            // do not raise a persistent trouble that would have to be cleared.
+            $this->AddHistory(AlarmConstants::EVENT_PIN_LOCKED, sprintf($this->Translate('PIN locked for %d seconds'), $lockout));
             $this->DispatchEvent(AlarmConstants::EVENT_PIN_LOCKED, ['lockout' => $lockout]);
         }
         $this->RebuildFrontendInternal();

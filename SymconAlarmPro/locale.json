@@ -163,6 +163,7 @@
             "PIN entry locked": "PIN-Eingabe gesperrt",
             "Wrong PIN (%d/%d)": "Falsche PIN (%d/%d)",
             "PIN locked for %d seconds": "PIN für %d Sekunden gesperrt",
+            "Trouble cleared": "Störung zurückgesetzt",
             "PIN cleared": "PIN gelöscht",
             "PIN set": "PIN gesetzt",
             "Test notification sent": "Testbenachrichtigung gesendet",

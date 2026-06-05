@@ -456,6 +456,7 @@
         {
             "type": "RowLayout",
             "items": [
+                { "type": "Button", "caption": "Störung zurücksetzen", "onClick": "Alarm_ClearTrouble($id);" },
                 { "type": "Button", "caption": "Vorab-Check (Abwesend)", "onClick": "echo Alarm_RunPreArmCheck($id, 2);" },
                 { "type": "Button", "caption": "Testbenachrichtigung", "onClick": "Alarm_TestNotification($id);" },
                 { "type": "Button", "caption": "Frontend neu aufbauen", "onClick": "Alarm_RebuildFrontend($id);" },

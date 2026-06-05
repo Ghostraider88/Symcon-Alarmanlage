@@ -320,6 +320,25 @@ class SymconAlarmPro extends IPSModuleStrict
         $this->ClearHistoryInternal();
     }
 
+    /**
+     * Dismisses an active trouble flag (e.g. after a PIN lockout or a fixed
+     * configuration problem). Clearing a fault changes no security state, so it
+     * deliberately does not require a PIN – otherwise a PIN lockout trouble
+     * could never be cleared. Does not arm or disarm the system.
+     */
+    public function ClearTrouble(): bool
+    {
+        $wasActive = (bool) $this->GetValue('TroubleActive');
+        $this->SetValue('TroubleActive', false);
+        $this->SetValue('TroubleSummary', '');
+        if ($wasActive) {
+            $this->AddHistory(AlarmConstants::EVENT_TROUBLE, $this->Translate('Trouble cleared'));
+        }
+        $this->UpdateModuleStatus();
+        $this->RebuildFrontendInternal();
+        return true;
+    }
+
     public function SetPin(string $pin): void
     {
         $this->SetPinInternal($pin);
@@ -406,13 +425,6 @@ class SymconAlarmPro extends IPSModuleStrict
         $this->SetValue('TroubleSummary', trim($existing . "\n" . $text));
         $this->AddHistory(AlarmConstants::EVENT_TROUBLE, $text);
         $this->DispatchEvent(AlarmConstants::EVENT_TROUBLE, ['eventType' => AlarmConstants::EVENT_TROUBLE]);
-        $this->UpdateModuleStatus();
-    }
-
-    private function ClearTrouble(): void
-    {
-        $this->SetValue('TroubleActive', false);
-        $this->SetValue('TroubleSummary', '');
         $this->UpdateModuleStatus();
     }
 
