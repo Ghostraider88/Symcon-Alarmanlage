@@ -29,32 +29,35 @@ trait NotificationTrait
             if (!$this->PassesFilters($notification, $ctx)) {
                 continue;
             }
-            $text = $this->RenderTemplate((string) ($notification['Template'] ?? ''), $ctx);
-            $subject = (string) ($notification['Subject'] ?? $this->Translate('Alarm'));
-            $this->DeliverNotification(
-                (int) ($notification['NotifyType'] ?? AlarmConstants::NOTIFY_SCRIPT),
-                (int) ($notification['TargetID'] ?? 0),
-                (string) ($notification['Parameter'] ?? ''),
-                $subject,
-                $text,
-                $event
-            );
+            $notification['RenderedText'] = $this->RenderTemplate((string) ($notification['Template'] ?? ''), $ctx);
+            $notification['RenderedSubject'] = $this->RenderTemplate((string) ($notification['Subject'] ?? $this->Translate('Alarm')), $ctx);
+            $this->DeliverNotification($notification, $event);
         }
     }
 
     /**
      * Dispatches a rendered notification to the configured delivery channel.
      *
-     * Pushover   – calls PushOver_SendNotification on the selected instance.
+     * Pushover   – calls TUPO_SendMessageComplete on the selected instance,
+     *              supporting priority, sound, HTML and (for emergency priority)
+     *              retry/expire. Falls back to TUPO_SendMessage / PushOver_*.
      * SMTP/Email – calls SMTP_SendMail on the selected instance.
      * Telegram   – calls TelegramBot_SendMessage or Telegram_SendMessage;
      *              Parameter holds the chat ID.
      * Variable   – writes text to a string variable; uses RequestAction when
      *              the variable has an action handler (e.g. Echo Remote TTS).
      * Script     – calls IPS_RunScriptEx with TEXT, SUBJECT, EVENT, SENDER.
+     *
+     * @param array<string, mixed> $notification
      */
-    private function DeliverNotification(int $type, int $targetID, string $parameter, string $subject, string $text, string $event): void
+    private function DeliverNotification(array $notification, string $event): void
     {
+        $type = (int) ($notification['NotifyType'] ?? AlarmConstants::NOTIFY_SCRIPT);
+        $targetID = (int) ($notification['TargetID'] ?? 0);
+        $parameter = (string) ($notification['Parameter'] ?? '');
+        $subject = (string) ($notification['RenderedSubject'] ?? $this->Translate('Alarm'));
+        $text = (string) ($notification['RenderedText'] ?? '');
+
         if ($targetID <= 0) {
             $this->RaiseTrouble($this->Translate('Notification') . ': ' . $this->Translate('no target configured'));
             return;
@@ -62,17 +65,7 @@ trait NotificationTrait
         try {
             switch ($type) {
                 case AlarmConstants::NOTIFY_PUSHOVER:
-                    if (!IPS_InstanceExists($targetID)) {
-                        $this->RaiseTrouble(sprintf($this->Translate('Notification: Pushover instance %d not found'), $targetID));
-                        return;
-                    }
-                    if (function_exists('PushOver_SendNotification')) {
-                        PushOver_SendNotification($targetID, $subject, $text, '', '', '', 0, '');
-                    } elseif (function_exists('PushOver_SendPush')) {
-                        PushOver_SendPush($targetID, $subject, $text);
-                    } else {
-                        $this->RaiseTrouble($this->Translate('Notification: Pushover module function not found. Check module installation.'));
-                    }
+                    $this->DeliverPushover($targetID, $subject, $text, $notification);
                     break;
 
                 case AlarmConstants::NOTIFY_SMTP:
@@ -129,6 +122,43 @@ trait NotificationTrait
             }
         } catch (Throwable $e) {
             $this->RaiseTrouble($this->Translate('Notification') . ' ' . $this->Translate('failed') . ': ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Pushover delivery via the timo-u Symcon_Pushover module (TUPO_ prefix).
+     *
+     * Priority levels follow the Pushover API: -2 lowest, -1 low, 0 normal,
+     * 1 high, 2 emergency. For emergency priority Pushover requires retry
+     * (>= 30 s) and expire (<= 10800 s); the notification repeats until the
+     * user acknowledges it.
+     *
+     * @param array<string, mixed> $notification
+     */
+    private function DeliverPushover(int $targetID, string $subject, string $text, array $notification): void
+    {
+        if (!IPS_InstanceExists($targetID)) {
+            $this->RaiseTrouble(sprintf($this->Translate('Notification: Pushover instance %d not found'), $targetID));
+            return;
+        }
+
+        $priority = (int) ($notification['Priority'] ?? 0);
+        $priority = max(-2, min(2, $priority));
+        $sound = (string) ($notification['Sound'] ?? '');
+        $html = !empty($notification['HTML']) ? 1 : 0;
+        // Emergency priority needs sane retry/expire bounds (Pushover limits).
+        $retry = max(30, (int) ($notification['Retry'] ?? 60));
+        $expire = min(10800, max($retry, (int) ($notification['Expire'] ?? 3600)));
+
+        if (function_exists('TUPO_SendMessageComplete')) {
+            // (id, title, text, url, urlTitle, priority, html, retry, expire, sound)
+            TUPO_SendMessageComplete($targetID, $subject, $text, '', '', $priority, $html, $retry, $expire, $sound);
+        } elseif (function_exists('TUPO_SendMessage')) {
+            TUPO_SendMessage($targetID, $subject, $text, $priority);
+        } elseif (function_exists('PushOver_SendNotification')) {
+            PushOver_SendNotification($targetID, $subject, $text, $sound, '', '', $priority, '');
+        } else {
+            $this->RaiseTrouble($this->Translate('Notification: Pushover module function not found. Check module installation.'));
         }
     }
 

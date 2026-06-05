@@ -190,9 +190,21 @@ Benachrichtigungen informieren bei Alarm-Ereignissen. Das Modul unterstützt fü
 
 #### Pushover
 
-Die in IP-Symcon konfigurierte **Pushover**-Instanz auswählen. Das Modul ruft `PushOver_SendNotification()` auf. Das Feld *Betreff/Titel* wird der Titel der Push-Benachrichtigung.
+Die in IP-Symcon konfigurierte **Pushover**-Instanz auswählen (Modul von timo-u, [Symcon_Pushover](https://github.com/timo-u/Symcon_Pushover), Funktionspräfix `TUPO_`). Das Modul ruft `TUPO_SendMessageComplete()` auf (mit Fallback auf `TUPO_SendMessage()`). Das Feld *Betreff/Titel* wird der Titel der Push-Benachrichtigung.
 
 **Einrichtung:** Pushover-Modul aus dem Symcon-Modulkatalog installieren, API-Zugangsdaten eingeben, dann die Instanz hier auswählen.
+
+**Pushover-spezifische Spalten** (nur sichtbar, wenn Typ = Pushover):
+
+| Spalte | Beschreibung |
+|--------|-------------|
+| Priorität | `-2` Niedrigste (keine Benachrichtigung/Badge), `-1` Niedrig (kein Ton), `0` Normal, `1` Hoch (umgeht Pushover-Ruhezeiten), `2` Notfall (wird wiederholt, bis der Nutzer quittiert) |
+| Sound | Pushover-Soundname (z. B. `pushover`, `siren`, `alien`, `persistent`). Leer = Standardton der App |
+| HTML | Erlaubt HTML-Formatierung im Nachrichtentext (z. B. `<b>fett</b>`) |
+| Retry | Nur bei Priorität 2: Wiederholintervall in Sekunden (min. 30) |
+| Expire | Nur bei Priorität 2: Gesamtdauer in Sekunden (max. 10800), nach der die Wiederholung endet |
+
+Bei Priorität **2 (Notfall)** wiederholt Pushover die Benachrichtigung alle *Retry* Sekunden, bis der Nutzer sie in der App quittiert oder *Expire* Sekunden verstrichen sind. Ideal für scharfen Alarm, der nicht überhört werden darf.
 
 #### SMTP / E-Mail
 

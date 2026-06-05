@@ -240,7 +240,7 @@
             "items": [
                 { "type": "Label", "bold": true, "caption": "Benachrichtigungen — Push, E-Mail, Telegram, Variable oder Skript" },
                 { "type": "Label", "caption": "Benachrichtigungen informieren bei Alarm-Ereignissen. Einfach die gewünschte IP-Symcon-Modulinstanz auswählen – das Modul ruft die passende Funktion des installierten Moduls auf." },
-                { "type": "Label", "caption": "PUSHOVER — Die konfigurierte Pushover-Instanz in IP-Symcon auswählen. 'Betreff/Titel' wird der Titel der Push-Benachrichtigung." },
+                { "type": "Label", "caption": "PUSHOVER — Die konfigurierte Pushover-Instanz (Modul von timo-u, Funktionspräfix TUPO_) auswählen. 'Betreff/Titel' wird der Titel der Push-Benachrichtigung. Zusätzliche Pushover-Spalten (nur sichtbar bei Typ Pushover):\n• PRIORITÄT: -2 Niedrigste (keine Benachrichtigung), -1 Niedrig (kein Ton), 0 Normal, 1 Hoch (umgeht Ruhezeiten), 2 Notfall (wird wiederholt bis quittiert).\n• SOUND: Pushover-Soundname (z. B. pushover, siren, alien, persistent). Leer = Standardton der App.\n• HTML: Erlaubt HTML-Formatierung im Text (z. B. <b>fett</b>).\n• RETRY / EXPIRE: Nur für Priorität 2 (Notfall). Retry = Wiederholintervall in Sekunden (min. 30), Expire = Gesamtdauer in Sekunden (max. 10800), nach der die Wiederholung endet." },
                 { "type": "Label", "caption": "SMTP / E-MAIL — Die konfigurierte SMTP- oder Mailer-Instanz auswählen. 'Betreff/Titel' wird der E-Mail-Betreff. Wenn das Modul eine Empfängeradresse benötigt, diese im Feld 'Parameter' eintragen." },
                 { "type": "Label", "caption": "TELEGRAM — Die konfigurierte Telegram-Bot-Instanz auswählen. Die Chat-ID im Feld 'Parameter' eintragen (Pflichtfeld). Das Modul versucht der Reihe nach TelegramBot_SendMessage und Telegram_SendMessage – das passende Modul muss installiert sein." },
                 { "type": "Label", "caption": "VARIABLE — Der gerenderte Nachrichtentext wird in eine String-Variable geschrieben. Geeignet für Anzeigetafeln, eigene Skripte, die eine Variable beobachten, oder andere Integrationen." },
@@ -270,6 +270,48 @@
                         { "caption": "Instanz / Ziel", "name": "TargetID", "width": "180px", "add": 0, "edit": { "type": "SelectObject" } },
                         { "caption": "Parameter (ChatID/E-Mail)", "name": "Parameter", "width": "170px", "add": "", "edit": { "type": "ValidationTextBox" } },
                         { "caption": "Betreff / Titel", "name": "Subject", "width": "140px", "add": "Alarm", "edit": { "type": "ValidationTextBox" } },
+                        {
+                            "caption": "Priorität (Pushover)", "name": "Priority", "width": "150px", "add": 0,
+                            "edit": { "type": "Select", "visibleIf": "NotifyType == 0", "options": [
+                                { "caption": "-2 Niedrigste", "value": -2 },
+                                { "caption": "-1 Niedrig", "value": -1 },
+                                { "caption": "0 Normal", "value": 0 },
+                                { "caption": "1 Hoch", "value": 1 },
+                                { "caption": "2 Notfall", "value": 2 }
+                            ] }
+                        },
+                        {
+                            "caption": "Sound (Pushover)", "name": "Sound", "width": "140px", "add": "",
+                            "edit": { "type": "Select", "visibleIf": "NotifyType == 0", "options": [
+                                { "caption": "Standard (App-Einstellung)", "value": "" },
+                                { "caption": "Pushover", "value": "pushover" },
+                                { "caption": "Bike", "value": "bike" },
+                                { "caption": "Bugle", "value": "bugle" },
+                                { "caption": "Cash Register", "value": "cashregister" },
+                                { "caption": "Classical", "value": "classical" },
+                                { "caption": "Cosmic", "value": "cosmic" },
+                                { "caption": "Falling", "value": "falling" },
+                                { "caption": "Gamelan", "value": "gamelan" },
+                                { "caption": "Incoming", "value": "incoming" },
+                                { "caption": "Intermission", "value": "intermission" },
+                                { "caption": "Magic", "value": "magic" },
+                                { "caption": "Mechanical", "value": "mechanical" },
+                                { "caption": "Piano Bar", "value": "pianobar" },
+                                { "caption": "Siren", "value": "siren" },
+                                { "caption": "Space Alarm", "value": "spacealarm" },
+                                { "caption": "Tug Boat", "value": "tugboat" },
+                                { "caption": "Alien Alarm (lang)", "value": "alien" },
+                                { "caption": "Climb (lang)", "value": "climb" },
+                                { "caption": "Persistent (lang)", "value": "persistent" },
+                                { "caption": "Pushover Echo (lang)", "value": "echo" },
+                                { "caption": "Up Down (lang)", "value": "updown" },
+                                { "caption": "Vibrate (nur Vibration)", "value": "vibrate" },
+                                { "caption": "Kein Ton", "value": "none" }
+                            ] }
+                        },
+                        { "caption": "HTML (Pushover)", "name": "HTML", "width": "100px", "add": false, "edit": { "type": "CheckBox", "visibleIf": "NotifyType == 0" } },
+                        { "caption": "Retry (s, Notfall)", "name": "Retry", "width": "120px", "add": 60, "edit": { "type": "NumberSpinner", "minimum": 30, "visibleIf": "NotifyType == 0" } },
+                        { "caption": "Expire (s, Notfall)", "name": "Expire", "width": "120px", "add": 3600, "edit": { "type": "NumberSpinner", "minimum": 30, "maximum": 10800, "visibleIf": "NotifyType == 0" } },
                         {
                             "caption": "Ereignis", "name": "Event", "width": "170px", "add": "alarm",
                             "edit": { "type": "Select", "options": [
