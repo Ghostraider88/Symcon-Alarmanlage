@@ -53,6 +53,15 @@ Eine Zone hat keine eigene Logik – sie ist nur ein Name, der an anderen Stelle
 
 **Einrichtung:** Zonen im Bereich **Zonen** anlegen. Der Name ist ein freies Textfeld. Exakt denselben Namen beim Zuordnen von Sensoren und beim Einrichten von Zonenfiltern verwenden.
 
+### Listen bearbeiten: Sortieren & Duplizieren
+
+Alle Listen (Zonen, Sensoren, Aktionen, Benachrichtigungen, Sprachansagen, Kameras) unterstützen:
+
+- **Neusortieren per Drag & Drop** – Eine Zeile am Ziehpunkt anfassen und an die gewünschte Position ziehen.
+- **Kopieren & Einfügen** – Eine Zeile in der Symcon-Konsole markieren und mit **Strg+C** / **Strg+V** duplizieren. Anschließend nur noch Name und Variable der Kopie anpassen, statt alle Felder neu einzutragen. (Diese Funktion ist Teil der Symcon-Konsole und steht bei jeder bearbeitbaren Liste zur Verfügung.)
+
+Beim Hinzufügen einer neuen Sensor-Zeile sind sinnvolle Standardwerte bereits vorbelegt (Abwesend = an, Test = an, Reaktion = Sofortalarm, Bypass erlaubt, Kritikalität = Normal, Eintrittsverzögerung = 30 s) – es müssen also in der Regel nur Name, Variable und Zone gesetzt werden.
+
 ---
 
 ## Sensoren
