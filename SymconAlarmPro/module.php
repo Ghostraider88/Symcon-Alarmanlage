@@ -71,6 +71,9 @@ class SymconAlarmPro extends IPSModuleStrict
         $this->RegisterPropertyBoolean('RequirePinForArm', false);
         $this->RegisterPropertyBoolean('RequirePinForDisarm', true);
         $this->RegisterPropertyBoolean('RequirePinForBypass', false);
+        // External PIN pad: a string variable the keypad writes the entered PIN into.
+        $this->RegisterPropertyInteger('PinInputVariableID', 0);
+        $this->RegisterPropertyBoolean('ClearPinInput', true);
 
         // --- History ---
         $this->RegisterPropertyInteger('HistoryMaxEntries', 50);
@@ -127,12 +130,44 @@ class SymconAlarmPro extends IPSModuleStrict
     {
         switch ($message) {
             case VM_UPDATE:
-                $this->HandleSensorEventInternal($senderID, $data[0]);
+                if ($senderID === $this->ReadPropertyInteger('PinInputVariableID') && $senderID > 0) {
+                    $this->HandlePinInput((string) $data[0]);
+                } else {
+                    $this->HandleSensorEventInternal($senderID, $data[0]);
+                }
                 break;
             case IPS_KERNELSTARTED:
                 $this->ApplyRestartBehavior();
                 break;
         }
+    }
+
+    /**
+     * Builds the configuration form dynamically so every zone selector offers
+     * exactly the zones configured in the Zones list (instead of free text).
+     */
+    public function GetConfigurationForm(): string
+    {
+        $form = json_decode((string) file_get_contents(__DIR__ . '/form.json'), true);
+        if (!is_array($form)) {
+            return '{}';
+        }
+
+        $options = [['caption' => '-', 'value' => '']];
+        $zones = json_decode($this->ReadPropertyString('Zones'), true);
+        if (is_array($zones)) {
+            foreach ($zones as $zone) {
+                $name = (string) ($zone['Name'] ?? '');
+                if ($name !== '') {
+                    $options[] = ['caption' => $name, 'value' => $name];
+                }
+            }
+        }
+
+        if (isset($form['elements']) && is_array($form['elements'])) {
+            $this->InjectZoneOptions($form['elements'], $options);
+        }
+        return json_encode($form);
     }
 
     public function RequestAction(string $ident, mixed $value): void
@@ -298,6 +333,28 @@ class SymconAlarmPro extends IPSModuleStrict
     protected function getTime(): int
     {
         return time();
+    }
+
+    /**
+     * Recursively replaces every "Zone"/"ZoneFilter" list column edit element
+     * with a Select offering the configured zones.
+     */
+    private function InjectZoneOptions(array &$elements, array $options): void
+    {
+        foreach ($elements as &$element) {
+            if (($element['type'] ?? '') === 'List' && isset($element['columns']) && is_array($element['columns'])) {
+                foreach ($element['columns'] as &$column) {
+                    if (in_array($column['name'] ?? '', ['Zone', 'ZoneFilter'], true)) {
+                        $column['edit'] = ['type' => 'Select', 'options' => $options];
+                    }
+                }
+                unset($column);
+            }
+            if (isset($element['items']) && is_array($element['items'])) {
+                $this->InjectZoneOptions($element['items'], $options);
+            }
+        }
+        unset($element);
     }
 
     // =====================================================================

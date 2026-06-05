@@ -87,4 +87,53 @@ trait PinTrait
         $this->WriteAttributeInteger('FailedAttempts', 0);
         $this->WriteAttributeInteger('LockoutUntil', 0);
     }
+
+    /**
+     * Processes a value written by an external PIN pad into the configured input
+     * variable. The value is either just the PIN (-> disarm) or a command with
+     * the PIN, e.g. "ARM_AWAY:1234", "ARM_NIGHT:1234", "DISARM:1234",
+     * "ACK:1234", "RESET:1234". The input variable is cleared afterwards.
+     */
+    private function HandlePinInput(string $raw): void
+    {
+        $raw = trim($raw);
+        if ($raw === '') {
+            return;
+        }
+
+        $command = 'DISARM';
+        $pin = $raw;
+        if (strpos($raw, ':') !== false) {
+            [$prefix, $rest] = explode(':', $raw, 2);
+            $prefix = strtoupper(trim($prefix));
+            if (in_array($prefix, ['ARM_AWAY', 'ARM_NIGHT', 'DISARM', 'ACK', 'RESET'], true)) {
+                $command = $prefix;
+                $pin = trim($rest);
+            }
+        }
+
+        switch ($command) {
+            case 'ARM_AWAY':
+                $this->ArmAway($pin);
+                break;
+            case 'ARM_NIGHT':
+                $this->ArmNight($pin);
+                break;
+            case 'ACK':
+                $this->Acknowledge($pin);
+                break;
+            case 'RESET':
+                $this->Reset($pin);
+                break;
+            default:
+                $this->Disarm($pin);
+                break;
+        }
+
+        // Clear the input variable so the PIN is not left in clear text.
+        $vid = $this->ReadPropertyInteger('PinInputVariableID');
+        if ($this->ReadPropertyBoolean('ClearPinInput') && $vid > 0 && IPS_VariableExists($vid)) {
+            @SetValue($vid, '');
+        }
+    }
 }

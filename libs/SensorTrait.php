@@ -74,6 +74,15 @@ trait SensorTrait
                 $watched[] = $vid;
             }
         }
+
+        // Also watch the optional external PIN pad input variable.
+        $pinVid = $this->ReadPropertyInteger('PinInputVariableID');
+        if ($pinVid > 0 && IPS_VariableExists($pinVid) && !in_array($pinVid, $watched, true)) {
+            $this->RegisterMessage($pinVid, VM_UPDATE);
+            $this->RegisterReference($pinVid);
+            $watched[] = $pinVid;
+        }
+
         $this->SetBuffer('WatchedVariables', json_encode($watched));
     }
 

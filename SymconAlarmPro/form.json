@@ -45,6 +45,9 @@
                 { "type": "CheckBox", "name": "RequirePinForArm", "caption": "Require PIN for arming" },
                 { "type": "CheckBox", "name": "RequirePinForDisarm", "caption": "Require PIN for disarm/acknowledge/reset" },
                 { "type": "CheckBox", "name": "RequirePinForBypass", "caption": "Require PIN for bypass" },
+                { "type": "SelectVariable", "name": "PinInputVariableID", "caption": "External PIN pad input variable (string, optional)" },
+                { "type": "CheckBox", "name": "ClearPinInput", "caption": "Clear PIN input variable after reading" },
+                { "type": "Label", "caption": "PIN pad: write the entered PIN into the variable above. Value formats: just the PIN (disarms), or with a command prefix ARM_AWAY: / ARM_NIGHT: / DISARM: / ACK: / RESET: followed by the PIN, e.g. ARM_AWAY:1234." },
                 { "type": "Label", "caption": "Set or change the PIN in the test area below (it is stored hashed, never in clear text)." }
             ]
         },
