@@ -53,7 +53,7 @@ trait FrontendTrait
             'mode'           => $this->GetValue('Mode'),
             'modeName'       => $this->GetModeName($this->GetValue('Mode')),
             'state'          => $state,
-            'stateName'      => $this->GetStateName($state),
+            'stateName'      => $this->GetStateDisplayName($state),
             'color'          => $this->GetStateColor($state),
             'icon'           => $this->GetStateIcon($state),
             'isArmed'        => $this->GetValue('IsArmed'),
@@ -89,6 +89,28 @@ trait FrontendTrait
             AlarmConstants::STATE_TEST               => '#2196f3',
             default                                  => '#4caf50',
         };
+    }
+
+    /**
+     * Localized, user-facing state name (the GetStateName tokens stay English
+     * for logic/debug). The phrases below are translated via locale.json.
+     */
+    private function GetStateDisplayName(int $state): string
+    {
+        $name = match ($state) {
+            AlarmConstants::STATE_DISARMED           => 'Disarmed',
+            AlarmConstants::STATE_ARMING_EXIT_DELAY  => 'Arming',
+            AlarmConstants::STATE_ARMED_NIGHT        => 'Armed night',
+            AlarmConstants::STATE_ARMED_AWAY         => 'Armed away',
+            AlarmConstants::STATE_ENTRY_DELAY        => 'Entry delay',
+            AlarmConstants::STATE_PRE_ALARM          => 'Pre-alarm',
+            AlarmConstants::STATE_ALARM              => 'Alarm',
+            AlarmConstants::STATE_ALARM_ACKNOWLEDGED => 'Alarm acknowledged',
+            AlarmConstants::STATE_TROUBLE            => 'Trouble',
+            AlarmConstants::STATE_TEST               => 'Test',
+            default                                  => 'Disarmed',
+        };
+        return $this->Translate($name);
     }
 
     private function GetStateIcon(int $state): string

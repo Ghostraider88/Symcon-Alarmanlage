@@ -20,6 +20,8 @@
 
         body {
             margin: 0;
+            /* Leave room at the top for the Symcon tile title bar + fullscreen icon. */
+            padding: 34px 2px 2px;
             font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             color: var(--content-color);
             background: transparent;
@@ -126,7 +128,6 @@
     <div class="head">
         <i class="fa-solid fa-shield-halved ico" id="ac-ico"></i>
         <div class="titles">
-            <div class="name" id="ac-name">Alarmanlage</div>
             <div class="state" id="ac-state">—</div>
         </div>
         <div class="mode" id="ac-mode"></div>
@@ -179,7 +180,6 @@
         var ico = document.getElementById('ac-ico');
         ico.className = 'fa-solid ' + (s.icon || 'fa-shield-halved') + ' ico';
 
-        document.getElementById('ac-name').textContent = s.name || 'Alarmanlage';
         document.getElementById('ac-state').textContent = s.stateName || '';
         document.getElementById('ac-mode').textContent = s.modeName || '';
 
