@@ -3,8 +3,18 @@
 declare(strict_types=1);
 
 /**
- * Camera action hooks. Generic: runs a snapshot and/or alarm script (receiving
- * ZONE, URL and event context) – no native Blue Iris or vendor dependency.
+ * Camera action hooks.
+ *
+ * Motion detection and camera alarm signals belong in the Sensors list (link the
+ * boolean alarm variable). This section handles what happens AFTER an alarm or
+ * pre-alarm: a user script is called so you can trigger a snapshot, send a
+ * Telegram message with an image, start a recording, etc.
+ *
+ * The script receives:
+ *   CAMERA_NAME  – name configured here
+ *   ZONE         – zone this camera is assigned to
+ *   EVENT        – 'pre_alarm', 'alarm', or 'test'
+ *   SENDER       – always 'AlarmCenter'
  */
 trait CameraTrait
 {
@@ -19,7 +29,6 @@ trait CameraTrait
 
     private function FireCameras(string $event, array $ctx): void
     {
-        // No real camera output in test state.
         $isTest = $this->GetValue('State') === AlarmConstants::STATE_TEST;
 
         foreach ($this->GetCameras() as $camera) {
@@ -35,38 +44,35 @@ trait CameraTrait
             if (!$applies) {
                 continue;
             }
-            // Zone filter: empty zone matches any.
+
+            // Zone filter: empty = applies to all zones.
             $zone = (string) ($camera['Zone'] ?? '');
             if ($zone !== '' && isset($ctx['zone']) && $ctx['zone'] !== '' && $ctx['zone'] !== $zone) {
                 continue;
             }
+
             if ($isTest && $event !== AlarmConstants::EVENT_TEST) {
                 continue;
             }
 
-            $url = $this->RenderTemplate((string) ($camera['URLTemplate'] ?? ''), $ctx);
-            $params = ['ZONE' => $zone, 'URL' => $url, 'EVENT' => $event, 'SENDER' => 'AlarmCenter'];
-
-            $this->RunCameraScript((int) ($camera['SnapshotScript'] ?? 0), $params, $this->Translate('Camera snapshot'));
-            if ($event === AlarmConstants::EVENT_ALARM) {
-                $this->RunCameraScript((int) ($camera['AlarmScript'] ?? 0), $params, $this->Translate('Camera alarm'));
+            $scriptID = (int) ($camera['Script'] ?? 0);
+            if ($scriptID <= 0) {
+                continue;
             }
-        }
-    }
-
-    private function RunCameraScript(int $scriptID, array $params, string $label): void
-    {
-        if ($scriptID <= 0) {
-            return;
-        }
-        if (!IPS_ScriptExists($scriptID)) {
-            $this->RaiseTrouble(sprintf($this->Translate('%s script %d missing'), $label, $scriptID));
-            return;
-        }
-        try {
-            IPS_RunScriptEx($scriptID, $params);
-        } catch (Throwable $e) {
-            $this->RaiseTrouble($label . ' ' . $this->Translate('failed') . ': ' . $e->getMessage());
+            if (!IPS_ScriptExists($scriptID)) {
+                $this->RaiseTrouble(sprintf($this->Translate('%s script %d missing'), $this->Translate('Camera'), $scriptID));
+                continue;
+            }
+            try {
+                IPS_RunScriptEx($scriptID, [
+                    'CAMERA_NAME' => (string) ($camera['Name'] ?? ''),
+                    'ZONE'        => $zone,
+                    'EVENT'       => $event,
+                    'SENDER'      => 'AlarmCenter',
+                ]);
+            } catch (Throwable $e) {
+                $this->RaiseTrouble($this->Translate('Camera') . ' ' . $this->Translate('failed') . ': ' . $e->getMessage());
+            }
         }
     }
 }

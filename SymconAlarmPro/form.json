@@ -16,7 +16,9 @@
                         { "caption": "Restore last mode with pre-arm check", "value": "restore_precheck" }
                     ]
                 },
+                { "type": "Label", "caption": "Always disarmed: the system starts unarmed after every restart (safest default). Restore last mode: the system re-arms to the mode it was in before the restart. Restore with pre-arm check: same as Restore, but blocks re-arming if sensors are open." },
                 { "type": "NumberSpinner", "name": "FrontendRefreshInterval", "caption": "Frontend refresh interval (s, 0 = off)", "minimum": 0 },
+                { "type": "Label", "caption": "Periodic frontend refresh for the tile visualization. Set to 0 to disable (updates are pushed automatically on every state change anyway)." },
                 { "type": "CheckBox", "name": "Debug", "caption": "Enable debug output" }
             ]
         },
@@ -24,13 +26,21 @@
             "type": "ExpansionPanel",
             "caption": "Modes & Delays",
             "items": [
+                { "type": "Label", "bold": true, "caption": "Exit delay (arming countdown)" },
+                { "type": "Label", "caption": "When you arm the system, the exit delay gives you time to leave the building before the sensors become active. During this countdown the system is not yet armed. Set to 0 for immediate arming." },
                 { "type": "NumberSpinner", "name": "ExitDelayNight", "caption": "Exit delay Night (s)", "minimum": 0 },
                 { "type": "NumberSpinner", "name": "ExitDelayAway", "caption": "Exit delay Away (s)", "minimum": 0 },
                 { "type": "NumberSpinner", "name": "ExitDelayTest", "caption": "Exit delay Test (s)", "minimum": 0 },
+                { "type": "Label", "bold": true, "caption": "Pre-alarm phase" },
+                { "type": "Label", "caption": "When enabled, certain sensors (configured with Reaction = Pre-alarm) do not trigger an immediate alarm but start a silent pre-alarm phase first. If the situation is not resolved within the pre-alarm duration, the full alarm fires. Useful for a final warning before escalation." },
                 { "type": "CheckBox", "name": "PreAlarmEnabled", "caption": "Enable pre-alarm phase" },
                 { "type": "NumberSpinner", "name": "PreAlarmDuration", "caption": "Pre-alarm duration (s)", "minimum": 0 },
+                { "type": "Label", "bold": true, "caption": "Escalation" },
+                { "type": "Label", "caption": "If an alarm is not acknowledged within the escalation interval, the alarm event fires again (e.g. to send another push notification or re-trigger the siren). Repeat fires every interval until acknowledged or the siren duration expires." },
                 { "type": "CheckBox", "name": "EscalationEnabled", "caption": "Enable escalation repeat" },
                 { "type": "NumberSpinner", "name": "EscalationDelay", "caption": "Escalation interval (s)", "minimum": 1 },
+                { "type": "Label", "bold": true, "caption": "Siren duration limit" },
+                { "type": "Label", "caption": "Limits how long actions with 'Cancel on disarm' keep running. After this time the alarm event fires once more (to reset outputs) even if nobody disarmed or acknowledged. Required in many countries by law." },
                 { "type": "CheckBox", "name": "SirenDurationEnabled", "caption": "Limit siren duration" },
                 { "type": "NumberSpinner", "name": "SirenDuration", "caption": "Siren duration (s)", "minimum": 1 }
             ]
@@ -40,21 +50,26 @@
             "caption": "PIN & Security",
             "items": [
                 { "type": "CheckBox", "name": "PinEnabled", "caption": "PIN protection active" },
+                { "type": "Label", "caption": "When active, arming, disarming, acknowledging, and bypassing require a correct PIN. Without a PIN set, the PIN feature is effectively disabled even if checked." },
                 { "type": "NumberSpinner", "name": "MaxFailedAttempts", "caption": "Max failed attempts", "minimum": 1 },
                 { "type": "NumberSpinner", "name": "LockoutSeconds", "caption": "Lockout time (s)", "minimum": 1 },
+                { "type": "Label", "caption": "After this many consecutive wrong PINs the system locks out further PIN attempts for the configured time." },
                 { "type": "CheckBox", "name": "RequirePinForArm", "caption": "Require PIN for arming" },
                 { "type": "CheckBox", "name": "RequirePinForDisarm", "caption": "Require PIN for disarm/acknowledge/reset" },
                 { "type": "CheckBox", "name": "RequirePinForBypass", "caption": "Require PIN for bypass" },
+                { "type": "Label", "bold": true, "caption": "External PIN pad" },
+                { "type": "Label", "caption": "Connect a physical keypad or any external input (e.g. a Symcon script or widget) by letting it write into a String variable. Select that variable below." },
                 { "type": "SelectVariable", "name": "PinInputVariableID", "caption": "External PIN pad input variable (string, optional)" },
                 { "type": "CheckBox", "name": "ClearPinInput", "caption": "Clear PIN input variable after reading" },
-                { "type": "Label", "caption": "PIN pad: write the entered PIN into the variable above. Value formats: just the PIN (disarms), or with a command prefix ARM_AWAY: / ARM_NIGHT: / DISARM: / ACK: / RESET: followed by the PIN, e.g. ARM_AWAY:1234." },
-                { "type": "Label", "caption": "Set or change the PIN in the test area below (it is stored hashed, never in clear text)." }
+                { "type": "Label", "caption": "Write the entered PIN into the variable above. Supported formats: only the PIN → disarms; or COMMAND:PIN where COMMAND is ARM_AWAY, ARM_NIGHT, DISARM, ACK, or RESET. Example: ARM_AWAY:1234" },
+                { "type": "Label", "caption": "Set or change the PIN in the test area below. The PIN is stored as a bcrypt hash; it is never saved in clear text." }
             ]
         },
         {
             "type": "ExpansionPanel",
             "caption": "Zones",
             "items": [
+                { "type": "Label", "caption": "Zones are logical areas of your home (e.g. Ground floor, First floor, Garden). Assign each sensor to a zone so that actions and notifications can be filtered by zone. A zone is only a name — it has no logic of its own." },
                 {
                     "type": "List",
                     "name": "Zones",
@@ -74,6 +89,18 @@
             "type": "ExpansionPanel",
             "caption": "Sensors",
             "items": [
+                { "type": "Label", "bold": true, "caption": "Sensor field reference" },
+                { "type": "Label", "caption": "TYPE — Documentary label only. Does not affect alarm logic. Use it to organise and filter your sensor list visually. Options: Door contact, Window contact, Motion detector, Camera alarm (use for camera motion output variables), Tamper, System status, External source, Other." },
+                { "type": "Label", "caption": "ZONE — Assign the sensor to a zone (from the Zones list above). Zone filtering in actions/notifications fires only when a sensor from that zone triggered the alarm." },
+                { "type": "Label", "caption": "TRIGGER — What counts as an alarm signal:\n• Bool true = alarm: the Boolean variable becomes true → alarm\n• Bool false = alarm: the Boolean variable becomes false → alarm (e.g. window contact opens = false)\n• Int = / != / > / >= / < / <=: compare the integer or float value to the threshold set in the VALUE field." },
+                { "type": "Label", "caption": "VALUE — Comparison threshold, only used when an Int trigger type is selected." },
+                { "type": "Label", "caption": "NIGHT / AWAY / TEST — In which armed mode should this sensor be active? Night mode is typically used when you are home and only perimeter sensors (doors/windows) should be armed. Away mode is used when you have left and all sensors including motion detectors are active. Test mode is for commissioning." },
+                { "type": "Label", "caption": "REACTION — What happens when the sensor triggers:\n• Instant alarm: the alarm fires immediately.\n• Pre-alarm: starts a silent pre-alarm phase (see Modes & Delays). You get a warning period before the full alarm.\n• Entry delay: starts a countdown (the Entry delay (s) field). If you do not disarm within that time, the alarm fires. Use for the front door sensor." },
+                { "type": "Label", "caption": "DEBOUNCE — Minimum milliseconds between two trigger events from the same sensor. Prevents chattering/bouncing contacts from generating multiple alarms. 0 = disabled." },
+                { "type": "Label", "caption": "BYPASS ALLOWED — If checked, this sensor can be individually bypassed without disarming the whole system. Useful for a window you want to leave open while the rest of the system is armed." },
+                { "type": "Label", "caption": "BLOCK ARM IF ACTIVE — If the sensor is in alarm state when arming is attempted, arming is blocked outright instead of only generating a warning. Combine with Criticality = High for critical sensors." },
+                { "type": "Label", "caption": "CRITICALITY — How important is an open sensor during the pre-arm check?\n• Low: only a notice, arming proceeds.\n• Normal: a warning is shown, arming still proceeds.\n• High: arming is blocked when this sensor is open (requires Block arm if active to also be checked)." },
+                { "type": "Label", "caption": "IGNORE EXIT DELAY — If checked, this sensor can trigger even during the exit delay (e.g. a tamper contact or panic button that must always be active)." },
                 {
                     "type": "List",
                     "name": "Sensors",
@@ -112,7 +139,7 @@
                                 { "caption": "Int <= value", "value": 7 }
                             ] }
                         },
-                        { "caption": "Value", "name": "TriggerValue", "width": "80px", "add": 0, "edit": { "type": "NumberSpinner" } },
+                        { "caption": "Value (Int only)", "name": "TriggerValue", "width": "100px", "add": 0, "edit": { "type": "NumberSpinner", "minimum": -999999, "visibleIf": "TriggerType >= 2" } },
                         { "caption": "Night", "name": "ActiveInNight", "width": "60px", "add": false, "edit": { "type": "CheckBox" } },
                         { "caption": "Away", "name": "ActiveInAway", "width": "60px", "add": true, "edit": { "type": "CheckBox" } },
                         { "caption": "Test", "name": "ActiveInTest", "width": "60px", "add": true, "edit": { "type": "CheckBox" } },
@@ -125,7 +152,7 @@
                             ] }
                         },
                         { "caption": "Entry delay (s)", "name": "EntryDelay", "width": "100px", "add": 30, "edit": { "type": "NumberSpinner", "minimum": 0 } },
-                        { "caption": "Ignore exit delay", "name": "IgnoreExitDelay", "width": "100px", "add": false, "edit": { "type": "CheckBox" } },
+                        { "caption": "Ignore exit delay", "name": "IgnoreExitDelay", "width": "110px", "add": false, "edit": { "type": "CheckBox" } },
                         { "caption": "Debounce (ms)", "name": "Debounce", "width": "100px", "add": 0, "edit": { "type": "NumberSpinner", "minimum": 0 } },
                         { "caption": "Bypass allowed", "name": "BypassAllowed", "width": "100px", "add": true, "edit": { "type": "CheckBox" } },
                         { "caption": "Block arm if active", "name": "BlockArmIfActive", "width": "120px", "add": false, "edit": { "type": "CheckBox" } },
@@ -146,6 +173,16 @@
             "type": "ExpansionPanel",
             "caption": "Actions (siren / light)",
             "items": [
+                { "type": "Label", "bold": true, "caption": "Actions — physical outputs when an alarm event occurs" },
+                { "type": "Label", "caption": "Actions control devices: a siren relay, a warning light, a Shelly switch, or any other variable or script. They fire when a specific alarm event occurs and can be limited by mode and zone." },
+                { "type": "Label", "caption": "TARGET TYPE — Variable: directly set an IP-Symcon variable (device output). The module uses RequestAction when the variable has an action handler, otherwise sets the value directly. Script: call an IPS script with VALUE and SENDER parameters." },
+                { "type": "Label", "caption": "VALUE ON / VALUE OFF — The value written when the action turns on and off. For Boolean variables: 1/0 or true/false. For dimmers (0–100) or colour variables: the appropriate numeric value. For scripts, VALUE is passed as a parameter." },
+                { "type": "Label", "caption": "DELAY — Wait this many seconds after the event before switching the output on. Useful for a staged response (e.g. pre-warning light 5 s before the siren)." },
+                { "type": "Label", "caption": "DURATION — Keep the output on for this many seconds, then switch it off automatically. Set to 0 for indefinite (controlled by Cancel on disarm / Cancel on ack)." },
+                { "type": "Label", "caption": "BLINK — Flash the output N times with the given interval (e.g. Blink=3, Interval=1 s flashes on-off-on-off-on-off). Overrides Duration when enabled. Useful for warning lights." },
+                { "type": "Label", "caption": "MODE FILTER — Comma-separated list of modes this action should fire in. Leave empty to fire in all modes. Values: night, away, test. Example: night,away (fires in Night and Away mode, not in Test)." },
+                { "type": "Label", "caption": "ZONE FILTER — Only fire this action when the triggering sensor belongs to the selected zone. Leave empty to fire for any zone." },
+                { "type": "Label", "caption": "CANCEL ON DISARM / CANCEL ON ACK — The module tracks running actions and turns off their 'Value off' when the condition clears. 'Cancel on disarm' is recommended for siren actions; 'Cancel on ack' for lights that should stop when the alarm is acknowledged." },
                 {
                     "type": "List",
                     "name": "Actions",
@@ -182,14 +219,17 @@
                                 { "caption": "Test", "value": "test" }
                             ] }
                         },
-                        { "caption": "Mode filter (csv)", "name": "ModeFilter", "width": "110px", "add": "", "edit": { "type": "ValidationTextBox" } },
+                        { "caption": "Mode filter (csv)", "name": "ModeFilter", "width": "120px", "add": "", "edit": { "type": "ValidationTextBox" } },
                         { "caption": "Zone filter", "name": "ZoneFilter", "width": "110px", "add": "", "edit": { "type": "ValidationTextBox" } },
                         { "caption": "Delay (s)", "name": "Delay", "width": "80px", "add": 0, "edit": { "type": "NumberSpinner", "minimum": 0 } },
                         { "caption": "Duration (s)", "name": "Duration", "width": "90px", "add": 0, "edit": { "type": "NumberSpinner", "minimum": 0 } },
                         { "caption": "Value on", "name": "ValueOn", "width": "80px", "add": "1", "edit": { "type": "ValidationTextBox" } },
                         { "caption": "Value off", "name": "ValueOff", "width": "80px", "add": "0", "edit": { "type": "ValidationTextBox" } },
                         { "caption": "Cancel on disarm", "name": "CancelOnDisarm", "width": "110px", "add": true, "edit": { "type": "CheckBox" } },
-                        { "caption": "Cancel on ack", "name": "CancelOnAck", "width": "100px", "add": false, "edit": { "type": "CheckBox" } }
+                        { "caption": "Cancel on ack", "name": "CancelOnAck", "width": "100px", "add": false, "edit": { "type": "CheckBox" } },
+                        { "caption": "Blink", "name": "BlinkEnabled", "width": "60px", "add": false, "edit": { "type": "CheckBox" } },
+                        { "caption": "Blink count", "name": "BlinkCount", "width": "90px", "add": 3, "edit": { "type": "NumberSpinner", "minimum": 1, "visibleIf": "BlinkEnabled" } },
+                        { "caption": "Blink interval (s)", "name": "BlinkInterval", "width": "110px", "add": 1, "edit": { "type": "NumberSpinner", "minimum": 1, "visibleIf": "BlinkEnabled" } }
                     ]
                 }
             ]
@@ -198,6 +238,15 @@
             "type": "ExpansionPanel",
             "caption": "Notifications",
             "items": [
+                { "type": "Label", "bold": true, "caption": "Notifications — push, email, Telegram, variable, or script" },
+                { "type": "Label", "caption": "Notifications inform you when an alarm event occurs. Select the type and the corresponding IP-Symcon module instance. The module never hard-codes any service — it calls the function of the installed module." },
+                { "type": "Label", "caption": "PUSHOVER — Select your configured Pushover module instance. Subject becomes the notification title." },
+                { "type": "Label", "caption": "SMTP / Email — Select your configured SMTP/Mailer instance. Subject is the email subject. If the module requires a recipient, enter the email address in the Parameter field." },
+                { "type": "Label", "caption": "TELEGRAM — Select your configured Telegram Bot instance. Enter the Chat ID in the Parameter field (required). The module tries TelegramBot_SendMessage and Telegram_SendMessage — ensure the correct module is installed." },
+                { "type": "Label", "caption": "VARIABLE — Write the rendered message text into a String variable. Useful for display boards, custom scripts watching a variable, or other integrations." },
+                { "type": "Label", "caption": "SCRIPT — Call an IPS script with TEXT, SUBJECT, EVENT, and SENDER='AlarmCenter' as parameters. Maximum flexibility: the script can forward to any service." },
+                { "type": "Label", "caption": "MESSAGE TEMPLATE — The text to send. Placeholders: {sensorName}, {zone}, {mode}, {state}, {timestamp}, {remainingSeconds}." },
+                { "type": "Label", "caption": "MODE FILTER — CSV list of modes (night, away, test). Leave empty for all modes. ZONE FILTER — Only notify when the triggering sensor is in the selected zone." },
                 {
                     "type": "List",
                     "name": "Notifications",
@@ -209,13 +258,18 @@
                         { "caption": "On", "name": "Enabled", "width": "50px", "add": true, "edit": { "type": "CheckBox" } },
                         { "caption": "Name", "name": "Name", "width": "140px", "add": "", "edit": { "type": "ValidationTextBox" } },
                         {
-                            "caption": "Target type", "name": "TargetType", "width": "110px", "add": 1,
+                            "caption": "Type", "name": "NotifyType", "width": "130px", "add": 4,
                             "edit": { "type": "Select", "options": [
-                                { "caption": "Variable", "value": 0 },
-                                { "caption": "Script", "value": 1 }
+                                { "caption": "Pushover", "value": 0 },
+                                { "caption": "SMTP / Email", "value": 1 },
+                                { "caption": "Telegram", "value": 2 },
+                                { "caption": "Variable", "value": 3 },
+                                { "caption": "Script", "value": 4 }
                             ] }
                         },
-                        { "caption": "Target", "name": "TargetID", "width": "180px", "add": 0, "edit": { "type": "SelectObject" } },
+                        { "caption": "Instance / Target", "name": "TargetID", "width": "180px", "add": 0, "edit": { "type": "SelectObject" } },
+                        { "caption": "Parameter (ChatID/Email)", "name": "Parameter", "width": "160px", "add": "", "edit": { "type": "ValidationTextBox" } },
+                        { "caption": "Subject / Title", "name": "Subject", "width": "140px", "add": "Alarm", "edit": { "type": "ValidationTextBox" } },
                         {
                             "caption": "Event", "name": "Event", "width": "160px", "add": "alarm",
                             "edit": { "type": "Select", "options": [
@@ -237,17 +291,23 @@
                                 { "caption": "PIN locked", "value": "pin_locked" }
                             ] }
                         },
-                        { "caption": "Mode filter (csv)", "name": "ModeFilter", "width": "110px", "add": "", "edit": { "type": "ValidationTextBox" } },
+                        { "caption": "Mode filter (csv)", "name": "ModeFilter", "width": "120px", "add": "", "edit": { "type": "ValidationTextBox" } },
                         { "caption": "Zone filter", "name": "ZoneFilter", "width": "110px", "add": "", "edit": { "type": "ValidationTextBox" } },
-                        { "caption": "Template", "name": "Template", "width": "auto", "add": "Alarm: {sensorName} in {zone} at {timestamp}", "edit": { "type": "ValidationTextBox" } }
+                        { "caption": "Message template", "name": "Template", "width": "auto", "add": "Alarm: {sensorName} in {zone} at {timestamp}", "edit": { "type": "ValidationTextBox" } }
                     ]
                 }
             ]
         },
         {
             "type": "ExpansionPanel",
-            "caption": "Voice announcements (Alexa)",
+            "caption": "Voice announcements (Alexa / TTS)",
             "items": [
+                { "type": "Label", "bold": true, "caption": "Voice announcements via Echo Remote or any TTS module" },
+                { "type": "Label", "caption": "Voice announcements send a spoken text when an alarm event occurs. Two delivery methods:" },
+                { "type": "Label", "caption": "VARIABLE — Enter the ID of the 'Text to speech' String variable of your Echo Remote (or any TTS module) instance. The module calls RequestAction on the variable so the module speaks the text even if the content has not changed since the last announcement." },
+                { "type": "Label", "caption": "SCRIPT — Call an IPS script with TEXT, KIND (TTS/Announcement/SSML), and SENDER='AlarmCenter'. Use this for custom TTS engines or multi-speaker setups." },
+                { "type": "Label", "caption": "KIND — TTS: plain text-to-speech. Announcement: uses the Alexa announcement API (overrides whatever is playing). SSML: Speech Synthesis Markup Language for advanced pronunciation control." },
+                { "type": "Label", "caption": "IMPORTANT: If the Alexa does not speak, verify that the 'Text to speech' variable is a String variable belonging to an active Echo Remote instance. The module uses RequestAction — make sure the variable has an action handler (check with HasAction in a test script)." },
                 {
                     "type": "List",
                     "name": "VoiceAnnouncements",
@@ -259,9 +319,9 @@
                         { "caption": "On", "name": "Enabled", "width": "50px", "add": true, "edit": { "type": "CheckBox" } },
                         { "caption": "Name", "name": "Name", "width": "140px", "add": "", "edit": { "type": "ValidationTextBox" } },
                         {
-                            "caption": "Target type", "name": "TargetType", "width": "110px", "add": 1,
+                            "caption": "Target type", "name": "TargetType", "width": "110px", "add": 0,
                             "edit": { "type": "Select", "options": [
-                                { "caption": "Variable", "value": 0 },
+                                { "caption": "Variable (TTS)", "value": 0 },
                                 { "caption": "Script", "value": 1 }
                             ] }
                         },
@@ -290,7 +350,7 @@
                                 { "caption": "Test", "value": "test" }
                             ] }
                         },
-                        { "caption": "Mode filter (csv)", "name": "ModeFilter", "width": "110px", "add": "", "edit": { "type": "ValidationTextBox" } },
+                        { "caption": "Mode filter (csv)", "name": "ModeFilter", "width": "120px", "add": "", "edit": { "type": "ValidationTextBox" } },
                         { "caption": "Zone filter", "name": "ZoneFilter", "width": "110px", "add": "", "edit": { "type": "ValidationTextBox" } },
                         { "caption": "Template", "name": "Template", "width": "auto", "add": "Alarm in zone {zone}. Trigger {sensorName}.", "edit": { "type": "ValidationTextBox" } }
                     ]
@@ -301,6 +361,10 @@
             "type": "ExpansionPanel",
             "caption": "Cameras",
             "items": [
+                { "type": "Label", "bold": true, "caption": "Camera actions on alarm" },
+                { "type": "Label", "caption": "IMPORTANT: To use a camera's motion or alarm output as an alarm trigger, add it as a Sensor (select the camera's Boolean motion/alarm variable). The camera section here serves a different purpose: it runs a script when an alarm or pre-alarm occurs, allowing you to capture a snapshot, send a Telegram message with an image, start a recording, etc." },
+                { "type": "Label", "caption": "SCRIPT — An IPS script called with these parameters:\n• CAMERA_NAME: the name configured here\n• ZONE: the zone this camera is assigned to\n• EVENT: 'pre_alarm', 'alarm', or 'test'\n• SENDER: always 'AlarmCenter'\n\nExample use: the script calls an HTTP endpoint to grab a snapshot, then sends it via Telegram or email." },
+                { "type": "Label", "caption": "ZONE FILTER — Leave empty to fire for any zone. Enter a zone name to only trigger this camera action when the alarm was caused by a sensor from that zone." },
                 {
                     "type": "List",
                     "name": "Cameras",
@@ -310,11 +374,9 @@
                     "delete": true,
                     "columns": [
                         { "caption": "On", "name": "Enabled", "width": "50px", "add": true, "edit": { "type": "CheckBox" } },
-                        { "caption": "Name", "name": "Name", "width": "140px", "add": "", "edit": { "type": "ValidationTextBox" } },
-                        { "caption": "Zone", "name": "Zone", "width": "120px", "add": "", "edit": { "type": "ValidationTextBox" } },
-                        { "caption": "Snapshot script", "name": "SnapshotScript", "width": "160px", "add": 0, "edit": { "type": "SelectScript" } },
-                        { "caption": "Alarm script", "name": "AlarmScript", "width": "160px", "add": 0, "edit": { "type": "SelectScript" } },
-                        { "caption": "URL template", "name": "URLTemplate", "width": "auto", "add": "", "edit": { "type": "ValidationTextBox" } },
+                        { "caption": "Name", "name": "Name", "width": "150px", "add": "", "edit": { "type": "ValidationTextBox" } },
+                        { "caption": "Zone filter", "name": "Zone", "width": "120px", "add": "", "edit": { "type": "ValidationTextBox" } },
+                        { "caption": "Script", "name": "Script", "width": "200px", "add": 0, "edit": { "type": "SelectScript" } },
                         { "caption": "On pre-alarm", "name": "OnPreAlarm", "width": "100px", "add": false, "edit": { "type": "CheckBox" } },
                         { "caption": "On alarm", "name": "OnAlarm", "width": "90px", "add": true, "edit": { "type": "CheckBox" } },
                         { "caption": "On test", "name": "OnTest", "width": "80px", "add": false, "edit": { "type": "CheckBox" } }
@@ -326,6 +388,7 @@
             "type": "ExpansionPanel",
             "caption": "Frontend & History",
             "items": [
+                { "type": "Label", "caption": "The alarm status is shown in an HTML tile visualization in the IP-Symcon web front. The tile updates automatically on every state change. The history keeps a rolling log of the last N events." },
                 { "type": "NumberSpinner", "name": "HistoryMaxEntries", "caption": "Maximum history entries", "minimum": 1 }
             ]
         }

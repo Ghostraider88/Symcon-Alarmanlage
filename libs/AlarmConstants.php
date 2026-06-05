@@ -67,6 +67,13 @@ abstract class AlarmConstants
     public const TARGET_VARIABLE = 0;
     public const TARGET_SCRIPT = 1;
 
+    // --- Notification delivery types ---
+    public const NOTIFY_PUSHOVER = 0;
+    public const NOTIFY_SMTP = 1;
+    public const NOTIFY_TELEGRAM = 2;
+    public const NOTIFY_VARIABLE = 3;
+    public const NOTIFY_SCRIPT = 4;
+
     // --- Voice announcement kinds ---
     public const VOICE_TTS = 0;
     public const VOICE_ANNOUNCEMENT = 1;

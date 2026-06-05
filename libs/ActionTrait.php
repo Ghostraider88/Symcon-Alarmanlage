@@ -8,6 +8,9 @@ declare(strict_types=1);
  * Actions target a variable (switched via RequestAction on the target object)
  * or run a script. Execution supports a start delay and an on-duration via a
  * shared scheduling queue, plus cancellation on disarm/acknowledge.
+ *
+ * Blink mode creates N on/off cycles with a configurable interval, useful for
+ * warning lights. Blink and Duration are mutually exclusive; Blink takes precedence.
  */
 trait ActionTrait
 {
@@ -42,20 +45,59 @@ trait ActionTrait
     {
         $delay = (int) ($action['Delay'] ?? 0);
         $startAt = time() + max(0, $delay);
+        $targetType = (int) ($action['TargetType'] ?? AlarmConstants::TARGET_VARIABLE);
+        $targetID = (int) ($action['TargetID'] ?? 0);
+        $valueOn = (string) ($action['ValueOn'] ?? '1');
+        $valueOff = (string) ($action['ValueOff'] ?? '0');
+        $cancelDisarm = !empty($action['CancelOnDisarm']);
+        $cancelAck = !empty($action['CancelOnAck']);
+        $name = (string) ($action['Name'] ?? '');
 
         $queue = $this->GetActionQueue();
-        $queue[] = [
-            'kind'         => 'on',
-            'at'           => $startAt,
-            'targetType'   => (int) ($action['TargetType'] ?? AlarmConstants::TARGET_VARIABLE),
-            'targetID'     => (int) ($action['TargetID'] ?? 0),
-            'value'        => (string) ($action['ValueOn'] ?? '1'),
-            'valueOff'     => (string) ($action['ValueOff'] ?? '0'),
-            'duration'     => (int) ($action['Duration'] ?? 0),
-            'cancelDisarm' => !empty($action['CancelOnDisarm']),
-            'cancelAck'    => !empty($action['CancelOnAck']),
-            'name'         => (string) ($action['Name'] ?? ''),
-        ];
+
+        if (!empty($action['BlinkEnabled']) && (int) ($action['BlinkCount'] ?? 0) > 0) {
+            // Blink mode: create N on/off pairs with configurable interval.
+            $count = (int) $action['BlinkCount'];
+            $interval = max(1, (int) ($action['BlinkInterval'] ?? 1));
+            for ($i = 0; $i < $count; $i++) {
+                $onAt = $startAt + ($i * 2 * $interval);
+                $offAt = $onAt + $interval;
+                $queue[] = [
+                    'kind'         => 'on',
+                    'at'           => $onAt,
+                    'targetType'   => $targetType,
+                    'targetID'     => $targetID,
+                    'value'        => $valueOn,
+                    'valueOff'     => $valueOff,
+                    'duration'     => 0,
+                    'cancelDisarm' => $cancelDisarm,
+                    'cancelAck'    => $cancelAck,
+                    'name'         => $name,
+                ];
+                $queue[] = [
+                    'kind'       => 'off',
+                    'at'         => $offAt,
+                    'targetType' => $targetType,
+                    'targetID'   => $targetID,
+                    'value'      => $valueOff,
+                ];
+            }
+        } else {
+            // Single on + optional timed off via Duration.
+            $queue[] = [
+                'kind'         => 'on',
+                'at'           => $startAt,
+                'targetType'   => $targetType,
+                'targetID'     => $targetID,
+                'value'        => $valueOn,
+                'valueOff'     => $valueOff,
+                'duration'     => (int) ($action['Duration'] ?? 0),
+                'cancelDisarm' => $cancelDisarm,
+                'cancelAck'    => $cancelAck,
+                'name'         => $name,
+            ];
+        }
+
         $this->SaveActionQueue($queue);
         $this->ScheduleActionQueue();
     }
@@ -103,7 +145,7 @@ trait ActionTrait
 
     /**
      * Turns off running actions. $onDisarm/$onAck restrict to the actions that
-     * declared the respective cancel flag; $sirenAll turns all of them off.
+     * declared the respective cancel flag; $all turns all of them off.
      */
     private function CancelActions(bool $onDisarm, bool $onAck, bool $all = false): void
     {
@@ -121,7 +163,7 @@ trait ActionTrait
         }
         $this->SaveActiveActions($keep);
 
-        // Drop queued "off" ops only when cancelling everything.
+        // Drop queued ops only when cancelling everything.
         if ($all) {
             $this->SaveActionQueue([]);
             $this->StopTimer('ActionQueueTimer');

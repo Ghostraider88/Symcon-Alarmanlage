@@ -195,7 +195,30 @@
             "Notification": "Benachrichtigung",
             "Voice announcement": "Sprachansage",
             "Camera snapshot": "Kamera-Snapshot",
-            "Camera alarm": "Kamera-Alarm"
+            "Camera alarm": "Kamera-Alarm",
+            "no target configured": "kein Ziel konfiguriert",
+            "Pushover": "Pushover",
+            "SMTP / Email": "SMTP / E-Mail",
+            "Telegram": "Telegram",
+            "Subject / Title": "Betreff / Titel",
+            "Instance / Target": "Instanz / Ziel",
+            "Parameter (ChatID/Email)": "Parameter (ChatID/E-Mail)",
+            "Message template": "Nachrichtenvorlage",
+            "Type": "Typ",
+            "Blink": "Blinken",
+            "Blink count": "Anzahl Blinks",
+            "Blink interval (s)": "Blink-Intervall (s)",
+            "Value (Int only)": "Wert (nur Int)",
+            "Zone filter": "Zonenfilter",
+            "Variable (TTS)": "Variable (TTS)",
+            "Camera": "Kamera",
+            "Notification: Pushover instance %d not found": "Benachrichtigung: Pushover-Instanz %d nicht gefunden",
+            "Notification: SMTP instance %d not found": "Benachrichtigung: SMTP-Instanz %d nicht gefunden",
+            "Notification: Telegram instance %d not found": "Benachrichtigung: Telegram-Instanz %d nicht gefunden",
+            "Notification: Pushover module function not found. Check module installation.": "Benachrichtigung: Pushover-Modulfunktion nicht gefunden. Modulinstallation prüfen.",
+            "Notification: SMTP module function not found. Check module installation.": "Benachrichtigung: SMTP-Modulfunktion nicht gefunden. Modulinstallation prüfen.",
+            "Notification: Telegram module function not found. Check module installation and enter function name in docs.": "Benachrichtigung: Telegram-Modulfunktion nicht gefunden. Modulinstallation und Funktionsname in der Doku prüfen.",
+            "Alarm": "Alarm"
         }
     }
 }
