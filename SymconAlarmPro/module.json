@@ -4,9 +4,7 @@
     "type": 3,
     "vendor": "Symcon Alarm Pro",
     "aliases": [
-        "Alarmanlage",
-        "Alarm Center",
-        "Alarm System"
+        "Alarmanlage"
     ],
     "url": "https://github.com/ghostraider88/symcon-alarmanlage",
     "parentRequirements": [],

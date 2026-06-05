@@ -61,7 +61,7 @@ trait StateMachineTrait
                 // Alarm timers are only stopped explicitly on reset/disarm,
                 // not on every transition between alarm sub-states.
                 if ($newState === AlarmConstants::STATE_DISARMED
-                    || $newState >= AlarmConstants::STATE_ARMED_NIGHT && $newState <= AlarmConstants::STATE_ARMED_AWAY) {
+                    || ($newState >= AlarmConstants::STATE_ARMED_NIGHT && $newState <= AlarmConstants::STATE_ARMED_AWAY)) {
                     $this->StopTimer('EscalationTimer');
                     $this->StopTimer('SirenDurationTimer');
                 }
@@ -154,13 +154,16 @@ trait StateMachineTrait
             return $this->DisarmInternal(true);
         }
 
-        // Arming a mode -> run pre-arm check first.
-        $result = $this->RunPreArmCheckInternal($mode);
-        if ($result['result'] === AlarmConstants::PREARM_BLOCKED) {
-            $this->AddHistory(AlarmConstants::EVENT_ARMING_FAILED, $this->Translate('Arming blocked') . ': ' . $result['summary']);
-            $this->DispatchEvent(AlarmConstants::EVENT_ARMING_FAILED, ['summary' => $result['summary']]);
-            $this->RebuildFrontendInternal();
-            return false;
+        // Arming a real mode -> run pre-arm check first. Test mode is exempt so
+        // commissioning is possible even with open sensors.
+        if ($mode !== AlarmConstants::MODE_TEST) {
+            $result = $this->RunPreArmCheckInternal($mode);
+            if ($result['result'] === AlarmConstants::PREARM_BLOCKED) {
+                $this->AddHistory(AlarmConstants::EVENT_ARMING_FAILED, $this->Translate('Arming blocked') . ': ' . $result['summary']);
+                $this->DispatchEvent(AlarmConstants::EVENT_ARMING_FAILED, ['summary' => $result['summary']]);
+                $this->RebuildFrontendInternal();
+                return false;
+            }
         }
 
         $this->SetValue('Mode', $mode);
