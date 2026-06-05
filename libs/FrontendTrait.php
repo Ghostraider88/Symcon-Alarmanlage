@@ -55,6 +55,7 @@ trait FrontendTrait
             'state'          => $state,
             'stateName'      => $this->GetStateName($state),
             'color'          => $this->GetStateColor($state),
+            'icon'           => $this->GetStateIcon($state),
             'isArmed'        => $this->GetValue('IsArmed'),
             'alarmActive'    => $this->GetValue('IsAlarmActive'),
             'acknowledged'   => $this->GetValue('IsAcknowledged'),
@@ -74,18 +75,37 @@ trait FrontendTrait
 
     private function GetStateColor(int $state): string
     {
+        // Palette aligned with the Central Info Screen dashboard.
         return match ($state) {
-            AlarmConstants::STATE_DISARMED           => '#3a3a3a',
-            AlarmConstants::STATE_ARMING_EXIT_DELAY  => '#d9a300',
-            AlarmConstants::STATE_ARMED_NIGHT        => '#1f6fb2',
-            AlarmConstants::STATE_ARMED_AWAY         => '#1f8a4c',
-            AlarmConstants::STATE_ENTRY_DELAY        => '#e07b00',
-            AlarmConstants::STATE_PRE_ALARM          => '#e07b00',
-            AlarmConstants::STATE_ALARM              => '#c0291f',
-            AlarmConstants::STATE_ALARM_ACKNOWLEDGED => '#9a3b9a',
-            AlarmConstants::STATE_TROUBLE            => '#9a3b9a',
-            AlarmConstants::STATE_TEST               => '#5a6b7a',
-            default                                  => '#3a3a3a',
+            AlarmConstants::STATE_DISARMED           => '#4caf50',
+            AlarmConstants::STATE_ARMING_EXIT_DELAY  => '#ff9800',
+            AlarmConstants::STATE_ARMED_NIGHT        => '#2196f3',
+            AlarmConstants::STATE_ARMED_AWAY         => '#2196f3',
+            AlarmConstants::STATE_ENTRY_DELAY        => '#ff9800',
+            AlarmConstants::STATE_PRE_ALARM          => '#ff9800',
+            AlarmConstants::STATE_ALARM              => '#f44336',
+            AlarmConstants::STATE_ALARM_ACKNOWLEDGED => '#ff9800',
+            AlarmConstants::STATE_TROUBLE            => '#ff9800',
+            AlarmConstants::STATE_TEST               => '#2196f3',
+            default                                  => '#4caf50',
+        };
+    }
+
+    private function GetStateIcon(int $state): string
+    {
+        // Font Awesome 6 icon classes.
+        return match ($state) {
+            AlarmConstants::STATE_DISARMED           => 'fa-shield-halved',
+            AlarmConstants::STATE_ARMING_EXIT_DELAY  => 'fa-hourglass-half',
+            AlarmConstants::STATE_ARMED_NIGHT        => 'fa-moon',
+            AlarmConstants::STATE_ARMED_AWAY         => 'fa-lock',
+            AlarmConstants::STATE_ENTRY_DELAY        => 'fa-hourglass-half',
+            AlarmConstants::STATE_PRE_ALARM          => 'fa-triangle-exclamation',
+            AlarmConstants::STATE_ALARM              => 'fa-bell',
+            AlarmConstants::STATE_ALARM_ACKNOWLEDGED => 'fa-bell-slash',
+            AlarmConstants::STATE_TROUBLE            => 'fa-triangle-exclamation',
+            AlarmConstants::STATE_TEST               => 'fa-flask',
+            default                                  => 'fa-shield-halved',
         };
     }
 
@@ -118,13 +138,19 @@ trait FrontendTrait
     private function RenderStatusHTML(): string
     {
         $s = $this->BuildVisualizationState();
+        $muted = 'color:var(--text-muted,#999)';
         $line = static fn (string $k, string $v): string => $v === '' ? '' :
-            '<div class="row"><span class="k">' . htmlspecialchars($k) . '</span><span class="v">' . htmlspecialchars($v) . '</span></div>';
+            '<div style="font-size:12px;line-height:1.6"><span style="' . $muted . '">'
+            . htmlspecialchars($k) . ':</span> ' . htmlspecialchars($v) . '</div>';
 
-        $html = '<div class="alarm-tile" style="border-left:6px solid ' . $s['color'] . ';padding:8px">';
-        $html .= '<div class="title" style="font-weight:bold">' . htmlspecialchars((string) $s['name']) . '</div>';
+        // Neutral card with a colored left status border, matching the dashboard.
+        $html = '<div style="font-family:\'Poppins\',-apple-system,Segoe UI,Roboto,sans-serif;'
+            . 'background:var(--card-color,#fff);color:var(--content-color,#2b2b2b);'
+            . 'border:1px solid var(--accent-color,#1abc9c);border-left:3px solid ' . $s['color'] . ';'
+            . 'border-radius:6px;padding:10px 12px">';
+        $html .= '<div style="' . $muted . ';font-size:12px">' . htmlspecialchars((string) $s['name']) . '</div>';
+        $html .= '<div style="font-size:17px;font-weight:600;color:' . $s['color'] . '">' . htmlspecialchars((string) $s['stateName']) . '</div>';
         $html .= $line($this->Translate('Mode'), (string) $s['modeName']);
-        $html .= $line($this->Translate('State'), (string) $s['stateName']);
         if ($s['exitRemaining'] > 0) {
             $html .= $line($this->Translate('Exit delay'), $s['exitRemaining'] . ' s');
         }
