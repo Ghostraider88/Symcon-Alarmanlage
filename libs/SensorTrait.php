@@ -185,8 +185,16 @@ trait SensorTrait
 
         switch ($reaction) {
             case AlarmConstants::REACTION_PRE_ALARM:
-                $this->AddHistory(AlarmConstants::EVENT_PRE_ALARM, sprintf($this->Translate('Pre-alarm: %s'), (string) ($sensor['Name'] ?? '')));
-                $this->TransitionTo(AlarmConstants::STATE_PRE_ALARM, $context);
+                $preAlarmDuration = $this->ReadPropertyBoolean('PreAlarmEnabled')
+                    ? (int) $this->ReadPropertyInteger('PreAlarmDuration') : 0;
+                if ($preAlarmDuration <= 0) {
+                    // Pre-alarm not configured → treat as instant alarm.
+                    $this->AddHistory(AlarmConstants::EVENT_ALARM, sprintf($this->Translate('Alarm triggered by %s'), (string) ($sensor['Name'] ?? '')));
+                    $this->TransitionTo(AlarmConstants::STATE_ALARM, $context);
+                } else {
+                    $this->AddHistory(AlarmConstants::EVENT_PRE_ALARM, sprintf($this->Translate('Pre-alarm: %s'), (string) ($sensor['Name'] ?? '')));
+                    $this->TransitionTo(AlarmConstants::STATE_PRE_ALARM, $context);
+                }
                 break;
 
             case AlarmConstants::REACTION_ENTRY_DELAY:

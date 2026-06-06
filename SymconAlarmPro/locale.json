@@ -179,6 +179,7 @@
             "Entry delay started by %s": "Eintrittsverzögerung gestartet durch %s",
             "Alarm triggered by %s": "Alarm ausgelöst durch %s",
             "Entry delay expired without disarm": "Eintrittszeit ohne Unscharfschaltung abgelaufen",
+            "Pre-alarm expired without disarm": "Voralarm abgelaufen ohne Unscharfschaltung",
             "Alarm still not acknowledged – escalating": "Alarm weiterhin nicht quittiert – Eskalation",
             "Restore blocked by pre-arm check": "Wiederherstellung durch Pre-Arm-Check blockiert",
             "Invalid variable for sensor %s": "Ungültige Variable für Sensor %s",

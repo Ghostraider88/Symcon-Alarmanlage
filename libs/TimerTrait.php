@@ -40,9 +40,10 @@ trait TimerTrait
     public function PreAlarmExpire(): void
     {
         $this->StopTimer('PreAlarmTimer');
-        // A pre-alarm does not necessarily escalate; return to the armed state.
+        // Pre-alarm expired without disarm → escalate to full alarm.
         if ($this->GetValue('State') === AlarmConstants::STATE_PRE_ALARM) {
-            $this->TransitionTo(AlarmConstants::ModeToArmedState($this->GetMode()));
+            $this->AddHistory(AlarmConstants::EVENT_ALARM, $this->Translate('Pre-alarm expired without disarm'));
+            $this->TransitionTo(AlarmConstants::STATE_ALARM);
         }
     }
 
