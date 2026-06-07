@@ -117,13 +117,20 @@
             border-radius: 3px;
         }
 
-        .sensor-list { margin-top: 6px; font-size: 12px; }
+        .sensor-cols { display: flex; gap: 10px; margin-top: 6px; }
+        .sensor-cols .col { flex: 1 1 0; min-width: 0; }
+        .sensor-cols .col-hdr {
+            font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em;
+            color: var(--text-muted); margin-bottom: 3px; padding: 0 4px;
+        }
+        .sensor-list { font-size: 12px; }
         .sensor-list table { width: 100%; border-collapse: collapse; }
         .sensor-list td { padding: 3px 4px; border-bottom: 1px solid var(--div-clr); vertical-align: middle; }
         .sensor-list .s-ico { width: 20px; color: var(--text-muted); }
-        .sensor-list .s-st { width: 28px; text-align: right; font-weight: 600; font-size: 11px; }
+        .sensor-list .s-st { width: 60px; text-align: right; font-weight: 600; font-size: 11px; white-space: nowrap; }
         .sensor-list .s-st.open { color: #f44336; }
         .sensor-list .s-st.closed { color: #4caf50; }
+        .sensor-list .empty { color: var(--text-muted); font-size: 11px; padding: 3px 4px; }
 
         .history { margin-top: 6px; max-height: 150px; overflow-y: auto; font-size: 12px; }
         .history table { width: 100%; border-collapse: collapse; }
@@ -159,7 +166,16 @@
     </div>
 
     <div class="grp-hdr" id="ac-sens-hdr" style="display:none">Sensoren</div>
-    <div class="sensor-list" id="ac-sensors"></div>
+    <div class="sensor-cols" id="ac-sens-cols" style="display:none">
+        <div class="col">
+            <div class="col-hdr">Tür / Fenster</div>
+            <div class="sensor-list" id="ac-contacts"></div>
+        </div>
+        <div class="col">
+            <div class="col-hdr">Bewegung</div>
+            <div class="sensor-list" id="ac-motion"></div>
+        </div>
+    </div>
 
     <div class="grp-hdr" id="ac-hist-hdr" style="display:none">Verlauf</div>
     <div class="history" id="ac-history"></div>
@@ -214,17 +230,27 @@
 
         document.getElementById('ac-pin').style.display = s.pinRequired ? 'block' : 'none';
 
-        // Sensor status list
-        var sICONS = ['fa-door-open','fa-window-maximize','fa-person-walking','fa-camera','fa-lock','fa-gear','fa-plug','fa-circle-dot'];
-        var sRows = '';
+        // Sensor status: door/window contacts (left) and motion detectors (right).
+        var contactRows = '', motionRows = '';
         (s.sensors || []).forEach(function(sv) {
-            var ico = sICONS[sv.type] || 'fa-circle-dot';
-            sRows += '<tr><td class="s-ico"><i class="fa-solid ' + ico + '"></i></td>' +
-                     '<td>' + acEscape(sv.name) + '</td>' +
-                     '<td class="s-st ' + (sv.isOpen ? 'open' : 'closed') + '">' + (sv.isOpen ? 'auf' : 'zu') + '</td></tr>';
+            if (sv.type === 0 || sv.type === 1) {
+                // 0 = door, 1 = window
+                var ico = sv.type === 0 ? 'fa-door-closed' : 'fa-window-maximize';
+                contactRows += '<tr><td class="s-ico"><i class="fa-solid ' + ico + '"></i></td>' +
+                    '<td>' + acEscape(sv.name) + '</td>' +
+                    '<td class="s-st ' + (sv.isOpen ? 'open' : 'closed') + '">' + (sv.isOpen ? 'auf' : 'zu') + '</td></tr>';
+            } else if (sv.type === 2) {
+                // 2 = motion detector
+                motionRows += '<tr><td class="s-ico"><i class="fa-solid fa-person-walking"></i></td>' +
+                    '<td>' + acEscape(sv.name) + '</td>' +
+                    '<td class="s-st ' + (sv.isOpen ? 'open' : 'closed') + '">' + (sv.isOpen ? 'Bewegung' : 'frei') + '</td></tr>';
+            }
         });
-        document.getElementById('ac-sens-hdr').style.display = sRows ? 'block' : 'none';
-        document.getElementById('ac-sensors').innerHTML = sRows ? '<table>' + sRows + '</table>' : '';
+        var anySensors = contactRows || motionRows;
+        document.getElementById('ac-sens-hdr').style.display = anySensors ? 'block' : 'none';
+        document.getElementById('ac-sens-cols').style.display = anySensors ? 'flex' : 'none';
+        document.getElementById('ac-contacts').innerHTML = contactRows ? '<table>' + contactRows + '</table>' : '<div class="empty">–</div>';
+        document.getElementById('ac-motion').innerHTML = motionRows ? '<table>' + motionRows + '</table>' : '<div class="empty">–</div>';
 
         var rows = '';
         (s.history || []).forEach(function (h) {
