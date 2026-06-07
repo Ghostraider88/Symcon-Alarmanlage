@@ -10,58 +10,58 @@
             justify-content: center;
             align-items: flex-start;
             overflow: hidden;
-            padding: 8px;
         }
 
         .container {
-            width: 100%;
-            max-width: 340px;
+            position: relative;
+            width: 95%;
+            border-radius: 10px;
+            padding: 10px 20px 20px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
         }
 
         /* Display */
         .display {
             width: 100%;
-            height: 52px;
-            text-align: center;
-            font-size: 5vh;
             outline: none;
             border: none;
-            border-radius: 8px;
+            text-align: center;
+            margin-top: 8%;
+            margin-bottom: 2%;
+            font-size: 8vh;
             background: transparent;
-            color: var(--display-color);
-            margin-bottom: 8px;
+            color: var(--button-color);
             letter-spacing: 4px;
         }
 
+        /* Feedback line */
         .feedback {
             width: 100%;
-            height: 22px;
+            height: 20px;
             text-align: center;
-            font-size: 2.4vh;
-            font-weight: 600;
-            border-radius: 6px;
-            line-height: 22px;
-            margin-bottom: 8px;
+            font-size: 2.2vh;
+            font-weight: 700;
+            line-height: 20px;
+            margin-bottom: 4%;
             color: transparent;
             transition: color 0.2s;
         }
         .feedback.ok   { color: #4caf50; }
         .feedback.fail { color: #f44336; }
 
-        /* Numpad grid */
-        .numpad {
+        /* Numpad */
+        .buttons {
             display: grid;
+            grid-gap: 10px;
             grid-template-columns: repeat(3, 1fr);
-            gap: 7px;
             margin-bottom: 10px;
         }
 
-        .numpad button {
-            padding: 0;
-            height: 52px;
-            border-radius: 18%;
+        .buttons button {
+            padding: 10px;
+            border-radius: 20%;
             border: none;
-            font-size: 5.5vh;
+            font-size: 8vh;
             background-color: var(--buttonbg-color);
             color: var(--button-color);
             cursor: pointer;
@@ -69,30 +69,48 @@
             -webkit-user-select: none;
         }
 
-        .numpad button:active  { transform: scale(0.97); background: #32c9ac; color: #fff; }
-        .numpad button:hover   { box-shadow: #32c9ac 0 0 2px 1px; }
-
-        .numpad .btn-clear         { font-size: 3.8vh; }
-        .numpad .btn-clear:hover   { box-shadow: #ff3c41 0 0 2px 1px; }
-        .numpad .btn-clear:active  { background: #ff3c41; color: #fff; }
-
-        .numpad .btn-back          { font-size: 3.8vh; }
-        .numpad .btn-back:hover    { box-shadow: #ff9800 0 0 2px 1px; }
-        .numpad .btn-back:active   { background: #ff9800; color: #fff; }
-
-        /* Action buttons */
-        .actions {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 7px;
+        .buttons button:active {
+            transform: scale(0.99);
+            background: #32c9ac;
+            color: #fff;
+        }
+        .buttons button:hover {
+            box-shadow: #32c9ac 0 0 1px 1px;
         }
 
-        .actions button {
-            padding: 0;
-            height: 44px;
-            border-radius: 14%;
+        .buttons .btn-clear,
+        .buttons .btn-back {
+            font-size: 4vh;
+        }
+        .buttons .btn-clear:hover,
+        .buttons .btn-back:hover {
+            box-shadow: #ff3c41 0 0 1px 1px;
+        }
+        .buttons .btn-clear:active,
+        .buttons .btn-back:active {
+            background: #ff3c41;
+            color: #fff;
+        }
+
+        /* Action buttons — 3 top row + 2 bottom row */
+        .actions {
+            display: grid;
+            grid-gap: 8px;
+            grid-template-columns: repeat(3, 1fr);
+            margin-bottom: 6px;
+        }
+        .actions2 {
+            display: grid;
+            grid-gap: 8px;
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .actions button,
+        .actions2 button {
+            padding: 8px 4px;
+            border-radius: 20%;
             border: none;
-            font-size: 2.5vh;
+            font-size: 3.4vh;
             font-weight: 700;
             cursor: pointer;
             user-select: none;
@@ -101,16 +119,23 @@
             color: var(--button-color);
         }
 
-        .actions button:active { transform: scale(0.97); }
-        .actions button:hover  { box-shadow: #32c9ac 0 0 2px 1px; }
+        .actions button:active,
+        .actions2 button:active {
+            transform: scale(0.99);
+            background: #32c9ac;
+            color: #fff;
+        }
+        .actions button:hover,
+        .actions2 button:hover {
+            box-shadow: #32c9ac 0 0 1px 1px;
+        }
 
-        .actions .btn-night   { }
-        .actions .btn-away    { }
-        .actions .btn-disarm  { background-color: #2e7d32; color: #fff; }
-        .actions .btn-disarm:active { background: #1b5e20; }
-        .actions .btn-disarm:hover  { box-shadow: #4caf50 0 0 2px 1px; }
-        .actions .btn-ack     { }
-        .actions .btn-reset   { }
+        .btn-disarm {
+            background-color: #2e7d32 !important;
+            color: #fff !important;
+        }
+        .btn-disarm:active { background: #1b5e20 !important; }
+        .btn-disarm:hover  { box-shadow: #4caf50 0 0 1px 1px !important; }
     </style>
 </head>
 <body>
@@ -118,7 +143,7 @@
         <input type="password" class="display" id="display" disabled />
         <div class="feedback" id="feedback"></div>
 
-        <div class="numpad">
+        <div class="buttons">
             <button data-digit="1">1</button>
             <button data-digit="2">2</button>
             <button data-digit="3">3</button>
@@ -137,11 +162,13 @@
         </div>
 
         <div class="actions">
-            <button class="btn-night"  data-action="ArmNight">Nacht</button>
-            <button class="btn-away"   data-action="ArmAway">Scharf</button>
+            <button data-action="ArmNight">Nacht</button>
+            <button data-action="ArmAway">Scharf</button>
             <button class="btn-disarm" data-action="Disarm">Unscharf</button>
-            <button class="btn-ack"    data-action="Acknowledge">Quitt.</button>
-            <button class="btn-reset"  data-action="Reset">Reset</button>
+        </div>
+        <div class="actions2">
+            <button data-action="Acknowledge">Quitt.</button>
+            <button data-action="Reset">Reset</button>
         </div>
     </div>
 
@@ -151,12 +178,11 @@
         let pin = '';
         let feedbackTimer = null;
 
-        // Apply theme from tile query parameters
-        document.documentElement.style.setProperty('--button-color',    queryParameters.get('textcolor'));
-        document.documentElement.style.setProperty('--buttonbg-color',  queryParameters.get('backgroundColor'));
-        document.documentElement.style.setProperty('--display-color',   queryParameters.get('textcolor'));
+        // Theme colors from tile parameters (lorbetzki pattern)
+        document.documentElement.style.setProperty('--button-color',   queryParameters.get('textcolor'));
+        document.documentElement.style.setProperty('--buttonbg-color', queryParameters.get('backgroundColor'));
 
-        // Numpad digit/control buttons
+        // Numpad
         document.querySelectorAll('[data-digit]').forEach(function(btn) {
             btn.addEventListener('click', function() {
                 var v = btn.getAttribute('data-digit');
@@ -171,17 +197,16 @@
             });
         });
 
-        // Action buttons — send PIN together with the command
+        // Action buttons
         document.querySelectorAll('[data-action]').forEach(function(btn) {
             btn.addEventListener('click', function() {
-                var action = btn.getAttribute('data-action');
-                requestAction(action, pin);
+                requestAction(btn.getAttribute('data-action'), pin);
                 pin = '';
                 display.value = '';
             });
         });
 
-        // Receive feedback from PHP (PushFeedback → UpdateVisualizationValue)
+        // Feedback from PHP → UpdateVisualizationValue → handleMessage
         function handleMessage(data) {
             var msg = JSON.parse(data);
             if (feedbackTimer) { clearTimeout(feedbackTimer); }
