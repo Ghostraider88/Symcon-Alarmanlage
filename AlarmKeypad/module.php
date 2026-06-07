@@ -9,7 +9,6 @@ class AlarmKeypad extends IPSModuleStrict
         parent::Create();
 
         $this->RegisterPropertyInteger('AlarmInstanceID', 0);
-        $this->RegisterPropertyBoolean('RequirePinForArm', false);
 
         $this->SetVisualizationType(1);
     }

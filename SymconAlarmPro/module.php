@@ -71,9 +71,6 @@ class SymconAlarmPro extends IPSModuleStrict
         $this->RegisterPropertyBoolean('RequirePinForArm', false);
         $this->RegisterPropertyBoolean('RequirePinForDisarm', true);
         $this->RegisterPropertyBoolean('RequirePinForBypass', false);
-        // External PIN pad: a string variable the keypad writes the entered PIN into.
-        $this->RegisterPropertyInteger('PinInputVariableID', 0);
-        $this->RegisterPropertyBoolean('ClearPinInput', true);
 
         // --- History ---
         $this->RegisterPropertyInteger('HistoryMaxEntries', 50);
@@ -130,14 +127,10 @@ class SymconAlarmPro extends IPSModuleStrict
     {
         switch ($message) {
             case VM_UPDATE:
-                if ($senderID === $this->ReadPropertyInteger('PinInputVariableID') && $senderID > 0) {
-                    $this->HandlePinInput((string) $data[0]);
-                } else {
-                    $this->HandleSensorEventInternal($senderID, $data[0]);
-                    // Always refresh the tile so the sensor status list stays current,
-                    // even when the state machine made no transition (e.g. disarmed).
-                    $this->PushVisualization();
-                }
+                $this->HandleSensorEventInternal($senderID, $data[0]);
+                // Always refresh the tile so the sensor status list stays current,
+                // even when the state machine made no transition (e.g. disarmed).
+                $this->PushVisualization();
                 break;
             case IPS_KERNELSTARTED:
                 $this->ApplyRestartBehavior();

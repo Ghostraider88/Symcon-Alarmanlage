@@ -14,18 +14,30 @@ zusätzlich wird bei jedem Release die ganzzahlige `build`-Nummer erhöht.
 - Bei **jedem** Release werden in `library.json` `version`, `build` (+1) und `date`
   (Unix-Zeitstempel) aktualisiert und hier ein Eintrag ergänzt.
 
+> **Hinweis:** Das Projekt befindet sich in der **Beta-Phase**. Ein zuvor vorbereitetes
+> Release 1.0 wurde **zurückgezogen**; es gibt noch kein finales 1.0-Release und keine
+> Einreichung im Symcon Module Store. Versionen unterhalb von `1.0` sind Beta-Stände.
+
 ---
 
-## [1.0] – 2026-06-07
+## [0.9.0] – 2026-06-07 (Beta)
 
-Erstes Release – bereit für die Einreichung im Symcon Module Store.
+### Entfernt
 
-### Veröffentlichung
+- **AlarmKeypad:** Eigenschaft/Checkbox „PIN beim Scharfschalten erforderlich" entfernt.
+  Ob eine Aktion eine PIN benötigt, wird ausschließlich zentral in der Alarmzentrale
+  (SymconAlarmPro → *PIN & Sicherheit*) festgelegt; das Keypad reicht die PIN nur durch.
+- **SymconAlarmPro:** Reste des externen PIN-Pad-Backends vollständig entfernt
+  (Eigenschaften `PinInputVariableID`/`ClearPinInput`, `MessageSink`-Verdrahtung,
+  `HandlePinInput` in `PinTrait`, Sensor-Watch der Eingabevariable, zugehörige
+  Übersetzungen). Die PIN-Eingabe erfolgt nun ausschließlich über das **AlarmKeypad**.
+
+### Vorbereitung (zunächst zurückgestellt)
 
 - `LICENSE` (MIT) ergänzt.
 - `url` für beide Module in `module.json` gesetzt.
 - Logo `imgs/logo.png` ergänzt und in der README eingebunden.
-- `docs/MODULE_STORE.md` mit allen Einreichungs-Infos für den Symcon Module Store angelegt.
+- `docs/MODULE_STORE.md` mit Einreichungs-Infos angelegt (Einreichung erst nach Beta-Abschluss).
 - `CHANGELOG.md` und Versionierungsregeln eingeführt (siehe oben).
 
 ### Module

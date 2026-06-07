@@ -335,10 +335,12 @@ markiert wird.
 
 ---
 
-## 11a. Versionierung & Release-Pflicht (ab Release 1.0 verbindlich)
+## 11a. Versionierung & Release-Pflicht (verbindlich)
 
-> **Der aktuelle Stand ist als Release `1.0` festgeschrieben.** Ab sofort darf **keine**
-> Änderung mehr ohne Versions-/Build-Schritt veröffentlicht werden.
+> **Status: Beta.** Ein zuvor vorbereitetes Release `1.0` wurde **zurückgezogen** – das Projekt
+> befindet sich weiterhin in der Beta-Phase (Versionen `0.x`). Es gibt noch kein finales
+> `1.0` und noch keine Einreichung im Module Store. Trotzdem gilt ab sofort: **keine**
+> Änderung mehr ohne Versions-/Build-Schritt veröffentlichen.
 
 **Bei JEDER veröffentlichten Änderung sind diese Schritte zwingend (in einem Zug):**
 

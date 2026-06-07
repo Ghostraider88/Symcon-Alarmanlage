@@ -1,4 +1,8 @@
-# Module Store – Einreichungs-Infos (Release 1.0)
+# Module Store – Einreichungs-Infos (Vorbereitung)
+
+> **Status: Beta – noch keine Einreichung.** Das Release 1.0 wurde zurückgezogen; die
+> Einreichung im Module Store erfolgt erst nach Abschluss der Beta-Phase. Dieses Dokument
+> hält die Angaben bereits bereit, damit die Einreichung später nur noch ausgefüllt werden muss.
 
 Dieses Dokument bündelt alle Angaben, die für die Einreichung im **IP-Symcon Module Store**
 benötigt werden. Inhalte können direkt in das Einreichungsformular auf der Symcon-Website
@@ -14,7 +18,7 @@ kopiert werden: **Entwicklerbereich → Module Store → Bibliothek einreichen**
 | Autor | Torsten Wolf |
 | Repository-URL | https://github.com/ghostraider88/symcon-alarmanlage |
 | Standard-Branch | `main` |
-| Version / Build | `1.0` / `1` |
+| Version / Build | `0.9.0` / `2` (Beta) |
 | Lizenz | MIT |
 | Mindest-Kernel | IP-Symcon **8.1** |
 | Bibliotheks-GUID | `{583DA8D0-D8D7-45B1-805E-DD873461DCD5}` |
@@ -75,7 +79,8 @@ Instanzkonfiguration eingerichtet – es sind keine Geräte-IDs fest einprogramm
 ## Checkliste vor dem Einreichen
 
 - [ ] GitHub-Actions **Check Style** und **Run Tests** sind auf `main` grün
-- [ ] `library.json`: `version`, `build`, `date` aktuell (aktuell `1.0` / `1`)
+- [ ] Beta abgeschlossen und finale Version auf `1.0` angehoben
+- [ ] `library.json`: `version`, `build`, `date` aktuell (aktuell `0.9.0` / `2`, Beta)
 - [ ] `LICENSE` vorhanden (MIT) ✔
 - [ ] Logo `imgs/logo.png` vorhanden ✔
 - [ ] READMEs für Bibliothek und beide Module aktuell ✔

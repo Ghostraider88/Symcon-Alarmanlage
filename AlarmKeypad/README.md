@@ -29,8 +29,7 @@ so lässt sich auch bei aktivem PIN-Schutz gezielt scharfschalten, quittieren od
 1. Bibliothek über die **Modulverwaltung** hinzufügen (siehe Haupt-README)
 2. Neue Instanz **AlarmKeypad** anlegen
 3. In der Konfiguration die **Alarmzentrale (Instanz)** auswählen
-4. Optional *PIN beim Scharfschalten erforderlich* setzen
-5. Die Kachel der Instanz in der Visualisierung platzieren
+4. Die Kachel der Instanz in der Visualisierung platzieren
 
 Die eingegebene PIN wird an die Alarmzentrale weitergereicht und dort geprüft. Die PIN selbst
 wird im AlarmKeypad **nicht** gespeichert.
@@ -42,7 +41,10 @@ wird im AlarmKeypad **nicht** gespeichert.
 | Feld | Beschreibung |
 |------|--------------|
 | Alarmzentrale (Instanz) | Die SymconAlarmPro-Instanz, die gesteuert werden soll |
-| PIN beim Scharfschalten erforderlich | Hinweisflag für die Bedienung (die eigentliche PIN-Prüfung übernimmt die Alarmzentrale anhand ihrer eigenen Einstellungen) |
+
+Ob für eine Aktion eine PIN nötig ist, wird **ausschließlich in der Alarmzentrale**
+(SymconAlarmPro → *PIN & Sicherheit*) festgelegt. Das AlarmKeypad besitzt dafür keine eigene
+Einstellung – es reicht die eingegebene PIN durch, die Prüfung übernimmt die Alarmzentrale.
 
 ---
 
