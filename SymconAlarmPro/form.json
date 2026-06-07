@@ -29,7 +29,7 @@
                 { "type": "Label", "bold": true, "caption": "Ausgangsverzögerung (Scharf-Countdown)" },
                 { "type": "Label", "caption": "Beim Scharfschalten gibt die Ausgangsverzögerung Zeit, das Gebäude zu verlassen, bevor die Sensoren aktiv werden. Während dieses Countdowns ist das System noch nicht scharf. Auf 0 setzen für sofortiges Scharfschalten." },
                 { "type": "NumberSpinner", "name": "ExitDelayNight", "caption": "Ausgangsverzögerung Nacht (s)", "minimum": 0 },
-                { "type": "NumberSpinner", "name": "ExitDelayAway", "caption": "Ausgangsverzögerung Abwesend (s)", "minimum": 0 },
+                { "type": "NumberSpinner", "name": "ExitDelayAway", "caption": "Ausgangsverzögerung Scharf (s)", "minimum": 0 },
                 { "type": "NumberSpinner", "name": "ExitDelayTest", "caption": "Ausgangsverzögerung Test (s)", "minimum": 0 },
                 { "type": "Label", "bold": true, "caption": "Voralarm-Phase" },
                 { "type": "Label", "caption": "Wenn aktiviert, lösen Sensoren mit der Reaktion 'Voralarm' keinen sofortigen Alarm aus, sondern starten eine stille Voralarm-Phase. Wird die Lage nicht innerhalb der Voralarm-Dauer bereinigt oder das System unscharfgeschaltet, folgt der vollständige Alarm. Nützlich als letzte Warnung vor der Eskalation." },
@@ -95,7 +95,7 @@
                 { "type": "Label", "caption": "ZONE — Ordnet den Sensor einer Zone zu (aus der Zonenliste oben). Der Zonenfilter bei Aktionen und Benachrichtigungen greift nur, wenn ein Sensor aus der jeweiligen Zone ausgelöst hat." },
                 { "type": "Label", "caption": "AUSLÖSER — Welcher Variablenwert gilt als Alarmsignal?\n• Bool wahr = Alarm: Die Boolean-Variable wechselt auf true → Alarm\n• Bool falsch = Alarm: Die Boolean-Variable wechselt auf false (z. B. Fensterkontakt: offen = false)\n• Int = / ≠ / > / ≥ / < / ≤: Der Integer- oder Float-Wert wird mit dem Schwellwert im Feld 'Wert' verglichen." },
                 { "type": "Label", "caption": "WERT — Der Vergleichsschwellwert, nur relevant bei Int-Auslösertypen. Bei Bool-Typen wird dieses Feld ausgeblendet." },
-                { "type": "Label", "caption": "NACHT / ABWESEND / TEST — In welchem Scharf-Modus soll dieser Sensor aktiv sein? Nacht-Modus: Typischerweise nur Perimetersensoren (Türen, Fenster) aktiv – Bewegungsmelder ausgeschaltet, da man sich im Gebäude befindet. Abwesend-Modus: Alle Sensoren aktiv, da das Gebäude verlassen wurde. Test-Modus: Nur für die Inbetriebnahme – es gibt keinen echten Alarm." },
+                { "type": "Label", "caption": "NACHT / SCHARF / TEST — In welchem Scharf-Modus soll dieser Sensor aktiv sein? Nacht-Modus: Typischerweise nur Perimetersensoren (Türen, Fenster) aktiv – Bewegungsmelder ausgeschaltet, da man sich im Gebäude befindet. Scharf-Modus: Alle Sensoren aktiv, da das Gebäude verlassen wurde. Test-Modus: Nur für die Inbetriebnahme – es gibt keinen echten Alarm." },
                 { "type": "Label", "caption": "REAKTION — Was passiert, wenn der Sensor auslöst?\n• Sofortalarm: Der Alarm wird sofort ausgelöst. Für Fenster, Sabotage und kritische Sensoren.\n• Voralarm: Das System wechselt zuerst in eine stille Voralarm-Phase (Dauer unter Modi & Verzögerungen). Wer das System nicht innerhalb dieser Zeit unscharfschaltet, löst den vollständigen Alarm aus.\n• Eintrittsverzögerung: Ein sensorindividueller Countdown startet (Feld 'Eintrittsverzögerung (s)'). Wird das System nicht innerhalb dieser Zeit unscharfgeschaltet, folgt der Alarm. Typischerweise für die Haustür." },
                 { "type": "Label", "caption": "ENTPRELLUNG — Mindestabstand in Millisekunden zwischen zwei Alarm-Auslösungen desselben Sensors. Verhindert Mehrfachauslösungen durch prellende Kontakte (z. B. Türkontakt flattert 20–50 ms beim Öffnen). 0 = deaktiviert." },
                 { "type": "Label", "caption": "BYPASS ERLAUBT — Wenn aktiviert, kann dieser einzelne Sensor manuell deaktiviert (gebypastet) werden, ohne die gesamte Anlage unscharfzuschalten. Nützlich für ein offen stehendes Fenster, während der Rest der Anlage scharf ist." },
@@ -143,7 +143,7 @@
                         },
                         { "caption": "Wert (nur Int)", "name": "TriggerValue", "width": "100px", "add": 0, "edit": { "type": "NumberSpinner", "minimum": -999999, "visibleIf": "TriggerType >= 2" } },
                         { "caption": "Nacht", "name": "ActiveInNight", "width": "65px", "add": false, "edit": { "type": "CheckBox" } },
-                        { "caption": "Abwesend", "name": "ActiveInAway", "width": "80px", "add": true, "edit": { "type": "CheckBox" } },
+                        { "caption": "Scharf", "name": "ActiveInAway", "width": "65px", "add": true, "edit": { "type": "CheckBox" } },
                         { "caption": "Test", "name": "ActiveInTest", "width": "55px", "add": true, "edit": { "type": "CheckBox" } },
                         {
                             "caption": "Reaktion", "name": "Reaction", "width": "160px", "add": 0,
@@ -446,7 +446,7 @@
             "type": "RowLayout",
             "items": [
                 { "type": "Button", "caption": "Nacht scharf", "onClick": "Alarm_ArmNight($id, '');" },
-                { "type": "Button", "caption": "Abwesend scharf", "onClick": "Alarm_ArmAway($id, '');" },
+                { "type": "Button", "caption": "Scharf", "onClick": "Alarm_ArmAway($id, '');" },
                 { "type": "Button", "caption": "Unscharf", "onClick": "Alarm_Disarm($id, '');" },
                 { "type": "Button", "caption": "Quittieren", "onClick": "Alarm_Acknowledge($id, '');" },
                 { "type": "Button", "caption": "Reset", "onClick": "Alarm_Reset($id, '');" },
@@ -457,7 +457,7 @@
             "type": "RowLayout",
             "items": [
                 { "type": "Button", "caption": "Störung zurücksetzen", "onClick": "Alarm_ClearTrouble($id);" },
-                { "type": "Button", "caption": "Vorab-Check (Abwesend)", "onClick": "echo Alarm_RunPreArmCheck($id, 2);" },
+                { "type": "Button", "caption": "Vorab-Check (Scharf)", "onClick": "echo Alarm_RunPreArmCheck($id, 2);" },
                 { "type": "Button", "caption": "Testbenachrichtigung", "onClick": "Alarm_TestNotification($id);" },
                 { "type": "Button", "caption": "Frontend neu aufbauen", "onClick": "Alarm_RebuildFrontend($id);" },
                 { "type": "Button", "caption": "Verlauf löschen", "onClick": "Alarm_ClearHistory($id);" }

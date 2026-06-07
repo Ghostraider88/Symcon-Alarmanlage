@@ -9,7 +9,7 @@ Flexible, state-machine-basierte Alarmzentrale für IP-Symcon 8.1+. Keine Gerät
 1. Bibliothek über **Modulverwaltung** → **Hinzufügen** → Repository-URL einfügen
 2. Neue Instanz **Symcon Alarm Pro** unter *Sonstige* anlegen
 3. Konfiguration öffnen, zunächst **Zonen** anlegen, dann **Sensoren** konfigurieren
-4. Erste Tests im **Test**-Modus durchführen, bevor Nacht- oder Abwesend-Modus genutzt wird
+4. Erste Tests im **Test**-Modus durchführen, bevor Nacht- oder Scharf-Modus genutzt wird
 5. Bei Bedarf eine PIN im Abschnitt *PIN setzen* am unteren Ende des Formulars setzen
 
 ---
@@ -24,7 +24,7 @@ Flexible, state-machine-basierte Alarmzentrale für IP-Symcon 8.1+. Keine Gerät
 |-------|-------------|
 | Unscharf | Anlage inaktiv, keine Sensoren überwacht |
 | Nacht | Man ist zuhause. Typischerweise nur Perimetersensoren (Türen, Fenster) aktiv. Bewegungsmelder ausgeschaltet. |
-| Abwesend | Das Gebäude wurde verlassen. Alle konfigurierten Sensoren sind aktiv. |
+| Scharf | Das Gebäude wurde verlassen. Alle konfigurierten Sensoren sind aktiv. |
 | Test | Inbetriebnahme-Modus. Sensoren lösen aus, aber die Anlage eskaliert nie zu einem echten Alarm. |
 
 **Zustand** ist das, was die Anlage intern gerade macht:
@@ -33,7 +33,7 @@ Flexible, state-machine-basierte Alarmzentrale für IP-Symcon 8.1+. Keine Gerät
 |---------|-------------|
 | Unscharf | Nichts aktiv |
 | Scharfschalten (Ausgangsverzögerung) | Countdown vor dem Scharfschalten – jetzt das Gebäude verlassen |
-| Scharf (Nacht / Abwesend) | Anlage ist aktiv |
+| Scharf (Nacht) / Scharf | Anlage ist scharf geschaltet |
 | Eintrittsverzögerung | Sensor mit Reaktion „Eintrittsverzögerung" hat ausgelöst; Anlage innerhalb der konfigurierten Sekunden unscharfschalten |
 | Voralarm | Sensor mit Reaktion „Voralarm" hat ausgelöst; stille Warnphase vor dem echten Alarm |
 | Alarm | Alarm ist aktiv |
@@ -60,7 +60,7 @@ Alle Listen (Zonen, Sensoren, Aktionen, Benachrichtigungen, Sprachansagen, Kamer
 - **Neusortieren per Drag & Drop** – Eine Zeile am Ziehpunkt anfassen und an die gewünschte Position ziehen.
 - **Kopieren & Einfügen** – Eine Zeile in der Symcon-Konsole markieren und mit **Strg+C** / **Strg+V** duplizieren. Anschließend nur noch Name und Variable der Kopie anpassen, statt alle Felder neu einzutragen. (Diese Funktion ist Teil der Symcon-Konsole und steht bei jeder bearbeitbaren Liste zur Verfügung.)
 
-Beim Hinzufügen einer neuen Sensor-Zeile sind sinnvolle Standardwerte bereits vorbelegt (Abwesend = an, Test = an, Reaktion = Sofortalarm, Bypass erlaubt, Kritikalität = Normal, Eintrittsverzögerung = 30 s) – es müssen also in der Regel nur Name, Variable und Zone gesetzt werden.
+Beim Hinzufügen einer neuen Sensor-Zeile sind sinnvolle Standardwerte bereits vorbelegt (Scharf = an, Test = an, Reaktion = Sofortalarm, Bypass erlaubt, Kritikalität = Normal, Eintrittsverzögerung = 30 s) – es müssen also in der Regel nur Name, Variable und Zone gesetzt werden.
 
 ---
 
@@ -98,14 +98,14 @@ Der Auslöser legt fest, welcher Variablenwert als Alarmsignal gilt. IP-Symcon s
 
 Das Feld **Wert** (Vergleichsschwellwert) wird nur bei Int-Auslösertypen angezeigt.
 
-### Nacht / Abwesend / Test – aktive Modi
+### Nacht / Scharf / Test – aktive Modi
 
-Jeder Sensor hat drei Kontrollkästchen: **Nacht**, **Abwesend**, **Test**. Ein Sensor wird nur ausgewertet, wenn das System in einem der aktivierten Modi scharf geschaltet ist.
+Jeder Sensor hat drei Kontrollkästchen: **Nacht**, **Scharf**, **Test**. Ein Sensor wird nur ausgewertet, wenn das System in einem der aktivierten Modi scharf geschaltet ist.
 
 **Typische Konfiguration:**
-- Türkontakt Haustür: ✓ Nacht, ✓ Abwesend → aktiv in beiden Modi
-- Bewegungsmelder: ✗ Nacht, ✓ Abwesend → nur aktiv, wenn man das Haus verlassen hat
-- Testsensor: ✗ Nacht, ✗ Abwesend, ✓ Test → ausschließlich für die Inbetriebnahme
+- Türkontakt Haustür: ✓ Nacht, ✓ Scharf → aktiv in beiden Modi
+- Bewegungsmelder: ✗ Nacht, ✓ Scharf → nur aktiv, wenn man das Haus verlassen hat
+- Testsensor: ✗ Nacht, ✗ Scharf, ✓ Test → ausschließlich für die Inbetriebnahme
 
 ### Reaktions-Typen
 
@@ -175,7 +175,7 @@ Blinkt den Ausgang N mal mit konfigurierbarem Intervall. Beispiel: Anzahl = 3, I
 
 ### Modusfilter
 
-Kommagetrennte Modusnamen. Leer = alle Modi. Beispiel: `night,away` löst im Nacht- und Abwesend-Modus aus, nicht im Test-Modus.
+Kommagetrennte Modusnamen. Leer = alle Modi. Beispiel: `night,away` löst im Nacht- und Scharf-Modus aus, nicht im Test-Modus.
 
 ### Zonenfilter
 
@@ -332,7 +332,7 @@ Ein physisches Tastenfeld anschließen, indem eine String-Variable im Feld *Eing
 |---------|--------|
 | `1234` | Unscharfschalten |
 | `DISARM:1234` | Unscharfschalten |
-| `ARM_AWAY:1234` | Abwesend scharf |
+| `ARM_AWAY:1234` | Scharf |
 | `ARM_NIGHT:1234` | Nacht scharf |
 | `ACK:1234` | Quittieren |
 | `RESET:1234` | Reset |
@@ -348,11 +348,11 @@ Alle exportierten Funktionen verwenden das Präfix `Alarm_`.
 | Funktion | Beschreibung |
 |----------|-------------|
 | `Alarm_ArmNight($id, $pin)` | Nacht-Modus scharf |
-| `Alarm_ArmAway($id, $pin)` | Abwesend-Modus scharf |
+| `Alarm_ArmAway($id, $pin)` | Scharf schalten |
 | `Alarm_Disarm($id, $pin)` | Unscharfschalten |
 | `Alarm_Acknowledge($id, $pin)` | Alarm quittieren |
 | `Alarm_Reset($id, $pin)` | Alarmzustand zurücksetzen |
-| `Alarm_SetMode($id, $modus)` | Modus per Ganzzahl setzen (0=Unscharf, 1=Nacht, 2=Abwesend, 3=Test) |
+| `Alarm_SetMode($id, $modus)` | Modus per Ganzzahl setzen (0=Unscharf, 1=Nacht, 2=Scharf, 3=Test) |
 | `Alarm_Panic($id)` | Panik-Alarm sofort auslösen |
 | `Alarm_BypassSensor($id, $varID, $minuten, $pin)` | Sensor temporär bypassen |
 | `Alarm_UnbypassSensor($id, $varID, $pin)` | Bypass aufheben |
