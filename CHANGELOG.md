@@ -18,7 +18,13 @@ zusätzlich wird bei jedem Release die ganzzahlige `build`-Nummer erhöht.
 
 ## [1.0] – 2026-06-07
 
-Erstes Release.
+Erstes Release – bereit für die Einreichung im Symcon Module Store.
+
+### Veröffentlichung
+
+- `LICENSE` (MIT) ergänzt.
+- `url` für beide Module in `module.json` gesetzt.
+- `CHANGELOG.md` und Versionierungsregeln eingeführt (siehe oben).
 
 ### Module
 
