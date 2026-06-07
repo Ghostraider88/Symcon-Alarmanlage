@@ -68,6 +68,8 @@ trait FrontendTrait
             'troubleText'    => $this->GetValue('TroubleSummary'),
             'bypass'         => $this->GetBypassSummary(),
             'pinRequired'    => $this->ReadPropertyBoolean('PinEnabled') && $state === AlarmConstants::STATE_ENTRY_DELAY,
+            'pinForArm'      => $this->ReadPropertyBoolean('PinEnabled') && $this->ReadPropertyBoolean('RequirePinForArm'),
+            'pinForDisarm'   => $this->ReadPropertyBoolean('PinEnabled') && $this->ReadPropertyBoolean('RequirePinForDisarm'),
             'history'        => array_slice($this->GetHistory(), 0, 20),
             'name'           => $this->ReadPropertyString('AlarmName'),
             'sensors'        => $this->BuildSensorStatusList(),

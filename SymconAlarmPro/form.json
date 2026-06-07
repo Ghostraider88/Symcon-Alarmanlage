@@ -57,11 +57,6 @@
                 { "type": "CheckBox", "name": "RequirePinForArm", "caption": "PIN zum Scharfschalten" },
                 { "type": "CheckBox", "name": "RequirePinForDisarm", "caption": "PIN für Unscharf / Quittieren / Reset" },
                 { "type": "CheckBox", "name": "RequirePinForBypass", "caption": "PIN für Bypass" },
-                { "type": "Label", "bold": true, "caption": "Externes PIN-Pad" },
-                { "type": "Label", "caption": "Ein physisches Tastenfeld oder eine externe Eingabe (z. B. ein Symcon-Skript oder Widget) kann die eingegebene PIN in eine String-Variable schreiben. Diese Variable unten auswählen." },
-                { "type": "SelectVariable", "name": "PinInputVariableID", "caption": "Eingabevariable des PIN-Pads (String, optional)" },
-                { "type": "CheckBox", "name": "ClearPinInput", "caption": "PIN-Variable nach dem Lesen leeren" },
-                { "type": "Label", "caption": "Die eingegebene PIN wird in die Variable oben geschrieben. Unterstützte Formate: nur die PIN → Unscharfschalten; oder BEFEHL:PIN, wobei BEFEHL ARM_AWAY, ARM_NIGHT, DISARM, ACK oder RESET ist. Beispiel: ARM_AWAY:1234" },
                 { "type": "Label", "caption": "PIN setzen oder ändern im Testbereich unten. Die PIN wird als bcrypt-Hash gespeichert – niemals im Klartext." }
             ]
         },

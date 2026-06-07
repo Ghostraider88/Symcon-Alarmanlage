@@ -157,12 +157,12 @@
         <input type="password" id="ac-pin-input" placeholder="PIN" inputmode="numeric">
     </div>
 
-    <div class="buttons">
-        <button onclick="acAction('ArmNight')"><i class="fa-solid fa-moon"></i><span>Nacht</span></button>
-        <button onclick="acAction('ArmAway')"><i class="fa-solid fa-lock"></i><span>Scharf</span></button>
-        <button onclick="acAction('Disarm')"><i class="fa-solid fa-lock-open"></i><span>Unscharf</span></button>
-        <button onclick="acAction('Acknowledge')"><i class="fa-solid fa-check"></i><span>Quitt.</span></button>
-        <button onclick="acAction('Reset')"><i class="fa-solid fa-rotate-left"></i><span>Reset</span></button>
+    <div class="buttons" id="ac-buttons">
+        <button id="btn-arm-night" onclick="acAction('ArmNight')"><i class="fa-solid fa-moon"></i><span>Nacht</span></button>
+        <button id="btn-arm-away"  onclick="acAction('ArmAway')"><i class="fa-solid fa-lock"></i><span>Scharf</span></button>
+        <button id="btn-disarm"    onclick="acAction('Disarm')"><i class="fa-solid fa-lock-open"></i><span>Unscharf</span></button>
+        <button id="btn-ack"       onclick="acAction('Acknowledge')"><i class="fa-solid fa-check"></i><span>Quitt.</span></button>
+        <button id="btn-reset"     onclick="acAction('Reset')"><i class="fa-solid fa-rotate-left"></i><span>Reset</span></button>
     </div>
 
     <div class="grp-hdr" id="ac-sens-hdr" style="display:none">Sensoren</div>
@@ -229,6 +229,21 @@
         document.getElementById('ac-meta').innerHTML = meta;
 
         document.getElementById('ac-pin').style.display = s.pinRequired ? 'block' : 'none';
+
+        // Show/hide arm and disarm buttons depending on PIN requirements.
+        // If a PIN is required for a group of actions the user must use the
+        // AlarmKeypad tile instead — showing the button without PIN input
+        // would be misleading.
+        var showArm    = !s.pinForArm;
+        var showDisarm = !s.pinForDisarm;
+        document.getElementById('btn-arm-night').style.display = showArm    ? '' : 'none';
+        document.getElementById('btn-arm-away').style.display  = showArm    ? '' : 'none';
+        document.getElementById('btn-disarm').style.display    = showDisarm ? '' : 'none';
+        document.getElementById('btn-ack').style.display       = showDisarm ? '' : 'none';
+        document.getElementById('btn-reset').style.display     = showDisarm ? '' : 'none';
+        // Hide the button row entirely when all buttons are hidden.
+        var anyBtn = showArm || showDisarm;
+        document.getElementById('ac-buttons').style.display = anyBtn ? '' : 'none';
 
         // Sensor status: door/window contacts (left) and motion detectors (right).
         var contactRows = '', motionRows = '';
