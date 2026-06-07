@@ -12,6 +12,7 @@ Benachrichtigungshooks sowie Kachelvisu-Frontend. Ohne hart codierte Ger채teabh�
 | Modul | Beschreibung | Doku |
 |-------|--------------|------|
 | SymconAlarmPro | Zentrale Alarmanlage (State Machine) | [README](SymconAlarmPro/README.md) |
+| AlarmKeypad | PIN-Tastenfeld f체r die Kachelvisu mit Befehlstasten (Nacht / Scharf / Unscharf / Quittieren / Reset) | [README](AlarmKeypad/README.md) |
 
 ## Installation
 
@@ -28,6 +29,14 @@ https://github.com/ghostraider88/symcon-alarmanlage
 ## Entwicklung
 
 Alle verbindlichen Struktur- und Codiervorgaben stehen in [`CLAUDE.md`](CLAUDE.md).
+
+## Danksagung
+
+Das Modul **AlarmKeypad** basiert auf dem Pinpad-Modul von **lorbetzki**
+([net.lorbetzki.pinpad](https://github.com/lorbetzki/net.lorbetzki.pinpad)).
+Dessen Kachel-Layout (Numpad, Theming 체ber `queryParameters`, `handleMessage`/`requestAction`)
+diente als Vorlage und wurde mit ausdr체cklicher Genehmigung des Autors verwendet und erweitert.
+Vielen Dank an lorbetzki f체r die Freigabe.
 
 ## Lizenz
 

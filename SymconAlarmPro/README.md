@@ -324,20 +324,23 @@ Die PIN wird als bcrypt-Hash in einem Modul-Attribut gespeichert. Sie wird **nie
 Alarm_SetPin($id, '1234');
 ```
 
-### Externes PIN-Pad
+### PIN-Tastenfeld (AlarmKeypad)
 
-Ein physisches Tastenfeld anschließen, indem eine String-Variable im Feld *Eingabevariable des PIN-Pads* ausgewählt wird. Das Tastenfeld schreibt die eingegebene PIN in diese Variable. Unterstützte Formate:
+Für die Kachelvisu liegt der Bibliothek das eigenständige Modul **AlarmKeypad** bei (siehe [dessen README](../AlarmKeypad/README.md)). Es zeigt ein Numpad mit eigenen Befehlstasten (Nacht / Scharf / Unscharf / Quittieren / Reset) und sendet die eingegebene PIN **zusammen mit dem gewünschten Befehl** an diese Alarmzentrale. Dadurch lässt sich auch mit aktivem PIN-Schutz quittieren oder zurücksetzen, ohne die Anlage versehentlich unscharfzuschalten.
 
-| Eingabe | Aktion |
-|---------|--------|
-| `1234` | Unscharfschalten |
-| `DISARM:1234` | Unscharfschalten |
-| `ARM_AWAY:1234` | Scharf |
-| `ARM_NIGHT:1234` | Nacht scharf |
-| `ACK:1234` | Quittieren |
-| `RESET:1234` | Reset |
+Einrichtung: Eine **AlarmKeypad**-Instanz anlegen und dort diese Alarmzentrale auswählen – fertig.
 
-*PIN-Variable nach dem Lesen leeren* aktivieren, damit die PIN nach der Verarbeitung sofort aus der Variable gelöscht wird.
+### Button-Sichtbarkeit in der Kachel bei PIN-Schutz
+
+Damit der Anwender nicht durch nicht nutzbare Schaltflächen verwirrt wird, blendet die Kachel der Alarmzentrale die Bedien-Buttons abhängig vom konfigurierten PIN-Schutz aus:
+
+| PIN-Einstellung | Ausgeblendete Buttons in der Kachel |
+|-----------------|-------------------------------------|
+| *PIN zum Scharfschalten* aktiv | Nacht, Scharf |
+| *PIN für Unscharf / Quittieren / Reset* aktiv | Unscharf, Quittieren, Reset |
+| Beide aktiv | Alle – die Bedienung erfolgt dann ausschließlich über das AlarmKeypad |
+
+Die betreffenden Aktionen sind dann nur noch über das **AlarmKeypad** (mit PIN) erreichbar.
 
 ---
 
