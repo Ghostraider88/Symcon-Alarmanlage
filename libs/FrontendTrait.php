@@ -70,7 +70,37 @@ trait FrontendTrait
             'pinRequired'    => $this->ReadPropertyBoolean('PinEnabled') && $state === AlarmConstants::STATE_ENTRY_DELAY,
             'history'        => array_slice($this->GetHistory(), 0, 20),
             'name'           => $this->ReadPropertyString('AlarmName'),
+            'sensors'        => $this->BuildSensorStatusList(),
         ];
+    }
+
+    /**
+     * Returns a list of all enabled sensors with their current open/closed state.
+     *
+     * @return array<int, array{name: string, type: int, isOpen: bool}>
+     */
+    private function BuildSensorStatusList(): array
+    {
+        $list = [];
+        foreach ($this->GetSensors() as $sensor) {
+            if (empty($sensor['Enabled'])) {
+                continue;
+            }
+            $vid = (int) ($sensor['VariableID'] ?? 0);
+            if ($vid <= 0 || !IPS_VariableExists($vid)) {
+                continue;
+            }
+            $list[] = [
+                'name'   => (string) ($sensor['Name'] ?? ''),
+                'type'   => (int) ($sensor['Type'] ?? AlarmConstants::SENSOR_DOOR),
+                'isOpen' => self::EvaluateTrigger(
+                    GetValue($vid),
+                    (int) ($sensor['TriggerType'] ?? AlarmConstants::TRIGGER_BOOL_TRUE),
+                    (float) ($sensor['TriggerValue'] ?? 0)
+                ),
+            ];
+        }
+        return $list;
     }
 
     private function GetStateColor(int $state): string

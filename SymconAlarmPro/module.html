@@ -117,7 +117,15 @@
             border-radius: 3px;
         }
 
-        .history { margin-top: 6px; max-height: 170px; overflow-y: auto; font-size: 12px; }
+        .sensor-list { margin-top: 6px; font-size: 12px; }
+        .sensor-list table { width: 100%; border-collapse: collapse; }
+        .sensor-list td { padding: 3px 4px; border-bottom: 1px solid var(--div-clr); vertical-align: middle; }
+        .sensor-list .s-ico { width: 20px; color: var(--text-muted); }
+        .sensor-list .s-st { width: 28px; text-align: right; font-weight: 600; font-size: 11px; }
+        .sensor-list .s-st.open { color: #f44336; }
+        .sensor-list .s-st.closed { color: #4caf50; }
+
+        .history { margin-top: 6px; max-height: 150px; overflow-y: auto; font-size: 12px; }
         .history table { width: 100%; border-collapse: collapse; }
         .history td { padding: 3px 4px; border-bottom: 1px solid var(--div-clr); vertical-align: top; }
         .history .t { white-space: nowrap; color: var(--text-muted); width: 1%; padding-right: 8px; }
@@ -144,12 +152,14 @@
 
     <div class="buttons">
         <button onclick="acAction('ArmNight')"><i class="fa-solid fa-moon"></i><span>Nacht</span></button>
-        <button onclick="acAction('ArmAway')"><i class="fa-solid fa-lock"></i><span>Abwesend</span></button>
+        <button onclick="acAction('ArmAway')"><i class="fa-solid fa-lock"></i><span>Scharf</span></button>
         <button onclick="acAction('Disarm')"><i class="fa-solid fa-lock-open"></i><span>Unscharf</span></button>
         <button onclick="acAction('Acknowledge')"><i class="fa-solid fa-check"></i><span>Quitt.</span></button>
         <button onclick="acAction('Reset')"><i class="fa-solid fa-rotate-left"></i><span>Reset</span></button>
-        <button onclick="acAction('Test')"><i class="fa-solid fa-flask"></i><span>Test</span></button>
     </div>
+
+    <div class="grp-hdr" id="ac-sens-hdr" style="display:none">Sensoren</div>
+    <div class="sensor-list" id="ac-sensors"></div>
 
     <div class="grp-hdr" id="ac-hist-hdr" style="display:none">Verlauf</div>
     <div class="history" id="ac-history"></div>
@@ -198,12 +208,23 @@
         }
 
         var meta = '';
-        if (s.openSensors) { meta += '<div class="row"><i class="fa-solid fa-door-open"></i><span class="lbl">Offen:</span> ' + acEscape(s.openSensors) + '</div>'; }
         if (s.bypass) { meta += '<div class="row"><i class="fa-solid fa-ban"></i><span class="lbl">Bypass:</span> ' + acEscape(s.bypass) + '</div>'; }
         if (s.lastTrigger) { meta += '<div class="row"><i class="fa-solid fa-bullseye"></i><span class="lbl">Auslöser:</span> ' + acEscape(s.lastTrigger) + (s.lastZone ? ' (' + acEscape(s.lastZone) + ')' : '') + '</div>'; }
         document.getElementById('ac-meta').innerHTML = meta;
 
         document.getElementById('ac-pin').style.display = s.pinRequired ? 'block' : 'none';
+
+        // Sensor status list
+        var sICONS = ['fa-door-open','fa-window-maximize','fa-person-walking','fa-camera','fa-lock','fa-gear','fa-plug','fa-circle-dot'];
+        var sRows = '';
+        (s.sensors || []).forEach(function(sv) {
+            var ico = sICONS[sv.type] || 'fa-circle-dot';
+            sRows += '<tr><td class="s-ico"><i class="fa-solid ' + ico + '"></i></td>' +
+                     '<td>' + acEscape(sv.name) + '</td>' +
+                     '<td class="s-st ' + (sv.isOpen ? 'open' : 'closed') + '">' + (sv.isOpen ? 'auf' : 'zu') + '</td></tr>';
+        });
+        document.getElementById('ac-sens-hdr').style.display = sRows ? 'block' : 'none';
+        document.getElementById('ac-sensors').innerHTML = sRows ? '<table>' + sRows + '</table>' : '';
 
         var rows = '';
         (s.history || []).forEach(function (h) {

@@ -134,6 +134,9 @@ class SymconAlarmPro extends IPSModuleStrict
                     $this->HandlePinInput((string) $data[0]);
                 } else {
                     $this->HandleSensorEventInternal($senderID, $data[0]);
+                    // Always refresh the tile so the sensor status list stays current,
+                    // even when the state machine made no transition (e.g. disarmed).
+                    $this->PushVisualization();
                 }
                 break;
             case IPS_KERNELSTARTED:
@@ -241,6 +244,11 @@ class SymconAlarmPro extends IPSModuleStrict
         $this->StopTimer('EscalationTimer');
         $this->CancelActions(false, true);
         $this->AddHistory(AlarmConstants::EVENT_ACKNOWLEDGED, $this->Translate('Alarm acknowledged'));
+        // Clear the last-trigger display so the tile shows a clean armed state.
+        $this->SetValue('LastTriggerSensorName', '');
+        $this->SetValue('LastTriggerSensorID', 0);
+        $this->SetValue('LastTriggerZone', '');
+        $this->WriteAttributeInteger('LastTriggerSensorID', 0);
         $this->TransitionTo(AlarmConstants::STATE_ALARM_ACKNOWLEDGED);
         return true;
     }
@@ -257,6 +265,11 @@ class SymconAlarmPro extends IPSModuleStrict
         $this->SetValue('IsAcknowledged', false);
         $this->ClearTrouble();
         $this->AddHistory(AlarmConstants::EVENT_RESET, $this->Translate('Alarm reset'));
+        // Clear the last-trigger display on reset.
+        $this->SetValue('LastTriggerSensorName', '');
+        $this->SetValue('LastTriggerSensorID', 0);
+        $this->SetValue('LastTriggerZone', '');
+        $this->WriteAttributeInteger('LastTriggerSensorID', 0);
 
         $mode = $this->GetValue('Mode');
         $this->TransitionTo(AlarmConstants::ModeToArmedState($mode));
