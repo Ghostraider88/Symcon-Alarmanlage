@@ -335,6 +335,32 @@ markiert wird.
 
 ---
 
+## 11a. Versionierung & Release-Pflicht (ab Release 1.0 verbindlich)
+
+> **Der aktuelle Stand ist als Release `1.0` festgeschrieben.** Ab sofort darf **keine**
+> Änderung mehr ohne Versions-/Build-Schritt veröffentlicht werden.
+
+**Bei JEDER veröffentlichten Änderung sind diese Schritte zwingend (in einem Zug):**
+
+1. **`library.json` aktualisieren:**
+   - `version` erhöhen (Schema `MAJOR.MINOR.PATCH`):
+     - Bugfix/kleine Änderung → **Patch**: `1.0` → `1.0.1` → `1.0.2` …
+     - Neue Funktion (abwärtskompatibel) → **Minor**: `1.1`, `1.2` …
+     - Inkompatible/grundlegende Änderung → **Major**: `2.0`
+   - `build` (Integer) um **+1** erhöhen – bei jedem Release, ausnahmslos.
+   - `date` auf den Release-Zeitpunkt setzen (Unix-Zeitstempel, z. B. `date +%s`).
+2. **`CHANGELOG.md` ergänzen:** Neuer Abschnitt `## [<version>] – <YYYY-MM-DD>` ganz oben
+   (unter den Versionierungsregeln) mit den Änderungen, gruppiert nach
+   *Hinzugefügt / Geändert / Behoben*.
+3. **Doku nachziehen:** Betroffene READMEs (Bibliothek + Modul) auf den neuen Stand bringen.
+4. Commit-Message verweist auf die Version, z. B. `release 1.0.1: <kurzbeschreibung>`.
+
+**Merke:** In IP-Symcon wird ein Bibliotheks-Update nur erkannt, wenn sich `version`/`build`
+in `library.json` ändern. Ohne Build-Schritt ziehen Nutzer das Update nicht – deshalb ist der
+Build-Schritt Pflicht, nicht optional.
+
+---
+
 ## 12. Quellen (offiziell)
 
 - SDK (PHP): https://www.symcon.de/de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/
