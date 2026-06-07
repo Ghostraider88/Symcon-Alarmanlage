@@ -3,58 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             display: flex;
-            justify-content: center;
-            align-items: flex-start;
             overflow: hidden;
         }
 
         .container {
             position: relative;
             width: 95%;
+            height: 95%;
             border-radius: 10px;
             padding: 10px 20px 20px;
             box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
         }
 
-        /* Display */
         .display {
+            height: 15%;
             width: 100%;
             outline: none;
-            border: none;
             text-align: center;
-            margin-top: 8%;
+            margin-top: 10%;
             margin-bottom: 2%;
             font-size: 8vh;
-            background: transparent;
-            color: var(--button-color);
-            letter-spacing: 4px;
         }
 
-        /* Feedback line */
         .feedback {
+            height: 4%;
             width: 100%;
-            height: 20px;
             text-align: center;
-            font-size: 2.2vh;
+            font-size: 2.5vh;
             font-weight: 700;
-            line-height: 20px;
-            margin-bottom: 4%;
+            margin-bottom: 3%;
             color: transparent;
             transition: color 0.2s;
         }
         .feedback.ok   { color: #4caf50; }
         .feedback.fail { color: #f44336; }
 
-        /* Numpad */
         .buttons {
             display: grid;
             grid-gap: 10px;
             grid-template-columns: repeat(3, 1fr);
-            margin-bottom: 10px;
+        }
+
+        .buttons .clear,
+        .buttons .back,
+        .buttons .action {
+            font-size: 4vh;
         }
 
         .buttons button {
@@ -64,9 +60,6 @@
             font-size: 8vh;
             background-color: var(--buttonbg-color);
             color: var(--button-color);
-            cursor: pointer;
-            user-select: none;
-            -webkit-user-select: none;
         }
 
         .buttons button:active {
@@ -74,73 +67,41 @@
             background: #32c9ac;
             color: #fff;
         }
+
         .buttons button:hover {
             box-shadow: #32c9ac 0 0 1px 1px;
         }
 
-        .buttons .btn-clear,
-        .buttons .btn-back {
-            font-size: 4vh;
-        }
-        .buttons .btn-clear:hover,
-        .buttons .btn-back:hover {
+        .buttons .clear:hover {
             box-shadow: #ff3c41 0 0 1px 1px;
         }
-        .buttons .btn-clear:active,
-        .buttons .btn-back:active {
+
+        .buttons .clear:active {
             background: #ff3c41;
             color: #fff;
         }
 
-        /* Action buttons — 3 top row + 2 bottom row */
-        .actions {
-            display: grid;
-            grid-gap: 8px;
-            grid-template-columns: repeat(3, 1fr);
-            margin-bottom: 6px;
-        }
-        .actions2 {
-            display: grid;
-            grid-gap: 8px;
-            grid-template-columns: repeat(2, 1fr);
+        .buttons .back:hover {
+            box-shadow: #ff3c41 0 0 1px 1px;
         }
 
-        .actions button,
-        .actions2 button {
-            padding: 8px 4px;
-            border-radius: 20%;
-            border: none;
-            font-size: 3.4vh;
-            font-weight: 700;
-            cursor: pointer;
-            user-select: none;
-            -webkit-user-select: none;
-            background-color: var(--buttonbg-color);
-            color: var(--button-color);
-        }
-
-        .actions button:active,
-        .actions2 button:active {
-            transform: scale(0.99);
-            background: #32c9ac;
+        .buttons .back:active {
+            background: #ff3c41;
             color: #fff;
         }
-        .actions button:hover,
-        .actions2 button:hover {
-            box-shadow: #32c9ac 0 0 1px 1px;
+
+        .divider {
+            border: none;
+            border-top: 1px solid rgba(128,128,128,0.2);
+            margin: 10px 0 4px;
         }
 
-        .btn-disarm {
-            background-color: #2e7d32 !important;
-            color: #fff !important;
-        }
-        .btn-disarm:active { background: #1b5e20 !important; }
-        .btn-disarm:hover  { box-shadow: #4caf50 0 0 1px 1px !important; }
     </style>
 </head>
+
 <body>
     <div class="container">
-        <input type="password" class="display" id="display" disabled />
+        <input type="password" class="display" disabled />
         <div class="feedback" id="feedback"></div>
 
         <div class="buttons">
@@ -156,48 +117,49 @@
             <button data-digit="8">8</button>
             <button data-digit="9">9</button>
 
-            <button class="btn-clear" data-digit="clear">C</button>
+            <button class="clear" data-digit="clear">clear</button>
             <button data-digit="0">0</button>
-            <button class="btn-back" data-digit="back">⌫</button>
-        </div>
+            <button class="back" data-digit="back">⌫</button>
 
-        <div class="actions">
-            <button data-action="ArmNight">Nacht</button>
-            <button data-action="ArmAway">Scharf</button>
-            <button class="btn-disarm" data-action="Disarm">Unscharf</button>
-        </div>
-        <div class="actions2">
-            <button data-action="Acknowledge">Quitt.</button>
-            <button data-action="Reset">Reset</button>
+            <hr class="divider" style="grid-column: 1 / -1;">
+
+            <button class="action" data-action="ArmNight">Nacht</button>
+            <button class="action" data-action="ArmAway">Scharf</button>
+            <button class="action" data-action="Disarm">Unscharf</button>
+
+            <button class="action" data-action="Acknowledge" style="grid-column: 1 / 2;">Quitt.</button>
+            <button class="action" data-action="Reset" style="grid-column: 2 / 3;">Reset</button>
         </div>
     </div>
 
     <script type="text/javascript" charset="UTF-8">
-        const display  = document.getElementById('display');
+
+        const display  = document.querySelector('.display');
         const feedback = document.getElementById('feedback');
         let pin = '';
         let feedbackTimer = null;
 
-        // Theme colors from tile parameters (lorbetzki pattern)
         document.documentElement.style.setProperty('--button-color',   queryParameters.get('textcolor'));
         document.documentElement.style.setProperty('--buttonbg-color', queryParameters.get('backgroundColor'));
 
-        // Numpad
+        // Digit / control buttons
         document.querySelectorAll('[data-digit]').forEach(function(btn) {
             btn.addEventListener('click', function() {
                 var v = btn.getAttribute('data-digit');
                 if (v === 'clear') {
                     pin = '';
+                    display.value = '';
                 } else if (v === 'back') {
                     pin = pin.slice(0, -1);
+                    display.value = pin;
                 } else {
                     pin += v;
+                    display.value = pin;
                 }
-                display.value = pin;
             });
         });
 
-        // Action buttons
+        // Action buttons — send PIN + command, then clear input
         document.querySelectorAll('[data-action]').forEach(function(btn) {
             btn.addEventListener('click', function() {
                 requestAction(btn.getAttribute('data-action'), pin);
@@ -206,7 +168,7 @@
             });
         });
 
-        // Feedback from PHP → UpdateVisualizationValue → handleMessage
+        // Feedback from PHP via UpdateVisualizationValue
         function handleMessage(data) {
             var msg = JSON.parse(data);
             if (feedbackTimer) { clearTimeout(feedbackTimer); }
@@ -217,6 +179,7 @@
                 feedback.className   = 'feedback';
             }, msg.timeOut || 2500);
         }
+
     </script>
 </body>
 </html>
