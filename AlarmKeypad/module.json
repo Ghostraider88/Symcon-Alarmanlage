@@ -1,0 +1,12 @@
+{
+    "id": "{D5FB72C3-7FDA-69C4-4DEB-E16515F84F31}",
+    "name": "AlarmKeypad",
+    "type": 3,
+    "vendor": "Symcon Alarm Pro",
+    "aliases": ["AlarmKeypad", "Alarm Keypad", "Alarm PIN Pad"],
+    "parentRequirements": [],
+    "childRequirements": [],
+    "implemented": [],
+    "prefix": "ALARMKP",
+    "url": ""
+}

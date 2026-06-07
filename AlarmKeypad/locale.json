@@ -1,0 +1,16 @@
+{
+    "translations": {
+        "de": {
+            "Alarm instance": "Alarmzentrale (Instanz)",
+            "Require PIN for arming": "PIN beim Scharfschalten erforderlich",
+            "No alarm instance configured": "Keine Alarmzentrale konfiguriert",
+            "Active": "Aktiv",
+            "Armed Night": "Scharf (Nacht)",
+            "Armed": "Scharf",
+            "Disarmed": "Unscharf",
+            "Acknowledged": "Quittiert",
+            "Reset": "Zurückgesetzt",
+            "Error": "Fehler"
+        }
+    }
+}

@@ -1,0 +1,28 @@
+{
+    "elements": [
+        {
+            "type": "SelectInstance",
+            "name": "AlarmInstanceID",
+            "caption": "Alarm instance",
+            "moduleID": "{91723F1C-05F2-4CDD-A2AC-A309AB3E335C}"
+        },
+        {
+            "type": "CheckBox",
+            "name": "RequirePinForArm",
+            "caption": "Require PIN for arming"
+        }
+    ],
+    "actions": [],
+    "status": [
+        {
+            "code": 102,
+            "icon": "Active",
+            "caption": "Active"
+        },
+        {
+            "code": 104,
+            "icon": "Inactive",
+            "caption": "No alarm instance configured"
+        }
+    ]
+}

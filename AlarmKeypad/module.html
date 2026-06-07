@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            overflow: hidden;
+            padding: 8px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 340px;
+        }
+
+        /* Display */
+        .display {
+            width: 100%;
+            height: 52px;
+            text-align: center;
+            font-size: 5vh;
+            outline: none;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            color: var(--display-color);
+            margin-bottom: 8px;
+            letter-spacing: 4px;
+        }
+
+        .feedback {
+            width: 100%;
+            height: 22px;
+            text-align: center;
+            font-size: 2.4vh;
+            font-weight: 600;
+            border-radius: 6px;
+            line-height: 22px;
+            margin-bottom: 8px;
+            color: transparent;
+            transition: color 0.2s;
+        }
+        .feedback.ok   { color: #4caf50; }
+        .feedback.fail { color: #f44336; }
+
+        /* Numpad grid */
+        .numpad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 7px;
+            margin-bottom: 10px;
+        }
+
+        .numpad button {
+            padding: 0;
+            height: 52px;
+            border-radius: 18%;
+            border: none;
+            font-size: 5.5vh;
+            background-color: var(--buttonbg-color);
+            color: var(--button-color);
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .numpad button:active  { transform: scale(0.97); background: #32c9ac; color: #fff; }
+        .numpad button:hover   { box-shadow: #32c9ac 0 0 2px 1px; }
+
+        .numpad .btn-clear         { font-size: 3.8vh; }
+        .numpad .btn-clear:hover   { box-shadow: #ff3c41 0 0 2px 1px; }
+        .numpad .btn-clear:active  { background: #ff3c41; color: #fff; }
+
+        .numpad .btn-back          { font-size: 3.8vh; }
+        .numpad .btn-back:hover    { box-shadow: #ff9800 0 0 2px 1px; }
+        .numpad .btn-back:active   { background: #ff9800; color: #fff; }
+
+        /* Action buttons */
+        .actions {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 7px;
+        }
+
+        .actions button {
+            padding: 0;
+            height: 44px;
+            border-radius: 14%;
+            border: none;
+            font-size: 2.5vh;
+            font-weight: 700;
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            background-color: var(--buttonbg-color);
+            color: var(--button-color);
+        }
+
+        .actions button:active { transform: scale(0.97); }
+        .actions button:hover  { box-shadow: #32c9ac 0 0 2px 1px; }
+
+        .actions .btn-night   { }
+        .actions .btn-away    { }
+        .actions .btn-disarm  { background-color: #2e7d32; color: #fff; }
+        .actions .btn-disarm:active { background: #1b5e20; }
+        .actions .btn-disarm:hover  { box-shadow: #4caf50 0 0 2px 1px; }
+        .actions .btn-ack     { }
+        .actions .btn-reset   { }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <input type="password" class="display" id="display" disabled />
+        <div class="feedback" id="feedback"></div>
+
+        <div class="numpad">
+            <button data-digit="1">1</button>
+            <button data-digit="2">2</button>
+            <button data-digit="3">3</button>
+
+            <button data-digit="4">4</button>
+            <button data-digit="5">5</button>
+            <button data-digit="6">6</button>
+
+            <button data-digit="7">7</button>
+            <button data-digit="8">8</button>
+            <button data-digit="9">9</button>
+
+            <button class="btn-clear" data-digit="clear">C</button>
+            <button data-digit="0">0</button>
+            <button class="btn-back" data-digit="back">⌫</button>
+        </div>
+
+        <div class="actions">
+            <button class="btn-night"  data-action="ArmNight">Nacht</button>
+            <button class="btn-away"   data-action="ArmAway">Scharf</button>
+            <button class="btn-disarm" data-action="Disarm">Unscharf</button>
+            <button class="btn-ack"    data-action="Acknowledge">Quitt.</button>
+            <button class="btn-reset"  data-action="Reset">Reset</button>
+        </div>
+    </div>
+
+    <script type="text/javascript" charset="UTF-8">
+        const display  = document.getElementById('display');
+        const feedback = document.getElementById('feedback');
+        let pin = '';
+        let feedbackTimer = null;
+
+        // Apply theme from tile query parameters
+        document.documentElement.style.setProperty('--button-color',    queryParameters.get('textcolor'));
+        document.documentElement.style.setProperty('--buttonbg-color',  queryParameters.get('backgroundColor'));
+        document.documentElement.style.setProperty('--display-color',   queryParameters.get('textcolor'));
+
+        // Numpad digit/control buttons
+        document.querySelectorAll('[data-digit]').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var v = btn.getAttribute('data-digit');
+                if (v === 'clear') {
+                    pin = '';
+                } else if (v === 'back') {
+                    pin = pin.slice(0, -1);
+                } else {
+                    pin += v;
+                }
+                display.value = pin;
+            });
+        });
+
+        // Action buttons — send PIN together with the command
+        document.querySelectorAll('[data-action]').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var action = btn.getAttribute('data-action');
+                requestAction(action, pin);
+                pin = '';
+                display.value = '';
+            });
+        });
+
+        // Receive feedback from PHP (PushFeedback → UpdateVisualizationValue)
+        function handleMessage(data) {
+            var msg = JSON.parse(data);
+            if (feedbackTimer) { clearTimeout(feedbackTimer); }
+            feedback.textContent = msg.sendText;
+            feedback.className   = 'feedback ' + (msg.ok ? 'ok' : 'fail');
+            feedbackTimer = setTimeout(function() {
+                feedback.textContent = '';
+                feedback.className   = 'feedback';
+            }, msg.timeOut || 2500);
+        }
+    </script>
+</body>
+</html>
