@@ -1,5 +1,9 @@
 # Symcon Alarm Pro
 
+<p align="center">
+  <img src="imgs/logo.png" alt="Symcon Alarm Pro Logo" width="160">
+</p>
+
 [![Check Style](https://github.com/ghostraider88/symcon-alarmanlage/actions/workflows/style.yml/badge.svg)](https://github.com/ghostraider88/symcon-alarmanlage/actions/workflows/style.yml)
 [![Run Tests](https://github.com/ghostraider88/symcon-alarmanlage/actions/workflows/tests.yml/badge.svg)](https://github.com/ghostraider88/symcon-alarmanlage/actions/workflows/tests.yml)
 

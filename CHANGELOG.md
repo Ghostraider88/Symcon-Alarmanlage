@@ -24,6 +24,8 @@ Erstes Release – bereit für die Einreichung im Symcon Module Store.
 
 - `LICENSE` (MIT) ergänzt.
 - `url` für beide Module in `module.json` gesetzt.
+- Logo `imgs/logo.png` ergänzt und in der README eingebunden.
+- `docs/MODULE_STORE.md` mit allen Einreichungs-Infos für den Symcon Module Store angelegt.
 - `CHANGELOG.md` und Versionierungsregeln eingeführt (siehe oben).
 
 ### Module
